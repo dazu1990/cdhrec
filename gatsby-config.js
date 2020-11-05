@@ -4,9 +4,10 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter`,
-    description: `Gatsby Starter`,
-    author: `Polychronis Papadakis`,
+    title: `CDHREC`,
+    description: `Welcome to Custom Dragon Highlander, a community dedicated to designing only the finest custom commanders!`,
+    
+    author: `Adrian Davila-Zuniga`,
   },
   plugins: [
     `gatsby-plugin-flow`,

@@ -1,6 +1,7 @@
 import Animated from './animated';
 import Avatar from './avatar';
 import BlogPost from './blog-post';
+import CommanderCard from './commander-card';
 import Footer from './footer';
 import Header from './header';
 import Layout from './layout';
@@ -13,6 +14,7 @@ export {
   Animated,
   Avatar,
   BlogPost,
+  CommanderCard,
   Footer,
   Header,
   Layout,

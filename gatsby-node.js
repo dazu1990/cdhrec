@@ -7,3 +7,8 @@ exports.onCreateWebpackConfig = ({ getConfig, stage }) => {
     }
   }
 }
+
+// exports.createPages = async ({ graphql, actions }) => {
+//   const { createPage } = actions
+
+// })

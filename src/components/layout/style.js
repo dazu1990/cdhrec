@@ -8,6 +8,7 @@ const styles = ({ app, breakpoints, typography }) => ({
   },
   container: {
     minHeight: '100vh',
+    marginTop: '5rem'
   },
   scrollFix: {
     marginRight: '-17px !important',

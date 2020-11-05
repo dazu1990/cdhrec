@@ -6,7 +6,7 @@
 </h1>
 
 <p align="center">
-  Gatsby Starter for creating portfolio & blog.
+  CDHREC
 </p>
 
 <p align="center">

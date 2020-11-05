@@ -18,6 +18,15 @@ const palette = {
     dark: '#00a7bc',
     contrastText: '#fff',
   },
+  mana: {
+    colorless: '#eee',
+    white: '#fff',
+    blue: '',
+    black: '',
+    red: '',
+    green: '',
+  }
+
 };
 
 export default palette;

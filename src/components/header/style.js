@@ -7,6 +7,7 @@ const styles = ({ app, typography, palette }) => ({
     justifyContent: 'center',
     width: `100%`,
     top: `0`,
+    zIndex: `10`
   },
   container: {
     display: 'flex',

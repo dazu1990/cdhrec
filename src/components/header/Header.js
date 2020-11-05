@@ -21,11 +21,11 @@ const Header = ({ classes }: Props) => (
       className={classes.container}>
       <Grid
         container
-        container
+        item
         direction='row'
         justify='space-between'
         alignItems='center'>
-        <Grid container xs={6} alignItems='center'>
+        <Grid container item xs={6} alignItems='center'>
           <Link to='/' className={classes.logo}>
             <Animated>
               <Avatar />

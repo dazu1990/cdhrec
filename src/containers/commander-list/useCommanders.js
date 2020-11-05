@@ -1,25 +1,41 @@
 import { useStaticQuery, graphql } from 'gatsby';
-
-const useCommanders = () => {
+// ...GatsbyContentfulFluid
+const useCommanders = (params) => {
+  const colorsIn = ["w"]
+  const colorsOut = ["u","b","r","g"]
+  // (
+  //   filter: {
+  //     frontmatter: {title: {ne: ""}}
+  //   }
+  // )
   const data = useStaticQuery(
     graphql`
-      query {
-        allContentfulCommander {
-          edges {
-            node {
+      query getCommander{
+        allContentfulCommander(
+          sort: { order: DESC, fields: [approvedOn] },
+          # filter: {
+          #   colorId: {in: ["w"], nin: ["u","b","r","g"]}
+          # }
+        ) {
+          edges{
+            node{
+              id
               name
+              slug
               colorId
               approvedOn
-              cardImage {
+              commanderType
+              mainImage {
+                id
                 fluid {
-                  base64
-                  tracedSVG
-                  aspectRatio
-                  src
-                  srcSet
-                  srcWebp
-                  srcSetWebp
-                  sizes
+                  ...GatsbyContentfulFluid
+                }
+                title
+              }
+              secondaryImage{
+                id
+                fluid {
+                  ...GatsbyContentfulFluid
                 }
                 title
               }
@@ -34,20 +50,3 @@ const useCommanders = () => {
 
 export default useCommanders;
 
-// allContentfulCommander(sort: { order: DESC, fields: publishDate }) {
-
-// title
-//               author {
-//                 name
-//               }
-//               publishDate
-//               body {
-//                 childMarkdownRemark {
-//                   html
-//                 }
-//               }
-//               heroImage {
-//                 fluid(maxWidth: 960) {
-//                   ...GatsbyContentfulFluid_withWebp
-//                 }
-//               }
