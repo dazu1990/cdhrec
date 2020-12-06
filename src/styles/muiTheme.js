@@ -32,11 +32,12 @@ muiTheme.overrides = {
       color: muiTheme.palette.primary.main,
     },
     h1: {
+      fontSize: '2rem',
       [muiTheme.breakpoints.down('sm')]: {
-        fontSize: muiTheme.typography.pxToRem(56),
+        fontSize: muiTheme.typography.pxToRem(30),
       },
       [muiTheme.breakpoints.down('xs')]: {
-        fontSize: muiTheme.typography.pxToRem(40),
+        fontSize: muiTheme.typography.pxToRem(30),
       },
     },
     h2: {

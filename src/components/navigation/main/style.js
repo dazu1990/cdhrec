@@ -10,10 +10,14 @@ const styles = ({ palette, typography }) => ({
     display: 'inline-block',
     padding: `${typography.pxToRem(8)} ${typography.pxToRem(8)}`,
     textDecoration: 'none',
-    fontFamily: 'Cardo',
-    fontWeight: '700',
-    textTransform: `uppercase`,
+    // fontFamily: 'Cardo',
+    // fontWeight: '700',
+    // textTransform: `uppercase`,
     color: palette.text.secondary,
+    '&:hover':{
+      borderBottom: `1px solid ${palette.text.secondary}`
+      // color: palette.text.primary,
+    }
   },
   navLinkActive: {
     borderBottom: `${typography.pxToRem(2)} solid ${palette.primary.main}`,

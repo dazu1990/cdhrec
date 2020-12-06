@@ -2,7 +2,7 @@ const typography = typography => ({
   fontFamily: 'Cardo',
   fontSize: 16,
   h1: {
-    fontSize: typography.pxToRem(70),
+    fontSize: typography.pxToRem(40),
     lineHeight: 1.1,
     fontWeight: 800,
   },

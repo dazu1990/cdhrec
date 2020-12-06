@@ -13,34 +13,28 @@ type Props = {
 
 const Header = ({ classes }: Props) => (
   <header className={classes.wrapper}>
+
     <Grid
       container
-      direction='column'
-      justify='center'
-      alignItems='center'
-      className={classes.container}>
-      <Grid
-        container
-        item
-        direction='row'
-        justify='space-between'
-        alignItems='center'>
-        <Grid container item xs={6} alignItems='center'>
-          <Link to='/' className={classes.logo}>
-            <Animated>
-              <Avatar />
-            </Animated>
-          </Link>
-          {/* <Link to='/' className={classes.siteName}>
-            Custom Dragon Highlander
-          </Link> */}
-        </Grid>
+      direction='row'
+      justify='space-between'
+      alignItems='center'>
 
-        <div className={classes.navigation}>
-          <Navigation />
-        </div>
-      </Grid>
+        <Link to='/' className={classes.logo}>
+          <Animated>
+            <Avatar />
+          </Animated>
+        </Link>
+        {/* <Link to='/' className={classes.siteName}>
+          Custom Dragon Highlander
+        </Link> */}
+
+
+      <div className={classes.navigation}>
+        <Navigation />
+      </div>
     </Grid>
+
   </header>
 );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
-import { Grid, Card } from '@material-ui/core';
+import { Grid, Card, CardActionArea } from '@material-ui/core';
 
 import Img from 'gatsby-image';
 
@@ -12,9 +12,10 @@ type Props = {
   card: Object,
 };
 
+// const card = 
+
 const CommanderCard = ({ classes, card }: Props) => {
   const cardWidth = 220;
-  // console.log(card)
   return  (
   <Grid 
   className={classes.container} 
@@ -24,47 +25,63 @@ const CommanderCard = ({ classes, card }: Props) => {
   container
   >
 
-    {!card.commanderType && (
-      <div className={classes.cardImg}>
-        <Img 
-        style={{ width: cardWidth }} 
-        fluid={card.mainImage.fluid} 
-        alt={card.mainImage.title}/>
-      </div>
+    {card && !card.flipCard && (
+      <Card className={classes.cardImg}>
+        <CardActionArea>
+        {card.featuredImage && (
+          <Img 
+          style={{ width: cardWidth }} 
+          fluid={card.featuredImage.node.localFile.childImageSharp.fluid} 
+          alt={card.title}/>
+        )}
+        </CardActionArea>
+        {/* {card.featuredImage.node.localFile.sourceUrl} */}
+        
+      </Card>
       
-    )}
+    )} 
 
-    {card.commanderType && (card.commanderType[0] === 'partnered' || card.commanderType[0] === 'flip') && (
+    {card && card.flipCard && (
       <div className={classes.cardPartners}>
-        <Img 
-        style={{ width: cardWidth }} 
-        fluid={card.mainImage.fluid} 
-        className={classes.cardFront} 
-        alt={card.mainImage.title}/>
-        <Img 
-        style={{ width: cardWidth }} 
-        fluid={card.secondaryImage.fluid} 
-        className={classes.cardBack} 
-        alt={card.secondaryImage.title}/>
+        <Card className={classes.cardFront}>
+          <CardActionArea>
+            <Img 
+            style={{ width: cardWidth }} 
+            fluid={card.card1.featuredImage.node.localFile.childImageSharp.fluid} 
+            alt={card.card1.title}/>
+          </CardActionArea>
+        </Card>
+        <Card className={classes.cardBack}>
+          <CardActionArea>
+            <Img 
+            style={{ width: cardWidth }} 
+            fluid={card.card2.featuredImage.node.localFile.childImageSharp.fluid}  
+            alt={card.card2.title}/>
+          </CardActionArea>
+        </Card>
+        
 
       </div>
       
     )}
 
-    <div className={classes.cardName}>
-      
-      {card.name}
-      
-    </div>
-    <Grid className={classes.downloads} justify='center' style={{'maxWidth': `${cardWidth}px`}}container>
-      <a href={card.xml} className={classes.downloadsLink} download>
-        <button>xml</button>
-      </a>
-      <a href={card.mse} className={classes.downloadsLink} download>
-        <button>mse</button>
-      </a>
-    </Grid>
-   
+    
+
+    {card && !card.flipCard && (
+      <div className={classes.cardName}>
+          {card.title} <br></br> {card.cdhCards.set.muid} 
+      </div>
+    )}
+
+    {card && card.flipCard && (
+      <div className={classes.cardName}>
+        {card.card1.title} {card.card2.title}  <br></br> {card.card1.cdhCards.set.muid} {card.card2.cdhCards.set.muid}
+      </div>
+    )}
+
+
+    
+
     
 
   </Grid>

@@ -1,6 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Fade from '@material-ui/core/Fade';
+import {Divider} from '@material-ui/core';
+
 
 import { Animated } from 'components';
 
@@ -10,17 +12,18 @@ const { tagline, title, subtitle } = content;
 
 const Welcome = () => (
   <>
-    <Typography variant='h3' color='textPrimary'>
-      {tagline}
-    </Typography>
+
     <Fade in timeout={1000}>
       <Typography variant='h1' color='textPrimary'>
-        <Animated>{title}</Animated>
+        {title}
       </Typography>
     </Fade>
-    <Typography variant='h3' color='textPrimary'>
-      {subtitle}
+    <strong>{subtitle}</strong>
+    <Typography variant='subtitle2' color='textPrimary'>
+    {subtitle}
     </Typography>
+    <Divider></Divider>
+
   </>
 );
 

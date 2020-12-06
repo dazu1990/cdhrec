@@ -44,7 +44,8 @@ const styles = ({ typography }) => ({
   },
   cardName:{
     margin: '1rem auto 0',
-    fontSize: '0.75rem'
+    fontSize: '0.75rem',
+    textAlign: 'center'
   }
   
 

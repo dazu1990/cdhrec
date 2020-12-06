@@ -71,6 +71,26 @@ module.exports = {
         },
       },
     },
+    
+    {
+      resolve: `gatsby-source-wordpress-experimental`,
+      options: {
+        url: `http://localhost:10003/graphql`
+      },
+    },
+    // {
+    //   resolve: `gatsby-source-wordpress`,
+    //   options: {
+    //     /*
+    //      * The base URL of the WordPress site without the trailingslash and the protocol. This is required.
+    //      * Example : 'dev-gatbsyjswp.pantheonsite.io' or 'www.example-site.com'
+    //      */
+    //     baseUrl: `localhost:10003/graphql`,
+    //     protocol: `http`,
+    //     hostingWPCOM: false,
+    //     useACF: true,
+    //   },
+    // },
     {
       resolve: `gatsby-source-contentful`,
       options: {

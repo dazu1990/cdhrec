@@ -21,10 +21,10 @@ const palette = {
   mana: {
     colorless: '#eee',
     white: '#fff',
-    blue: '',
-    black: '',
-    red: '',
-    green: '',
+    blue: '#0000ff',
+    black: '#000',
+    red: '#ff0000',
+    green: '#00ff00',
   }
 
 };

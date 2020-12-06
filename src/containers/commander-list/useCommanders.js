@@ -1,43 +1,79 @@
 import { useStaticQuery, graphql } from 'gatsby';
+
+// const FluidImageFragment = `
+//     fragment GatsbyImageSharpFluid_tracedSVG on ImageSharpFluid {
+//         tracedSVG
+//         aspectRatio
+//         src
+//         srcSet
+//         sizes
+//     }
+// `;
 // ...GatsbyContentfulFluid
 const useCommanders = (params) => {
-  const colorsIn = ["w"]
-  const colorsOut = ["u","b","r","g"]
+
   // (
-  //   filter: {
-  //     frontmatter: {title: {ne: ""}}
-  //   }
-  // )
+  //   sort: { order: DESC, fields: [id] },
+  // ) 
   const data = useStaticQuery(
     graphql`
-      query getCommander{
-        allContentfulCommander(
-          sort: { order: DESC, fields: [approvedOn] },
-          # filter: {
-          #   colorId: {in: ["w"], nin: ["u","b","r","g"]}
-          # }
-        ) {
-          edges{
-            node{
+      query allCards{
+        allWpCard(
+          sort: { order: DESC, fields: [ cdhCards___set___num ] },
+          filter: { cdhCards: { token :  { ne: true } } }
+      ){
+          edges {
+            node {
               id
-              name
-              slug
-              colorId
-              approvedOn
-              commanderType
-              mainImage {
-                id
-                fluid {
-                  ...GatsbyContentfulFluid
+              title
+              cdhCards {
+                prop {
+                  cmc
+                  coloridentity
+                  colors
+                  fieldGroupName
+                  maintype
+                  manacost
+                  side
+                  pt
+                  type
                 }
-                title
+                name
+                formatCommander
+                related
+                set {
+                  rarity
+                  picurl
+                  num
+                  muid
+                  fieldGroupName
+                  uuid
+                }
+                text
+                token
+                fieldGroupName
               }
-              secondaryImage{
-                id
-                fluid {
-                  ...GatsbyContentfulFluid
+              featuredImage {
+                node {
+                  srcSet
+                  sourceUrl
+                  localFile{
+                    childImageSharp{
+                      fluid(maxWidth: 375) {
+                        # In the GraphQL explorer, use field names
+                        # like "src". In your site's code, remove them
+                        # and use the fragments provided by Gatsby.
+                        src
+                        # This fragment won't work in the GraphQL
+                        # explorer, but you can use it in your site
+                        ...GatsbyImageSharpFluid_withWebp
+                      }
+                      gatsbyImage {
+                        imageData
+                      }
+                    }
+                  }
                 }
-                title
               }
             }
           }
