@@ -4,7 +4,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Fade from '@material-ui/core/Fade';
 import classNames from 'classnames';
 
-import { Header } from 'components';
+import { Header, Footer } from 'components';
 
 import styles from './style';
 
@@ -34,7 +34,10 @@ const Layout = ({ classes, children, noBackground }: Props) => (
         <main className={classes.content}>{children}</main>
       </Fade>
     </div>
+        
+
   </Scrollbars>
+  
 );
 
 export default withStyles(styles)(Layout);

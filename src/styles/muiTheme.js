@@ -9,6 +9,7 @@ const muiTheme = createMuiTheme({
   typography: {
     useNextVariants: true,
     fontFamily: typography.fontFamily,
+    
   },
   palette,
   color,
@@ -32,7 +33,7 @@ muiTheme.overrides = {
       color: muiTheme.palette.primary.main,
     },
     h1: {
-      fontSize: '2rem',
+      fontSize: 10,
       [muiTheme.breakpoints.down('sm')]: {
         fontSize: muiTheme.typography.pxToRem(30),
       },
@@ -73,5 +74,7 @@ muiTheme.overrides = {
     },
   },
 };
+
+console.log('muiTheme', muiTheme)
 
 export default muiTheme;

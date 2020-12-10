@@ -1,20 +1,20 @@
 import { useStaticQuery, graphql } from 'gatsby';
 
 const useBlogPosts = () => {
-  const data = useStaticQuery(
-    graphql`
-      query {
-        allContentfulCommander {
-          edges {
-            node {
-              id
-            }
-          }
-        }
-      }
-    `
-  );
-  return data;
+  // const data = useStaticQuery(
+  //   graphql`
+  //     query {
+  //       allContentfulCommander {
+  //         edges {
+  //           node {
+  //             id
+  //           }
+  //         }
+  //       }
+  //     }
+  //   `
+  // );
+  return '';
 };
 
 export default useBlogPosts;

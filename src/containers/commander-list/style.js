@@ -12,6 +12,9 @@ const styles = ({ typography,palette }) => ({
   },
   goUpBtn:{
     background: `#ddd`
+  },
+  vertSpace:{
+    margin: '2rem 0'
   }
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Layout, SEO } from 'components';
+import { Layout, SEO, Footer} from 'components';
 import { Welcome, CommanderList } from 'containers';
 
 const IndexPage = () => (
@@ -8,6 +8,7 @@ const IndexPage = () => (
     <SEO title='Home' />
     <Welcome />
     <CommanderList/>
+    <Footer />
   </Layout>
 );
 

@@ -1,7 +1,7 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
 import { withStyles } from '@material-ui/styles';
-import { Grid, Container, TextField, ButtonGroup, Button, Divider, InputBase, IconButton } from '@material-ui/core';
+import { Grid, Container, TextField, ButtonGroup, Button, Divider, InputBase, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -38,22 +38,14 @@ const CommanderList = ({ classes }: Props) => {
 
 
   const [searchQuery, setSearchQuery] = useState("");
-
   const[searchResult,setSearchResult] = useState([]);
-
-
-
-
-
   const { allWpCard } = useCommanders();
-  // console.log(allWpCard.edges)
 
 
   const handleSearch = (event)=>{
     if(event.target.value.length > 2){
       setSearchQuery(event.target.value)
-      let results = fuse.search(event.target.value);
-
+      let results = fuse.search(searchQuery);
       results = results.map(({item})=>{
         let fullcard = allWpCard.edges.find(obj => obj.node.cdhCards.set.muid === item.muid);
         return(fullcard)
@@ -63,26 +55,19 @@ const CommanderList = ({ classes }: Props) => {
     }else if (event.target.value.length === 0){
       setSearchResult("")
     }
+
+    // event.preventDefault();
+
     
   }
 
   const backToTop = (event)=>{
-    console.log('going back',window.scrollY)
     const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
-
     if (anchor) {
       anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
-  
-  // const handleClick = (event) => {
-  //   const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
 
-  //   if (anchor) {
-  //     anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  //   }
-  // };
-  
   
 
   // This filters by color
@@ -128,7 +113,7 @@ const CommanderList = ({ classes }: Props) => {
           })[0].node
         }
       }
-      // checks color identity
+      // converts color identity to appropriate format
       const isEqual = (a, b) =>{ 
         let A =  a ? a.replace(/[0-9]/g, '') : a;
         if(A){
@@ -141,6 +126,7 @@ const CommanderList = ({ classes }: Props) => {
       const finalReturn = ()=>{
         // checking if card is part of a flip card
         if(flipCard && (node.cdhCards.name === flipCard.card1.cdhCards.name || node.cdhCards.name === flipCard.card2.cdhCards.name)){
+          // console.log(flipCard.card1.cdhCards.name)
           return flipCard;
         }else{
           return node;
@@ -162,7 +148,7 @@ const CommanderList = ({ classes }: Props) => {
       // remove duplicate flip parings
       let frontSideFirst = true;
       if(el && el.flipCard ){
-        console.log('EL', el)
+        // console.log('EL', el)
         if(el.card1.cdhCards.prop.side !== "front"){
           frontSideFirst = false;
         }
@@ -200,51 +186,53 @@ const CommanderList = ({ classes }: Props) => {
 
   return (
     <Container className={classes.container} >
-      <Grid 
-        container
-        direction="row"
-        justify="space-between"
-        alignItems="center"
-        id="back-to-top-anchor"
-      >
-        <Grid item>
-          <form className={classes.searchbar} noValidate autoComplete="off">
-            <TextField 
-              id="standard-basic" 
-              name="search"
-              label="Search Commanders" 
-              placeholder="Commander Name"
-              onChange={handleSearch}
-              InputProps={{
-                startAdornment: <SearchIcon></SearchIcon>,
-              }}
-              variant="outlined"
-            />
-          </form>
-        </Grid>
-        
-        <Grid item>
-          <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
-        </Grid>
-        
-        <Grid item>
-          <ButtonGroup disableElevation variant="contained" >
-            <Button onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
-            {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
-          </ButtonGroup>
+      <Card style={{ padding: 10 }}>
+        <Grid 
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          id="back-to-top-anchor"
+        >
+          <Grid item>
+            <form className={classes.searchbar} noValidate autoComplete="off">
+              <TextField 
+                id="standard-basic" 
+                name="search"
+                label="Search Commanders" 
+                placeholder="Commander Name"
+                onChange={handleSearch}
+                InputProps={{
+                  startAdornment: <SearchIcon></SearchIcon>,
+                }}
+                variant="outlined"
+              />
+            </form>
+          </Grid>
           
+          <Grid item>
+            <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
+          </Grid>
+          
+          <Grid item>
+            <ButtonGroup disableElevation variant="contained" >
+              <Button onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
+              {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
+            </ButtonGroup>
+            
+          </Grid>
         </Grid>
-      </Grid>
-      <br></br>
-      <Divider></Divider>
-      <br></br>
+
+      </Card>
+
       <Grid 
         container
         direction="row"
         justify="center"
         alignItems="center"
+        className={classes.vertSpace}
       >
-        <div>showing {filteredCommanders().length}/ {flattenedList.length} commanders from {descAsc ? 'new to old' : 'old to new'}</div>
+        <div>showing {filteredCommanders().length} commanders from {descAsc ? 'new to old' : 'old to new'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``} out of a total {flattenedList.length}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (

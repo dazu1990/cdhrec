@@ -6,7 +6,6 @@ module.exports = {
   siteMetadata: {
     title: `CDHREC`,
     description: `Welcome to Custom Dragon Highlander, a community dedicated to designing only the finest custom commanders!`,
-    
     author: `Adrian Davila-Zuniga`,
   },
   plugins: [
@@ -91,19 +90,12 @@ module.exports = {
     //     useACF: true,
     //   },
     // },
-    {
-      resolve: `gatsby-source-contentful`,
-      options: {
-        spaceId: process.env.CONTENTFUL_SPACE_ID,
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-        environment: process.env.CONTENTFUL_ENV,
-      },
-    },
+
     {
       resolve: 'gatsby-plugin-web-font-loader',
       options: {
         google: {
-          families: ['Cardo'],
+          families: ['Cardo', 'Playfair Display SC'],
         },
       },
     },

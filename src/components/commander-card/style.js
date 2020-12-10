@@ -5,6 +5,9 @@ const styles = ({ typography }) => ({
   cardImg:{
     borderRadius: '12px',
   },
+  cardBodyCopy:{
+    fontSize: '0.7rem'
+  },
   cardPartners:{
     display: 'flex',
     alignItems: 'center',

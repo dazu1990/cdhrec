@@ -1,8 +1,7 @@
 const options = [
-  { to: '/', text: 'Home' },
-  { to: '/blog/', text: 'Blog' },
-  { to: '/about/', text: 'About' },
-  { to: '/commanders/', text: 'Commanders' },
+  { to: '/blog/', text: 'News' },
+  { to: '/faq/', text: 'FAQ' },
+  { to: '/resources/', text: 'Resources' },
 ];
 
 export default options;

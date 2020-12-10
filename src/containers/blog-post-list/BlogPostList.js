@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/styles';
 
 import { BlogPost } from 'components';
 
-import useBlogPosts from './useBlogPosts';
+// import useBlogPosts from './useBlogPosts';
 import styles from './style';
 
 type Props = {
