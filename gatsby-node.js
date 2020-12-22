@@ -1,5 +1,14 @@
 const path = require(`path`)
+const { createFilePath } = require(`gatsby-source-filesystem`)
 const chunk = require(`lodash/chunk`)
+
+const convertToSlug = (Text) =>{
+    return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+}
 
 
 exports.onCreateWebpackConfig = ({ getConfig, stage }) => {
@@ -12,121 +21,178 @@ exports.onCreateWebpackConfig = ({ getConfig, stage }) => {
   }
 }
 
+
+exports.onCreateNode = ({ node, getNode, actions }) => {
+  const { createNodeField } = actions
+  if (node.internal.type === `MarkdownRemark`) {
+    const slug = createFilePath({ node, getNode, basePath: `pages` })
+    console.log('SLUG ===> ', slug)
+    createNodeField({
+      node,
+      name: `slug`,
+      value: slug,
+    })
+  }
+}
+
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions
+  const result = await graphql(/* GraphQL */ `
+    query allCards{
+        allWpCard(
+          sort: { order: DESC, fields: [ cdhCards___set___num ] },
+      ){
+          edges {
+            node {
+              id
+              title
+              cdhCards {
+                prop {
+                  cmc
+                  coloridentity
+                  colors
+                  fieldGroupName
+                  maintype
+                  manacost
+                  side
+                  pt
+                  type
+                }
+                name
+                formatCommander
+                related
+                set {
+                  rarity
+                  picurl
+                  num
+                  muid
+                  fieldGroupName
+                  uuid
+                }
+                text
+                token
+                fieldGroupName
+              }
+              featuredImage {
+                node {
+                  srcSet
+                  sourceUrl
+                  localFile{
+                    childImageSharp{
+                      fluid(maxWidth: 375) {
+                        base64
+                        aspectRatio
+                        src
+                        srcSet
+                        srcWebp
+                        srcSetWebp
+                        sizes
+                      }
+                      gatsbyImageData
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  `)
+  console.log('THIS IS IT ====  > ', result, result.data, result.allWpCard)
+  result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
+
+    let relations = []
+    let tokens = []
+    if (outerNode.cdhCards.related ){
+      result.data.allWpCard.edges.forEach(({node : innernode}) => {
+        if(outerNode.cdhCards.related.includes(innernode.title)){
+          if(innernode.cdhCards.token){
+            tokens.push(innernode)
+          }else{
+            relations.push(innernode)
+          }
+          
+        }
+      })
+
+    }
+    
+
+    // let related = result.data.allWpCard.edges.filter(relation => node.cdhCards.related.includes(relation.title))
+
+
+    createPage({
+      path: `${convertToSlug(outerNode.title)}`,
+      component: path.resolve(`./src/templates/blog-post.js`),
+      context: {
+        // Data passed to context is available
+        // in page queries as GraphQL variables.
+        slug: `${convertToSlug(outerNode.title)}`,
+        cardData: outerNode,
+        related: relations,
+        tokens: tokens
+      },
+    })
+  })
+}
+
+
 /**
  * exports.createPages is a built-in Gatsby Node API.
  * It's purpose is to allow you to create pages for your site! 💡
  *
  * See https://www.gatsbyjs.com/docs/node-apis/#createPages for more info.
  */
-exports.createPages = async gatsbyUtilities => {
-  // Query our posts from the GraphQL server
-  const posts = await getPosts(gatsbyUtilities)
+// exports.createPages = async gatsbyUtilities => {
+//   // Query our posts from the GraphQL server
+//   const posts = await getCards(gatsbyUtilities)
 
-  // If there are no posts in WordPress, don't do anything
-  if (!posts.length) {
-    return
-  }
 
-  // If there are posts, create pages for them
-  await createIndividualBlogPostPages({ posts, gatsbyUtilities })
+//   // If there are no posts in WordPress, don't do anything
+//   if (!posts.length) {
+//     return
+//   }
 
-  // And a paginated archive
-  await createBlogPostArchive({ posts, gatsbyUtilities })
-}
+//   // If there are posts, create pages for them
+//   await createIndividualBlogPostPages({ posts, gatsbyUtilities })
 
-/**
- * This function creates all the individual blog pages in this site
- */
-const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>
-  Promise.all(
-    posts.map(({ previous, post, next }) =>
-      // createPage is an action passed to createPages
-      // See https://www.gatsbyjs.com/docs/actions#createPage for more info
-      gatsbyUtilities.actions.createPage({
-        // Use the WordPress uri as the Gatsby page path
-        // This is a good idea so that internal links and menus work 👍
-        path: post.uri,
-
-        // use the blog post template as the page component
-        component: path.resolve(`./src/templates/blog-post.js`),
-
-        // `context` is available in the template as a prop and
-        // as a variable in GraphQL.
-        context: {
-          // we need to add the post id here
-          // so our blog post template knows which blog post
-          // the current page is (when you open it in a browser)
-          id: post.id,
-
-          // We also use the next and previous id's to query them and add links!
-          previousPostId: previous ? previous.id : null,
-          nextPostId: next ? next.id : null,
-        },
-      })
-    )
-  )
+//   // And a paginated archive
+//   // await createBlogPostArchive({ posts, gatsbyUtilities })
+// }
 
 /**
  * This function creates all the individual blog pages in this site
  */
-async function createBlogPostArchive({ posts, gatsbyUtilities }) {
-  const graphqlResult = await gatsbyUtilities.graphql(/* GraphQL */ `
-    {
-      wp {
-        readingSettings {
-          postsPerPage
-        }
-      }
-    }
-  `)
+// const createIndividualBlogPostPages = async ({ posts, gatsbyUtilities }) =>{
 
-  const { postsPerPage } = graphqlResult.data.wp.readingSettings
+//   return Promise.all(
+//     posts.map(({ previous, post, next }) =>{
+//       // createPage is an action passed to createPages
+//       // See https://www.gatsbyjs.com/docs/actions#createPage for more info
+//       return gatsbyUtilities.actions.createPage({
+//         // Use the WordPress uri as the Gatsby page path
+//         // This is a good idea so that internal links and menus work 👍
+//         path: `card/${encodeURI(post.title)}`,
 
-  const postsChunkedIntoArchivePages = chunk(posts, postsPerPage)
-  const totalPages = postsChunkedIntoArchivePages.length
+//         // use the blog post template as the page component
+//         component: path.resolve(`./src/templates/blog-post.js`),
 
-  return Promise.all(
-    postsChunkedIntoArchivePages.map(async (_posts, index) => {
-      const pageNumber = index + 1
+//         // `context` is available in the template as a prop and
+//         // as a variable in GraphQL.
+//         context: {
+//           // we need to add the post id here
+//           // so our blog post template knows which blog post
+//           // the current page is (when you open it in a browser)
+//           id: post.id,
 
-      const getPagePath = page => {
-        if (page > 0 && page <= totalPages) {
-          // Since our homepage is our blog page
-          // we want the first page to be "/" and any additional pages
-          // to be numbered.
-          // "/blog/2" for example
-          return page === 1 ? `/` : `/blog/${page}`
-        }
+//           // We also use the next and previous id's to query them and add links!
+//           previousPostId: previous ? previous.id : null,
+//           nextPostId: next ? next.id : null,
+//         },
+//       })}
+//     )
+//   )}
 
-        return null
-      }
-
-      // createPage is an action passed to createPages
-      // See https://www.gatsbyjs.com/docs/actions#createPage for more info
-      await gatsbyUtilities.actions.createPage({
-        path: getPagePath(pageNumber),
-
-        // use the blog post archive template as the page component
-        component: path.resolve(`./src/templates/blog-post-archive.js`),
-
-        // `context` is available in the template as a prop and
-        // as a variable in GraphQL.
-        context: {
-          // the index of our loop is the offset of which posts we want to display
-          // so for page 1, 0 * 10 = 0 offset, for page 2, 1 * 10 = 10 posts offset,
-          // etc
-          offset: index * postsPerPage,
-
-          // We need to tell the template how many posts to display too
-          postsPerPage,
-
-          nextPagePath: getPagePath(pageNumber + 1),
-          previousPagePath: getPagePath(pageNumber - 1),
-        },
-      })
-    })
-  )
-}
 /**
  * This function queries Gatsby's GraphQL server and asks for
  * All WordPress blog posts. If there are any GraphQL error it throws an error
@@ -135,84 +201,36 @@ async function createBlogPostArchive({ posts, gatsbyUtilities }) {
  * We're passing in the utilities we got from createPages.
  * So see https://www.gatsbyjs.com/docs/node-apis/#createPages for more info!
  */
-async function getPosts({ graphql, reporter }) {
-  const graphqlResult = await graphql(/* GraphQL */ `
-    query WpPosts {
-      # Query all WordPress blog posts sorted by date
-      allWpPost(sort: { fields: [date], order: DESC }) {
-        edges {
-          previous {
-            id
-          }
-
-          # note: this is a GraphQL alias. It renames "node" to "post" for this query
-          # We're doing this because this "node" is a post! It makes our code more readable further down the line.
-          post: node {
-            id
-            uri
-          }
-
-          next {
-            id
-          }
-        }
-      }
-    }
-  `)
-
-  if (graphqlResult.errors) {
-    reporter.panicOnBuild(
-      `There was an error loading your blog posts`,
-      graphqlResult.errors
-    )
-    return
-  }
-
-  return graphqlResult.data.allWpPost.edges
-}
-
-
-// gatsby-node.js
-
-// const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
-
-// exports.createResolvers = async (
-//   {
-//     actions,
-//     cache,
-//     createNodeId,
-//     createResolvers,
-//     store,
-//     reporter,
-//   },
-// ) => {
-//   const { createNode } = actions
-
-//   await createResolvers({
-//     WPGraphQL_MediaItem: {
-//       imageFile: {
-//         type: "File",
-//         async resolve(source) {
-//           let sourceUrl = source.sourceUrl
-
-//           if (source.mediaItemUrl !== undefined) {
-//             sourceUrl = source.mediaItemUrl
+// async function getCards({ graphql, reporter }) {
+//   const graphqlResult = await graphql(/* GraphQL */ `
+//     query allCards{
+//         allWpCard(
+//           sort: { order: DESC, fields: [ cdhCards___set___num ] },
+//           filter: { cdhCards: { token :  { ne: true } } }
+//       ){
+//           edges {
+//             previous {
+//               id
+//             }
+//             post: node {
+//               id
+//               title
+//             }
+//             next {
+//               id
+//             }
 //           }
+//         }
+//       }
+//   `)
 
-//           return await createRemoteFileNode({
-//             url: encodeURI(sourceUrl),
-//             store,
-//             cache,
-//             createNode,
-//             createNodeId,
-//             reporter,
-//           })
-//         },
-//       },
-//     },
-//   })
+//   if (graphqlResult.errors) {
+//     reporter.panicOnBuild(
+//       `There was an error loading your commander cards`,
+//       graphqlResult.errors
+//     )
+//     return
+//   }
+
+//   return graphqlResult.data.allWpCard.edges
 // }
-// exports.createPages = async ({ graphql, actions }) => {
-//   const { createPage } = actions
-
-// })

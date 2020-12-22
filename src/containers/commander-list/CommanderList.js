@@ -1,7 +1,7 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
 import { withStyles } from '@material-ui/styles';
-import { Grid, Container, TextField, ButtonGroup, Button, Divider, InputBase, IconButton, Card } from '@material-ui/core';
+import { Grid, Container, TextField, ButtonGroup, Button, Divider, InputBase, Link, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -13,7 +13,7 @@ import { BlogPost } from 'components';
 
 
 
-import useCommanders from './useCommanders';
+import useCommanders from '../../utils/useCommanders';
 import ColorSelector from './ColorSelector/ColorSelector';
 
 
@@ -40,6 +40,19 @@ const CommanderList = ({ classes }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const[searchResult,setSearchResult] = useState([]);
   const { allWpCard } = useCommanders();
+  
+
+
+  const convertToSlug = (Text) =>{
+    if(Text){
+      return Text
+        .toLowerCase()
+        .replace(/[^\w ]+/g,'')
+        .replace(/ +/g,'-')
+        ;
+    }
+    
+  }
 
 
   const handleSearch = (event)=>{
@@ -74,9 +87,11 @@ const CommanderList = ({ classes }: Props) => {
   const filteredCommanders= ()=>{
 
     let sourceList = (searchResult && searchResult.length > 0 ) ? searchResult: allWpCard.edges;
-
+    // generate list of all "related" cards
     const getRelatedList = ()=>{
       let relatedList = sourceList.filter(({node})=>{ 
+        // console.log()
+
         if(node.cdhCards.related){
           return node.cdhCards.related
         }
@@ -238,8 +253,12 @@ const CommanderList = ({ classes }: Props) => {
       {filteredCommanders().length > 0 && (
         <Grid container spacing={1} className={classes.grid}>
         {filteredCommanders().map(( card, index) => (
-          <Grid key={index} container item xs={12} sm={6} md={3} >
-            <CommanderCard card={card}/>
+          <Grid key={index} container item xs={12} sm={6} md={3}  justify='center' alignItems='center'>
+
+            <Link href={card.flipCard ? convertToSlug(card.card1.title) : convertToSlug(card.title)}>
+              <CommanderCard card={card}/>
+            </Link>
+            
           </Grid>
         ))}
 

@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Card, CardActionArea, CardContent } from '@material-ui/core';
 
+
 import Img from 'gatsby-image';
 
 import styles from './style';

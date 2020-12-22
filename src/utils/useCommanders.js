@@ -1,20 +1,9 @@
-import { useStaticQuery, graphql } from 'gatsby';
+import { useStaticQuery,  graphql } from 'gatsby';
 
-// const FluidImageFragment = `
-//     fragment GatsbyImageSharpFluid_tracedSVG on ImageSharpFluid {
-//         tracedSVG
-//         aspectRatio
-//         src
-//         srcSet
-//         sizes
-//     }
-// `;
-// ...GatsbyContentfulFluid
 const useCommanders = (params) => {
 
-  // (
-  //   sort: { order: DESC, fields: [id] },
-  // ) 
+
+
   const data = useStaticQuery(
     graphql`
       query allCards{
@@ -68,9 +57,7 @@ const useCommanders = (params) => {
                         # explorer, but you can use it in your site
                         ...GatsbyImageSharpFluid_withWebp
                       }
-                      gatsbyImage {
-                        imageData
-                      }
+                      gatsbyImageData
                     }
                   }
                 }
@@ -85,4 +72,7 @@ const useCommanders = (params) => {
 };
 
 export default useCommanders;
+
+
+
 

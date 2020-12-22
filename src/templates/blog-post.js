@@ -1,126 +1,114 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
-import Image from "gatsby-image"
-// import parse from "html-react-parser"
+import { withStyles } from '@material-ui/styles';
 
-// We're using Gutenberg so we need the block styles
-// import "@wordpress/block-library/build-style/style.css"
-// import "@wordpress/block-library/build-style/theme.css"
+// import { Link, graphql } from "gatsby"
+import Image from "gatsby-image"
+import { CommanderCard } from 'components';
+import { Container, Grid, Card, CardContent } from '@material-ui/core';
+// import useCommanders from '../utils/useCommanders';
 
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
-const BlogPostTemplate = ({ data: { previous, next, post } }) => {
-  const featuredImage = {
-    fluid: post.featuredImage?.node?.localFile?.childImageSharp?.fluid,
-    alt: post.featuredImage?.node?.alt || ``,
+import styles from './style';
+
+
+type Props = {
+  classes: Object
+};
+
+
+
+const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: Props) => {
+  // console.log(cardData, related, tokens)
+  const card = related.length > 0 ? { flipCard : true, card1: cardData, card2: related[0]} : cardData;
+
+
+  const renderCard = (card)=>{    
+    return(      
+      <Card>
+        <CardContent>
+
+          <h1 itemProp="headline">{card.title}</h1>
+
+          {card.cdhCards.prop.manacost}
+          <br></br>
+          <div>
+            {card.cdhCards.prop.type}
+          </div>
+          <div dangerouslySetInnerHTML={{__html: card.cdhCards.text}}>
+          </div>
+          <p>{card.cdhCards.prop.pt}</p>
+        </CardContent>
+      </Card>
+    )
   }
 
+
+ 
   return (
     <Layout>
-      <SEO title={post.title} description={post.excerpt} />
-
-      <article
-        className="blog-post"
-        itemScope
-        itemType="http://schema.org/Article"
-      >
-        <header>
-          <h1 itemProp="headline">{post.title}</h1>
-
-          <p>{post.date}</p>
-
-          {/* if we have a featured image for this post let's display it */}
-          {featuredImage?.fluid && (
-            <Image
-              fluid={featuredImage.fluid}
-              alt={featuredImage.alt}
-              style={{ marginBottom: 50 }}
-            />
-          )}
-        </header>
-
-        {!!post.content && (
-          <section itemProp="articleBody">{post.content}</section>
-        )}
-
-        <hr />
-
-
-      </article>
-
-      <nav className="blog-post-nav">
-        <ul
-          style={{
-            display: `flex`,
-            flexWrap: `wrap`,
-            justifyContent: `space-between`,
-            listStyle: `none`,
-            padding: 0,
-          }}
+      <SEO title={card.title || `${card.card1.title} // ${card.card2.title}`} />
+      
+        <article
+          itemScope
+          itemType="http://schema.org/Article"
         >
-          <li>
-            {previous && (
-              <Link to={previous.uri} rel="prev">
-                ← {previous.title}
-              </Link>
-            )}
-          </li>
+          <Container className={classes.container} >
+            <Grid container>
+              <Grid item xs={12} md={3}>
+                <CommanderCard card={card}></CommanderCard>
+              </Grid>
+              
+              {related.length == 0 && (
+                <Grid item xs={12} md={4}>
+                  {renderCard(card)}
+                </Grid>
+              )}
 
-          <li>
-            {next && (
-              <Link to={next.uri} rel="next">
-                {next.title} →
-              </Link>
-            )}
-          </li>
-        </ul>
-      </nav>
+              {related.length > 0 && (
+                <Grid item xs={12} md={4}>
+                  {renderCard(card.card1)}
+                </Grid>
+              )}
+              
+              {related.length > 0 && (
+                <Grid item xs={12} md={4}>
+                  {renderCard(card.card2)}
+                </Grid>
+              )}
+              
+              {/* <pre>
+                <code>
+                {`<card>
+                <name>${card.title}</name>
+                  <text><![CDATA[${card.cdhCards.text}]]></text>
+                  <tablerow>2</tablerow>
+                  <set rarity="${card.cdhCards.set.rarity}" uuid="${card.cdhCards.set.uuid}" num="${card.cdhCards.set.num}" muid="${card.cdhCards.set.muid}" picurl="${card.cdhCards.set.picurl}">CDH</set>
+                  <related>${card.cdhCards.related}</related>
+                  <prop>
+                    <layout>normal</layout>
+                    <side>${card.cdhCards.prop.side}</side>
+                    <type>${card.cdhCards.prop.type}</type>
+                    <maintype>${card.cdhCards.prop.maintype}</maintype>
+                    <manacost>${card.cdhCards.prop.manacost}</manacost>
+                    <cmc>${card.cdhCards.prop.cmc}</cmc>
+                    <colors>${card.cdhCards.prop.colors}</colors>
+                    <coloridentity>${card.cdhCards.prop.coloridentity}</coloridentity>
+                    <pt>${card.cdhCards.prop.pt}</pt>
+                    <format-commander>legal</format-commander>
+                  </prop>
+                </card> `}
+                </code>
+              </pre> */}
+
+            </Grid>
+            
+
+          </Container>
+        </article>
     </Layout>
   )
 }
 
-export default BlogPostTemplate
-
-export const pageQuery = graphql`
-  query BlogPostById(
-    # these variables are passed in via createPage.pageContext in gatsby-node.js
-    $id: String!
-    $previousPostId: String
-    $nextPostId: String
-  ) {
-    # selecting the current post by id
-    post: wpPost(id: { eq: $id }) {
-      id
-      excerpt
-      content
-      title
-      date(formatString: "MMMM DD, YYYY")
-
-      featuredImage {
-        node {
-          altText
-          localFile {
-            childImageSharp {
-              fluid(maxWidth: 1000, quality: 100) {
-                ...GatsbyImageSharpFluid_tracedSVG
-              }
-            }
-          }
-        }
-      }
-    }
-
-    # this gets us the previous post by id (if it exists)
-    previous: wpPost(id: { eq: $previousPostId }) {
-      uri
-      title
-    }
-
-    # this gets us the next post by id (if it exists)
-    next: wpPost(id: { eq: $nextPostId }) {
-      uri
-      title
-    }
-  }
-`
+export default withStyles(styles)(BlogPostTemplate)

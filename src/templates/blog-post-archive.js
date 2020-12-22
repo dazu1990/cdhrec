@@ -25,6 +25,7 @@ const BlogIndex = ({
   return (
     <Layout isHomePage>
       <SEO title="All posts" />
+      <p>THIS IS THE BLOG PAGE</p>
 
       <ol style={{ listStyle: `none` }}>
         {posts.map(post => {
