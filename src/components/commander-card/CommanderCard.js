@@ -75,20 +75,24 @@ const CommanderCard = ({ classes, card }: Props) => {
       <div className={classes.cardPartners}>
         <Card className={classes.cardFront}>
           <CardActionArea>
+            {card.card1.featuredImage && (
             <Img 
             style={{ width: cardWidth }} 
             fluid={card.card1.featuredImage.node.localFile.childImageSharp.fluid} 
             alt={card.card1.title}/>
+            )}
             {noImageCard(card.card1)}
 
           </CardActionArea>
         </Card>
         <Card className={classes.cardBack}>
           <CardActionArea>
+          {card.card2.featuredImage && (
             <Img 
             style={{ width: cardWidth }} 
             fluid={card.card2.featuredImage.node.localFile.childImageSharp.fluid}  
             alt={card.card2.title}/>
+          )}
             {noImageCard(card.card2)}
 
           </CardActionArea>

@@ -1,9 +1,13 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
 import { withStyles } from '@material-ui/styles';
-import { Grid, Container, TextField, ButtonGroup, Button, Divider, InputBase, Link, IconButton, Card } from '@material-ui/core';
+import { AppBar, Toolbar, Grid, GridList, GridListTile, GridListTileBar ,Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SearchIcon from '@material-ui/icons/Search';
+import Fab from '@material-ui/core/Fab';
+
+import Typography from '@material-ui/core/Typography';
+
 
 
 
@@ -27,6 +31,9 @@ const CommanderList = ({ classes }: Props) => {
   
   const[colorFilter,setColorFilter] = useState("");
 
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+
+
   const[descAsc,setDescAsc] = useState(1);
   const[alphabetical,setAlphabetical] = useState(1);
 
@@ -40,6 +47,16 @@ const CommanderList = ({ classes }: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const[searchResult,setSearchResult] = useState([]);
   const { allWpCard } = useCommanders();
+  // const[commanderList, setCommanderList] = useState(allWpCard.edges);
+
+
+  const maxCards = 100;
+  const[currentChunk,setCurrentChunk] = useState(maxCards);
+
+
+  // const[maxCardsChunks,setMaxCardsChunks] = useState(1);
+
+
   
 
 
@@ -54,8 +71,46 @@ const CommanderList = ({ classes }: Props) => {
     
   }
 
+  const colorToWords = (color) => {
+    let filter = Array.from(color);
+    let newString = '';
+
+    filter.forEach((colorLetter,index) => {
+      if(index !== 0){
+        newString = newString + ' ';
+      }
+      switch(colorLetter){
+        case 'C':
+          newString = newString + 'colorless'
+          break;
+        case 'W':
+          newString = newString + 'white';
+          break;
+        case 'B':
+          newString = newString + 'black';
+          break;
+        case 'U':
+          newString = newString + 'blue';
+          break;
+        case 'R':
+          newString = newString + 'red';
+          break;
+        case 'G':
+          newString = newString + 'green';
+          break;
+        default:
+          newString = newString + color;
+          break;
+      }
+      
+    });
+    return newString;
+  }
+
 
   const handleSearch = (event)=>{
+    // setMaxCards(100)
+
     if(event.target.value.length > 2){
       setSearchQuery(event.target.value)
       let results = fuse.search(searchQuery);
@@ -65,9 +120,15 @@ const CommanderList = ({ classes }: Props) => {
       });
 
       setSearchResult(results)
+      // setMaxCardsChunks(results/maxCards)
+
     }else if (event.target.value.length === 0){
       setSearchResult("")
+      // setMaxCardsChunks(allWpCard.edges/maxCards)
+
     }
+    // setMaxCards(100)
+
 
     // event.preventDefault();
 
@@ -75,17 +136,38 @@ const CommanderList = ({ classes }: Props) => {
   }
 
   const backToTop = (event)=>{
-    const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top-anchor');
+    const anchor = (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
+    // (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
     if (anchor) {
-      anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      anchor.scrollIntoView();
     }
   }
+  // let toggle = true;
+  const handleScroll = () => {
+    // console.log(commanderList)
+    const currentScrollTop = document.getElementById('grid').scrollTop;
+    const innerHeight = document.getElementById('grid').scrollHeight
 
-  
+    setLastScrollTop(currentScrollTop);
+
+    
+
+    // if(lastScrollTop > (innerHeight * 0.9)){
+    //   console.log('scrolllimit')
+
+    //   setCurrentChunk(currentChunk + 25)
+    // }
+
+  }
+
+  useEffect(() => {
+    document.getElementById('grid').addEventListener('scroll', handleScroll);
+  }, [lastScrollTop ]);
+
+
 
   // This filters by color
   const filteredCommanders= ()=>{
-
     let sourceList = (searchResult && searchResult.length > 0 ) ? searchResult: allWpCard.edges;
     // generate list of all "related" cards
     const getRelatedList = ()=>{
@@ -156,6 +238,7 @@ const CommanderList = ({ classes }: Props) => {
       }else {
         return finalReturn();
       }
+      
     });
     newList = newList.filter(function (el) {
       // removed null items
@@ -176,6 +259,13 @@ const CommanderList = ({ classes }: Props) => {
 
     // set order by muid
     newList = descAsc ? newList : newList.reverse();
+    // (newList/maxCards)
+    // setMaxCards(100)
+
+    // if(maxCardsChunks !== (newList/maxCards)){
+      // console.log('here')
+      // setMaxCardsChunks(newList/maxCards)
+    // }
 
     return (newList)
   }
@@ -198,7 +288,12 @@ const CommanderList = ({ classes }: Props) => {
 
   const fuse = new Fuse(flattenedList, searchOptions);
 
+  // setCommanderList(filteredCommanders())
 
+  // const commanderList = filteredCommanders();
+
+  
+  // const commanderList = []
   return (
     <Container className={classes.container} >
       <Card style={{ padding: 10 }}>
@@ -208,34 +303,41 @@ const CommanderList = ({ classes }: Props) => {
           justify="space-between"
           alignItems="center"
           id="back-to-top-anchor"
+
         >
-          <Grid item>
+          <Grid container xs={12} md={3} justify="center">
             <form className={classes.searchbar} noValidate autoComplete="off">
               <TextField 
                 id="standard-basic" 
                 name="search"
                 label="Search Commanders" 
-                placeholder="Commander Name"
+                placeholder='"Kard, The Seeking"'
                 onChange={handleSearch}
                 InputProps={{
                   startAdornment: <SearchIcon></SearchIcon>,
+                }}
+                InputLabelProps={{
+                  focused: 'true',
+
                 }}
                 variant="outlined"
               />
             </form>
           </Grid>
-          
-          <Grid item>
-            <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
+          <Grid container xs={12} md={6} justify="center">
+            <Grid item xs={8} md={12}>
+              <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
+            </Grid>
+              
           </Grid>
           
-          <Grid item>
+          <Grid container xs={12} md={3} justify="space-around">
             <ButtonGroup disableElevation variant="contained" >
               <Button onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
               {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
             </ButtonGroup>
-            
           </Grid>
+
         </Grid>
 
       </Card>
@@ -247,30 +349,41 @@ const CommanderList = ({ classes }: Props) => {
         alignItems="center"
         className={classes.vertSpace}
       >
-        <div>showing {filteredCommanders().length} commanders from {descAsc ? 'new to old' : 'old to new'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``} out of a total {flattenedList.length}</div>
+        <div>showing {colorFilter ? `${filteredCommanders().length} ${colorToWords(colorFilter)}` : 'all' } commanders from {descAsc ? 'new to old' : 'old to new'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (
-        <Grid container spacing={1} className={classes.grid}>
-        {filteredCommanders().map(( card, index) => (
-          <Grid key={index} container item xs={12} sm={6} md={3}  justify='center' alignItems='center'>
+        <Grid container className={classes.grid} id="grid">
+          
 
-            <Link href={card.flipCard ? convertToSlug(card.card1.title) : convertToSlug(card.title)}>
-              <CommanderCard card={card}/>
-            </Link>
-            
-          </Grid>
-        ))}
-
-      </Grid>
-      )}
+          {filteredCommanders().map(( card, index) => {
+            if(index < currentChunk){
+              return (
+                <Grid item key={index} xs={12} sm={6} md={3} justify='center' alignItems='center' id={`card_${index}`}>
       
+                  <Link href={card.flipCard ? convertToSlug(card.card1.title) : convertToSlug(card.title)}>
+                    <CommanderCard card={card}/>
+                  </Link>
+                  
+                </Grid>
+              )
+            }
+          })}
 
+          {currentChunk < filteredCommanders().length &&(
+            <Grid item xs={12} justify='center' alignItems='center' className={classes.loadmore} style={{ height: 'auto' }}> 
+              <Button variant="contained" size="large" onClick={()=>setCurrentChunk(currentChunk + 100)}>Load More</Button>
+            </Grid>
+          )}
+        </Grid>
+      )} 
       <div className={classes.goUp}>
-          <IconButton onClick={backToTop} variant="contained" className={classes.goUpBtn}> 
-            <KeyboardArrowUpIcon fontSize="large"></KeyboardArrowUpIcon> 
-          </IconButton>
+        <IconButton onClick={backToTop} variant="contained" className={classes.goUpBtn}> 
+          <KeyboardArrowUpIcon fontSize="large"></KeyboardArrowUpIcon> 
+        </IconButton>
       </div>
+
+      
     </Container>
   );
 };

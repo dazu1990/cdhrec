@@ -14,6 +14,12 @@ const styles = ({ typography }) => ({
   icon_inner:{
     width: '4rem',
     height: '4rem'
+  },
+  cardcopy:{
+    padding: '0.75rem 0',
+    '@media (max-width: 768px)': {
+      textAlign: 'center'
+    }
   }
 });
 

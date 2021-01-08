@@ -1,12 +1,11 @@
 import React, {useState, useEffect}  from 'react';
 import 'mana-font';
 import { withStyles } from '@material-ui/core/styles';
-import { green } from '@material-ui/core/colors';
+import { green, grey, blue, black, red } from '@material-ui/core/colors';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
+
 // import Favorite from '@material-ui/icons/Favorite';
 // import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 
@@ -17,6 +16,36 @@ type Props = {
   classes: Object,
   data: Object
 };
+const RedCheckbox = withStyles({
+  root: {
+    color: red[400],
+    '&$checked': {
+      color: red[600],
+    },
+  },
+  checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+
+const BlueCheckbox = withStyles({
+  root: {
+    color: blue[400],
+    '&$checked': {
+      color: blue[600],
+    },
+  },
+  checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+
+const GreenCheckbox = withStyles({
+  root: {
+    color: green[400],
+    '&$checked': {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Checkbox color="default" {...props} />);
+
 
 const ColorSelector = ({ classes, data }: Props) => {
   const [checkedState, setCheckedState] = useState({
@@ -35,25 +64,17 @@ const ColorSelector = ({ classes, data }: Props) => {
     setCheckedState({ ...checkedState, [event.target.name]: event.target.checked });
     let tempFilter = newFilter;
 
-    if(event.target.value === "C"){
-      tempFilter = checkedState.C === true  ? ["C"] : [];
+  // add color to filter if it isn't already included
+    if(newFilter.includes(event.target.value)){
+      let removeMe = newFilter.indexOf(event.target.value);
+      tempFilter.splice(removeMe,1);
     }else{
-      if(newFilter.includes(event.target.value)){
-        let removeMe = newFilter.indexOf(event.target.value);
-        tempFilter.splice(removeMe,1);
-      }else{
-        tempFilter.push(event.target.value);
-      }
-
-      if(newFilter.includes("C")){
-        let removeMe = newFilter.indexOf("C");
-        tempFilter.splice(removeMe,1);
-      }
-
+      tempFilter.push(event.target.value);
     }
     setNewFilter(tempFilter)
     // set colorFilter state in CommanderList
     data.setColorFilter(newFilter.join(""))
+
   };
 
   // useEffect(() => {
@@ -62,9 +83,8 @@ const ColorSelector = ({ classes, data }: Props) => {
   // }, [newFilter]);
 
   return (
-    <FormGroup row>
-
-    <FormControlLabel
+    <FormGroup row >
+      <FormControlLabel
         control={
             <Checkbox 
               disabled={checkedState.W || checkedState.U || checkedState.B || checkedState.R || checkedState.G } 
@@ -79,78 +99,78 @@ const ColorSelector = ({ classes, data }: Props) => {
         label="Colorless"
         labelPlacement="bottom"
       />
-      {/* { checkedState.C == false &&( */}
-        <FormControlLabel
-          control={
-            <Checkbox
-              disabled={checkedState.C} 
-              icon={<i className={`ms ms-w ms-cost`}></i>} 
-              checkedIcon={<i className={`ms ms-w`}></i>} 
-              name="W" 
-              value="W"
-              color="primary"
-              onChange={handleChange}
-            />
-          }
-          label="White"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              disabled={checkedState.C} 
-              icon={<i className={`ms ms-u ms-cost`}></i>} 
-              checkedIcon={<i className={`ms ms-u`}></i>} 
-              name="U" 
-              value="U"
-              onChange={handleChange}
-            />
-          }
-          label="Blue"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox 
-              disabled={checkedState.C} 
-              icon={<i className={`ms ms-b ms-cost`}></i>} 
-              checkedIcon={<i className={`ms ms-b`}></i>} 
-              name="B"
-              value="B"
-              onChange={handleChange}
-            />}
-          label="Black"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox 
-              disabled={checkedState.C} 
-              icon={<i className={`ms ms-r ms-cost`}></i>} 
-              checkedIcon={<i className={`ms ms-r`}></i>} 
-              name="R" 
-              value="R"
-              onChange={handleChange}
-            />
-          }
-          label="Red"
-          labelPlacement="bottom"
-        />
-        <FormControlLabel
-          control={
-            <Checkbox 
-              disabled={checkedState.C} 
-              icon={<i className={`ms ms-g ms-cost`}></i>}
-              checkedIcon={<i className={`ms ms-g`}></i>} 
-              name="G" 
-              value="G"
-              onChange={handleChange}
-            />
-          }
-          label="Green"
-          labelPlacement="bottom"
-        />
-      {/* )} */}
+      <FormControlLabel
+        control={
+          <Checkbox
+            disabled={checkedState.C} 
+            icon={<i className={`ms ms-w ms-cost`}></i>} 
+            checkedIcon={<i className={`ms ms-w`}></i>} 
+            name="W" 
+            value="W"
+            color='primary'
+            onChange={handleChange}
+          />
+        }
+        label="White"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={
+          <BlueCheckbox
+            disabled={checkedState.C} 
+            icon={<i className={`ms ms-u ms-cost`}></i>} 
+            checkedIcon={<i className={`ms ms-u`}></i>} 
+            name="U" 
+            value="U"
+            onChange={handleChange}
+          />
+        }
+        label="Blue"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox 
+            disabled={checkedState.C} 
+            icon={<i className={`ms ms-b ms-cost`}></i>} 
+            checkedIcon={<i className={`ms ms-b`}></i>} 
+            name="B"
+            value="B"
+            color="primary"
+            onChange={handleChange}
+          />}
+        label="Black"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={
+          <RedCheckbox 
+            disabled={checkedState.C} 
+            icon={<i className={`ms ms-r ms-cost`}></i>} 
+            checkedIcon={<i className={`ms ms-r`}></i>} 
+            name="R" 
+            value="R"
+            onChange={handleChange}
+          />
+        }
+        label="Red"
+        labelPlacement="bottom"
+      />
+      <FormControlLabel
+        control={
+          <GreenCheckbox 
+            disabled={checkedState.C} 
+            icon={<i className={`ms ms-g ms-cost`}></i>}
+            checkedIcon={<i className={`ms ms-g`}></i>} 
+            name="G" 
+            value="G"
+            onChange={handleChange}
+          />
+        }
+        label="Green"
+        labelPlacement="bottom"
+      />
+
     </FormGroup>
 
   );

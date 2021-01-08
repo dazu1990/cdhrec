@@ -32,6 +32,9 @@ muiTheme.overrides = {
     colorPrimary: {
       color: muiTheme.palette.primary.main,
     },
+    colorMana: {
+      color: muiTheme.palette.mana_red.main,
+    },
     h1: {
       fontSize: 10,
       [muiTheme.breakpoints.down('sm')]: {

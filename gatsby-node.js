@@ -98,7 +98,6 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
   `)
-  console.log('THIS IS IT ====  > ', result, result.data, result.allWpCard)
   result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
 
     let relations = []

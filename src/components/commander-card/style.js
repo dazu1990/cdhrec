@@ -16,7 +16,6 @@ const styles = ({ typography }) => ({
     '@media (max-width: 768px)': {
       marginTop: '25px',
       marginBottom: '10px',
-      background: 'red'
     }
 
   },

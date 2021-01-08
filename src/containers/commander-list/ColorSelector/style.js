@@ -12,3 +12,4 @@ const styles = ({ typography }) => ({
 });
 
 export default styles;
+

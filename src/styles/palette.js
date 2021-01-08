@@ -18,13 +18,28 @@ const palette = {
     dark: '#00a7bc',
     contrastText: '#fff',
   },
-  mana: {
+  green: {
     colorless: '#eee',
     white: '#fff',
     blue: '#0000ff',
     black: '#000',
     red: '#ff0000',
     green: '#00ff00',
+  },
+  mana_colorless: {
+    light: '#eee',
+    main: '#eee',
+    dark: '#eee',
+  },
+  mana_red: {
+    light: '#ff0000',
+    main: '#ff0000',
+    dark: '#ff0000',
+  },
+  mana_white: {
+    light: '#fff',
+    main: '#fff',
+    dark: '#fff',
   }
 
 };

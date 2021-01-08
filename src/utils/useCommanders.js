@@ -3,7 +3,6 @@ import { useStaticQuery,  graphql } from 'gatsby';
 const useCommanders = (params) => {
 
 
-
   const data = useStaticQuery(
     graphql`
       query allCards{
