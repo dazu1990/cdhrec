@@ -10,6 +10,7 @@
     "@material-ui/styles": "^4.7.1",
     "cache-manager-fs-hash": "^0.0.9",
     "classnames": "^2.2.6",
+    "cross-env": "^7.0.3",
     "fuse.js": "^6.4.3",
     "gatsby": "^2.24.84",
     "gatsby-cli": "^2.12.117",
