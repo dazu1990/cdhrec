@@ -229,14 +229,30 @@ const CommanderList = ({ classes }: Props) => {
         }
       }
 
-      if(colorFilter && colorFilter.length > 0 ){
-        // does the node pass the colour filter?
-        if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
+      if(approvedFilter){
+        if(colorFilter && colorFilter.length > 0 ){
+          // does the node pass the colour filter?
+          if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
+            return finalReturn();
+          }
+        }else {
           return finalReturn();
         }
-      }else {
-        return finalReturn();
+      }else{
+        if(node.cdhCards.status === 'Approved'){
+          if(colorFilter && colorFilter.length > 0 ){
+            // does the node pass the colour filter?
+            if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
+              return finalReturn();
+            }
+          }else {
+            return finalReturn();
+          }
+        }
+        
       }
+
+      
       
     });
     newList = newList.filter(function (el) {

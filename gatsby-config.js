@@ -163,6 +163,12 @@ module.exports = {
     },
 
     'gatsby-plugin-netlify',
-    'gatsby-plugin-sitemap'
+    'gatsby-plugin-sitemap',
+    {
+      resolve: `gatsby-plugin-google-adsense`,
+      options: {
+        publisherId: `ca-pub-8937023691503080`
+      },
+    }
   ],
 };
