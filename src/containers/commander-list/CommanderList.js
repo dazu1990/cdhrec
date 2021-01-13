@@ -36,8 +36,10 @@ const CommanderList = ({ classes }: Props) => {
 
   const[descAsc,setDescAsc] = useState(1);
   const[alphabetical,setAlphabetical] = useState(1);
+  const[approvedFilter,setApprovedFilter] = useState(1);
 
-  const descAscDisplay = !descAsc ? `new > old` : `old > new`;
+
+  const descAscDisplay = !descAsc ? `new to old` : `old to new`;
   const alphabeticalDisplay = !alphabetical ? `A > Z` : `Z > A`;
   // const activeOrder = ()=>{
   //   if(descAsc && )
@@ -55,9 +57,6 @@ const CommanderList = ({ classes }: Props) => {
 
 
   // const[maxCardsChunks,setMaxCardsChunks] = useState(1);
-
-
-  
 
 
   const convertToSlug = (Text) =>{
@@ -267,6 +266,8 @@ const CommanderList = ({ classes }: Props) => {
       // setMaxCardsChunks(newList/maxCards)
     // }
 
+    console.log(newList)
+
     return (newList)
   }
 
@@ -296,7 +297,7 @@ const CommanderList = ({ classes }: Props) => {
   // const commanderList = []
   return (
     <Container className={classes.container} >
-      <Card style={{ padding: 10 }}>
+      <Card className={classes.toolbar} >
         <Grid 
           container
           direction="row"
@@ -305,7 +306,7 @@ const CommanderList = ({ classes }: Props) => {
           id="back-to-top-anchor"
 
         >
-          <Grid container xs={12} md={3} justify="center">
+          <Grid container xs={12} md={3} justify="center" className={classes.mobileSpacer}>
             <form className={classes.searchbar} noValidate autoComplete="off">
               <TextField 
                 id="standard-basic" 
@@ -324,16 +325,18 @@ const CommanderList = ({ classes }: Props) => {
               />
             </form>
           </Grid>
-          <Grid container xs={12} md={6} justify="center">
+          <Grid container xs={12} md={6} justify="center" className={classes.mobileSpacer} >
             <Grid item xs={8} md={12}>
               <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
             </Grid>
               
           </Grid>
           
-          <Grid container xs={12} md={3} justify="space-around">
+          <Grid container xs={12} md={3} justify="space-around" className={classes.mobileSpacer}>
             <ButtonGroup disableElevation variant="contained" >
               <Button onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
+              <Button onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Beta'}</Button>
+
               {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
             </ButtonGroup>
           </Grid>
@@ -359,7 +362,7 @@ const CommanderList = ({ classes }: Props) => {
           {filteredCommanders().map(( card, index) => {
             if(index < currentChunk){
               return (
-                <Grid item key={index} xs={12} sm={6} md={3} justify='center' alignItems='center' id={`card_${index}`}>
+                <Grid container key={index} xs={12} sm={6} md={3} justify='center' alignItems='center' id={`card_${index}`}>
       
                   <Link href={card.flipCard ? convertToSlug(card.card1.title) : convertToSlug(card.title)}>
                     <CommanderCard card={card}/>
@@ -372,7 +375,7 @@ const CommanderList = ({ classes }: Props) => {
 
           {currentChunk < filteredCommanders().length &&(
             <Grid item xs={12} justify='center' alignItems='center' className={classes.loadmore} style={{ height: 'auto' }}> 
-              <Button variant="contained" size="large" onClick={()=>setCurrentChunk(currentChunk + 100)}>Load More</Button>
+              <Button variant="contained" size="large" className={classes.loadmoreBtn} onClick={()=>setCurrentChunk(currentChunk + 100)}>Load More</Button>
             </Grid>
           )}
         </Grid>
@@ -382,6 +385,21 @@ const CommanderList = ({ classes }: Props) => {
           <KeyboardArrowUpIcon fontSize="large"></KeyboardArrowUpIcon> 
         </IconButton>
       </div>
+
+
+      {colorFilter && (
+        <Grid container xs={12} justify='center' alignItems='center' className={classes.colorBar} >
+          {colorFilter.split("").map((color, colorIndex)=>(
+            <Grid item style={{width: `${100/colorFilter.length}%`}} className={`${classes[`color_${color}`]} ${classes.colorInner}`}></Grid>
+          ))}
+
+        </Grid>
+      )}
+      
+
+
+
+
 
       
     </Container>

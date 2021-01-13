@@ -1,6 +1,6 @@
 const palette = {
   background: {
-    default: '#fff',
+    default: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)',
   },
   text: {
     primary: '#17252A',

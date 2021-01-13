@@ -3,6 +3,8 @@ const styles = ({ app, breakpoints, typography }) => ({
     html: {
       [breakpoints.up('xl')]: {
         fontSize: '0.833333vw !important',
+        
+        // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
       },
     },
   },
@@ -28,11 +30,16 @@ const styles = ({ app, breakpoints, typography }) => ({
     margin: 'auto',
     // maxWidth: app.maxWidth,
     width: '100%',
-    // background: '#EEE',
+    // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
+
   },
   background: {
     backgroundImage: ``,
     backgroundSize: 'cover',
+    background: '#EEE',
+
+    // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
+    // backgroundPosition: 
   },
 });
 

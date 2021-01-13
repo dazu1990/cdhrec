@@ -26,6 +26,7 @@ const useCommanders = (params) => {
                   pt
                   type
                 }
+                status
                 name
                 formatCommander
                 related

@@ -71,7 +71,7 @@ const About = () => {
           >
             {content.resources.links.map((resource)=>(
               <Link href={resource.link} target="_blank">
-                <ListItem alignItems="flex-start" button style={{border: '1px solid lightgray', marginBottom: '10px'}}>
+                <ListItem alignItems="flex-start" button style={{backgroundColor: 'white', border: '1px solid lightgray', marginBottom: '10px'}}>
                 <ListItemAvatar>
                   <Avatar alt="Remy Sharp" src={resource.logo} style={{backgroundColor: resource.color}}/>
                 </ListItemAvatar>

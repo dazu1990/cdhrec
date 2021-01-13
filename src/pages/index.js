@@ -5,7 +5,7 @@ import { Welcome, CommanderList } from 'containers';
 
 const IndexPage = () => (
   <Layout>
-    <SEO title='Home' />
+    <SEO title='CDHrec'/>
     <Welcome />
     <CommanderList/>
     <Footer />

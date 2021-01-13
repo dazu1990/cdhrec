@@ -5,7 +5,8 @@ const styles = ({ typography }) => ({
     fontFamily: 'Playfair Display SC'
   },
   tagline:{
-      fontSize: '1.25rem'
+    fontSize: '1.25rem',
+    lineHeight: '1.4'
   },
   icon:{
       width: '6rem',

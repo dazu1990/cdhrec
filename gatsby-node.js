@@ -58,6 +58,7 @@ exports.createPages = async ({ graphql, actions }) => {
                   pt
                   type
                 }
+                status
                 name
                 formatCommander
                 related
