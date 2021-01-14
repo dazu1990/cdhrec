@@ -1,9 +1,13 @@
 const styles = ({ typography }) => ({
   container: {
     marginBottom: '2rem',
+    position: 'relative'
   },
   cardImg:{
     borderRadius: '12px',
+    // zIndex: '0',
+    // top: '0px',
+    // position: 'absolute'
   },
   cardBodyCopy:{
     fontSize: '0.7rem'
@@ -48,6 +52,19 @@ const styles = ({ typography }) => ({
     margin: '1rem auto 0',
     fontSize: '0.75rem',
     textAlign: 'center'
+  },
+  cardBanner:{
+    top: '0px',
+    padding: '0.25rem',
+    width: '100%',
+    textDecoration: 'none',
+    fontSize: '0.8rem',
+    display: 'flex',
+    justifyContent: 'center',
+    background: 'grey',
+    
+    // zIndex: '2'
+
   }
   
 

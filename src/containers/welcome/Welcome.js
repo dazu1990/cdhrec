@@ -49,12 +49,8 @@ const Welcome = ({classes}: Props) => (
         {/* style={{ padding: 10, height: '100%' }} */}
                 <Grid container style={{ height: '100%' }}>
                   <Grid item  xs={6} style={{ padding: 10, height: '100%'  }}>
-                    {/* <Link href="https://mtg.design/" > */}
-                      
 
-                    
                     <Card style={{ height: '100%' }}>
-                      {/* <CardActionArea style={{ height: '100%' }}> */}
                         
                         <Grid container style={{ height: '100%', padding: '10px 20px' }} justify='center' alignItems='center'>
                           
@@ -71,12 +67,7 @@ const Welcome = ({classes}: Props) => (
                           </Link>
 
                         </Grid>
-                      {/* </CardActionArea> */}
                     </Card>
-                      
-                    {/* </Link> */}
-                      
-
                     
                   </Grid>
                   <Grid item  xs={6} style={{ padding: 10, height: '100%'  }}>

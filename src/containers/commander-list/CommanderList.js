@@ -122,6 +122,7 @@ const CommanderList = ({ classes }: Props) => {
       // setMaxCardsChunks(results/maxCards)
 
     }else if (event.target.value.length === 0){
+      setSearchQuery(event.target.value)
       setSearchResult("")
       // setMaxCardsChunks(allWpCard.edges/maxCards)
 
@@ -368,7 +369,7 @@ const CommanderList = ({ classes }: Props) => {
         alignItems="center"
         className={classes.vertSpace}
       >
-        <div>showing {colorFilter ? `${filteredCommanders().length} ${colorToWords(colorFilter)}` : 'all' } commanders from {descAsc ? 'new to old' : 'old to new'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
+        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders from {descAsc ? 'newest to oldest' : 'oldest to newest'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (

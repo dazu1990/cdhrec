@@ -56,12 +56,16 @@ const CommanderCard = ({ classes, card }: Props) => {
   container
   >
 
+
     {card && !card.flipCard && (
       <Card className={classes.cardImg}>
+        
+          
         <CardActionArea>
           {card.featuredImage && (
             <Img 
             style={{ width: cardWidth }} 
+            // src={card.featuredImage.node.localFile.url} 
             fluid={card.featuredImage.node.localFile.childImageSharp.fluid} 
             alt={card.title}/>
           )}
@@ -74,6 +78,7 @@ const CommanderCard = ({ classes, card }: Props) => {
     {card && card.flipCard && (
       <div className={classes.cardPartners}>
         <Card className={classes.cardFront}>
+          
           <CardActionArea>
             {card.card1.featuredImage && (
             <Img 
@@ -107,13 +112,22 @@ const CommanderCard = ({ classes, card }: Props) => {
 
     {card && !card.flipCard && (
       <div className={classes.cardName}>
-          {card.title} <br></br> #{card.cdhCards.set.muid} 
+        
+          {card.title}
+          {card.cdhCards.status !== 'Approved' && (
+            <span> (BETA)</span>
+          )}
+           <br></br> #{card.cdhCards.set.muid} 
       </div>
     )}
 
     {card && card.flipCard && (
       <div className={classes.cardName}>
-        {card.card1.title} // {card.card2.title}  <br></br> #{card.card1.cdhCards.set.muid} // #{card.card2.cdhCards.set.muid}
+        {card.card1.title} // {card.card2.title}  
+        {card.card1.cdhCards.status !== 'Approved' && (
+          <span> (BETA)</span>
+        )}
+        <br></br> #{card.card1.cdhCards.set.muid} // #{card.card2.cdhCards.set.muid}
       </div>
     )}
 
