@@ -30,6 +30,7 @@ const useCommanders = (params) => {
                 name
                 formatCommander
                 related
+                reverseRelated
                 set {
                   rarity
                   picurl
@@ -52,7 +53,10 @@ const useCommanders = (params) => {
                         # In the GraphQL explorer, use field names
                         # like "src". In your site's code, remove them
                         # and use the fragments provided by Gatsby.
-                        src
+                        srcWebp
+                        srcSetWebp
+                        originalImg
+                        originalName
                         # This fragment won't work in the GraphQL
                         # explorer, but you can use it in your site
                         ...GatsbyImageSharpFluid_withWebp

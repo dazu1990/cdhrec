@@ -1,7 +1,9 @@
 const styles = ({ typography,palette }) => ({
   container: {
-    minHeight: '90vh',
-    overflow: 'hidden'
+    minHeight: '100vh',
+    overflow: 'hidden',
+    paddingTop: '1rem'
+    
   },
   codeBlock:{
     whiteSpace: 'pre-wrap',

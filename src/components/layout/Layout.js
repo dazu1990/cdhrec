@@ -1,6 +1,8 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { Box} from '@material-ui/core';
+
 import Fade from '@material-ui/core/Fade';
 import classNames from 'classnames';
 
@@ -17,7 +19,7 @@ type Props = {
 };
 
 const Layout = ({ classes, children, noBackground }: Props) => (
-  <Scrollbars
+  <Box
     autoHide
     autoHideTimeout={1000}
     autoHideDuration={200}
@@ -36,7 +38,7 @@ const Layout = ({ classes, children, noBackground }: Props) => (
     </div>
         
 
-  </Scrollbars>
+  </Box>
   
 );
 

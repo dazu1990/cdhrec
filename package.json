@@ -31,7 +31,7 @@
     "gatsby-plugin-web-font-loader": "^1.0.4",
     "gatsby-source-contentful": "^2.1.73",
     "gatsby-source-filesystem": "^2.1.43",
-    "gatsby-source-wordpress-experimental": "^4.0.0",
+    "gatsby-source-wordpress-experimental": "^7.0.1",
     "gatsby-transformer-remark": "^2.6.45",
     "gatsby-transformer-sharp": "^2.5.21",
     "graphql": "^15.4.0",

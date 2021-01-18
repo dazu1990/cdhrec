@@ -28,6 +28,14 @@ const styles = ({ typography,palette }) => ({
     left: '0px',
     background: 'black'
   },
+  colorBarInner: {
+    height: '0.35rem',
+    position: 'relative',
+    bottom: '-0.65rem',
+    left: '0px',
+    background: 'black',
+    transform: 'scale(1.1)'
+  },
   colorInner: {
     height: '100%'
   },

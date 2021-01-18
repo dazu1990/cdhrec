@@ -18,7 +18,7 @@ const About = () => {
   const { allWpPost } = usePosts();
 
   const faqs = ()=>{
-    let faqs = allWpPost.edges.filter(({node})=>node.categories.nodes[0].name==='faq');
+    let faqs = allWpPost.edges.filter(({node})=>node.categories.nodes[0] && node.categories.nodes[0].name==='faq');
     return faqs;
   }
 

@@ -10,7 +10,7 @@ const styles = ({ app, breakpoints, typography }) => ({
   },
   container: {
     minHeight: '100vh',
-    marginTop: '5rem'
+    marginTop: '4.25rem'
   },
   scrollFix: {
     marginRight: '-17px !important',
@@ -25,6 +25,9 @@ const styles = ({ app, breakpoints, typography }) => ({
     padding: `${typography.pxToRem(16)} ${typography.pxToRem(48)}`,
     transition: 'filter .5s, opacity .5s',
     boxSizing: 'border-box',
+    '@media (max-width: 768px)': {
+      padding: `${typography.pxToRem(0)} ${typography.pxToRem(24)}`
+    }
   },
   content: {
     margin: 'auto',

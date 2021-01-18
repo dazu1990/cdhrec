@@ -4,7 +4,7 @@ const content = {
   subtitle:
     'Welcome to Custom Dragon Highlander, a community dedicated to designing only the finest custom commanders!',
   xmlcard: {
-    link: 'http://api.cdhrec.com/wp-admin/admin.php?page=pmxi-admin-manage&id=1&action=feed&_wpnonce=11cacfa7b3',
+    link: 'http://api.cdhrec.com/publicXML/CDH.Upload.19.1.5_Dread_the_pirate.xml',
     copy: "Here's the latest XML file with all commanders and tokens!",
     cta: "Download"
   },

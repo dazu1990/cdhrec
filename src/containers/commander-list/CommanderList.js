@@ -136,11 +136,12 @@ const CommanderList = ({ classes }: Props) => {
   }
 
   const backToTop = (event)=>{
-    const anchor = (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
-    // (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
-    if (anchor) {
-      anchor.scrollIntoView();
-    }
+    // const anchor = (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
+    // // (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
+    // if (anchor) {
+    //   anchor.scrollIntoView();
+    // }
+    window.scrollTo(0,0)
   }
   // let toggle = true;
   const handleScroll = () => {
@@ -168,47 +169,79 @@ const CommanderList = ({ classes }: Props) => {
 
   // This filters by color
   const filteredCommanders= ()=>{
-    let sourceList = (searchResult && searchResult.length > 0 ) ? searchResult: allWpCard.edges;
+    const sourceList = (searchResult && searchResult.length > 0 ) ? searchResult: allWpCard.edges;
     // generate list of all "related" cards
     const getRelatedList = ()=>{
       let relatedList = sourceList.filter(({node})=>{ 
-        // console.log()
 
-        if(node.cdhCards.related){
-          return node.cdhCards.related
-        }
+        if(node.cdhCards.related || node.cdhCards.reverseRelated ){
+          if(node.cdhCards.reverseRelated){
+            // console.log('REVERSE SET == ', node.cdhCards.reverseRelated)
+
+            return node.cdhCards.reverseRelated
+          }else{
+            return node.cdhCards.related 
+          }
+          
+        } 
+
+
       });
-      relatedList = relatedList.map(({node})=>node.cdhCards.related);
+
+
+
+      relatedList = relatedList.map(({node})=>{
+        // console.log('RELATED ',node)
+        if(node.cdhCards.related ){
+          return node.cdhCards.related;
+        }else {
+          return node.cdhCards.reverseRelated
+        }
+        
+      } );
   
       let finalList = [];
       relatedList.forEach(name => {
-        sourceList.forEach(({node}) => {
+        allWpCard.edges.forEach(({node}) => {
           if(node.cdhCards.name === name){
             finalList.push(name)
           }
         })
       });      
+
+      console.log('finalList',finalList);
+
       return finalList;
     }
 
     const relatedList = getRelatedList();
+    // console.log('rdxtfyghiujo')
     // searchQuery
     
     let newList = sourceList.map(({node})=>{
 
       let flipCard = false;
       // create flip card obj if card is part of the list of related cards
-      if(node.cdhCards.related && relatedList.includes(node.cdhCards.related) ){
-        flipCard = {
-          flipCard: true,
-          card1: node,
-          card2: sourceList.filter((subnode)=>{
-            // console.log(subnode)
-            if(subnode.node.cdhCards.name === node.cdhCards.related){
-              return subnode
-            }
-          })[0].node
+      if((node.cdhCards.related && relatedList.includes(node.cdhCards.related)) || (node.cdhCards.reverseRelated && relatedList.includes(node.cdhCards.reverseRelated)) ){
+
+        let card2 = sourceList.filter((subnode)=>{
+          // console.log('norm', subnode)
+
+          if(subnode && subnode.node.cdhCards.name === node.cdhCards.related){
+            return subnode
+          }else if(subnode && subnode.node.cdhCards.name === node.cdhCards.reverseRelated){
+            return subnode
+          }
+        })
+        
+        if(card2[0]){
+          flipCard = {
+            flipCard: true,
+            card1: node,
+            card2: card2[0].node
+          }
         }
+        
       }
       // converts color identity to appropriate format
       const isEqual = (a, b) =>{ 
@@ -359,6 +392,14 @@ const CommanderList = ({ classes }: Props) => {
           </Grid>
 
         </Grid>
+        {colorFilter && (
+          <Grid container xs={12} justify='center' alignItems='center' className={classes.colorBarInner} >
+            {colorFilter.split("").map((color, colorIndex)=>(
+              <Grid item style={{width: `${100/colorFilter.length}%`}} className={`${classes[`color_${color}`]} ${classes.colorInner}`}></Grid>
+            ))}
+
+          </Grid>
+        )}
 
       </Card>
 

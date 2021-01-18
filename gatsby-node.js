@@ -61,6 +61,7 @@ exports.createPages = async ({ graphql, actions }) => {
                 name
                 formatCommander
                 related
+                reverseRelated
                 set {
                   rarity
                   picurl
@@ -102,9 +103,9 @@ exports.createPages = async ({ graphql, actions }) => {
 
     let relations = []
     let tokens = []
-    if (outerNode.cdhCards.related ){
+    if (outerNode.cdhCards.related || outerNode.cdhCards.reverseRelated){
       result.data.allWpCard.edges.forEach(({node : innernode}) => {
-        if(outerNode.cdhCards.related.includes(innernode.title)){
+        if((outerNode.cdhCards.related && outerNode.cdhCards.related.includes(innernode.title)) || (outerNode.cdhCards.reverseRelated && outerNode.cdhCards.reverseRelated.includes(innernode.title))){
           if(innernode.cdhCards.token){
             tokens.push(innernode)
           }else{

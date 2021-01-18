@@ -62,7 +62,7 @@ const CommanderCard = ({ classes, card }: Props) => {
         
           
         <CardActionArea>
-          {card.featuredImage && (
+          {card.featuredImage && card.featuredImage.node.localFile.childImageSharp && (
             <Img 
             style={{ width: cardWidth }} 
             // src={card.featuredImage.node.localFile.url} 
@@ -78,7 +78,6 @@ const CommanderCard = ({ classes, card }: Props) => {
     {card && card.flipCard && (
       <div className={classes.cardPartners}>
         <Card className={classes.cardFront}>
-          
           <CardActionArea>
             {card.card1.featuredImage && (
             <Img 

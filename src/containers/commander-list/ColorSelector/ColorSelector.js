@@ -88,8 +88,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
             <Checkbox 
               disabled={checkedState.W || checkedState.U || checkedState.B || checkedState.R || checkedState.G } 
-              icon={ <i className={`ms ms-c ms-cost`}></i> } 
-              checkedIcon={ <i className={`ms ms-c ${classes.checked}`}></i> } 
+              icon={ <i className={`ms ms-c ${classes.unchecked}`}></i> } 
+              checkedIcon={ <i className={`ms ms-c ms-cost`}></i> } 
               name="C"
               value="C"
               color="primary"
@@ -103,8 +103,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
           <Checkbox
             disabled={checkedState.C} 
-            icon={<i className={`ms ms-w ms-cost`}></i>} 
-            checkedIcon={<i className={`ms ms-w ${classes.checked}`}></i>} 
+            icon={<i className={`ms ms-w ${classes.unchecked}`}></i>} 
+            checkedIcon={<i className={`ms ms-w ms-cost`}></i>} 
             name="W" 
             value="W"
             color='primary'
@@ -118,8 +118,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
           <BlueCheckbox
             disabled={checkedState.C} 
-            icon={<i className={`ms ms-u ms-cost`}></i>} 
-            checkedIcon={<i className={`ms ms-u ${classes.checked}`}></i>} 
+            icon={<i className={`ms ms-u ${classes.unchecked}`}></i>} 
+            checkedIcon={<i className={`ms ms-u ms-cost`}></i>} 
             name="U" 
             value="U"
             onChange={handleChange}
@@ -132,8 +132,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
           <Checkbox 
             disabled={checkedState.C} 
-            icon={<i className={`ms ms-b ms-cost`}></i>} 
-            checkedIcon={<i className={`ms ms-b ${classes.checked}`}></i>} 
+            icon={<i className={`ms ms-b ${classes.unchecked}`}></i>} 
+            checkedIcon={<i className={`ms ms-b ms-cost`}></i>} 
             name="B"
             value="B"
             color="primary"
@@ -146,8 +146,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
           <RedCheckbox 
             disabled={checkedState.C} 
-            icon={<i className={`ms ms-r ms-cost`}></i>} 
-            checkedIcon={<i className={`ms ms-r ${classes.checked}`}></i>} 
+            icon={<i className={`ms ms-r ${classes.unchecked}`}></i>} 
+            checkedIcon={<i className={`ms ms-r ms-cost`}></i>} 
             name="R" 
             value="R"
             onChange={handleChange}
@@ -160,8 +160,8 @@ const ColorSelector = ({ classes, data }: Props) => {
         control={
           <GreenCheckbox 
             disabled={checkedState.C} 
-            icon={<i className={`ms ms-g ms-cost`}></i>}
-            checkedIcon={<i className={`ms ms-g ${classes.checked}`}></i>} 
+            icon={<i className={`ms ms-g ${classes.unchecked}`}></i>}
+            checkedIcon={<i className={`ms ms-g ms-cost`}></i>} 
             name="G" 
             value="G"
             onChange={handleChange}

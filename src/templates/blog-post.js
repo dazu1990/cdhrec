@@ -23,8 +23,10 @@ type Props = {
 
 
 const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: Props) => {
-  console.log(cardData, related, tokens)
+  // console.log('cardData',cardData, related, tokens)
   const[cardFlip,setCardFlip] = useState(false);
+  const[extendCard,setExtendCard] = useState(false);
+
 
   const card = related.length > 0 ? { flipCard : true, card1: cardData, card2: related[0]} : cardData;
 
@@ -93,6 +95,8 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
   <tablerow>2</tablerow>
   <set rarity="${card.cdhCards.set.rarity}" uuid="${card.cdhCards.set.uuid}" num="${card.cdhCards.set.num}" muid="${card.cdhCards.set.muid}" picurl="${card.cdhCards.set.picurl}">CDH</set>
   <related>${card.cdhCards.related}</related>
+  <reverse-related>${card.cdhCards.reverseRelated}</reverse-related>
+
   <prop>
     <layout>normal</layout>
     <side>${card.cdhCards.prop.side}</side>
@@ -105,10 +109,12 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
     <pt>${card.cdhCards.prop.pt}</pt>
     <format-commander>legal</format-commander>
   </prop>
+  <status>${card.cdhCards.status}</status>
 </card>`
 
 
     return(  
+      
       <ReactCardFlip isFlipped={cardFlip}>
         <Card>
           {/* front */}
@@ -128,11 +134,29 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
             <div dangerouslySetInnerHTML={{__html: addBreaks(ConvertCost.parse(card.cdhCards.text, true))}}>
             </div>
             <p>{card.cdhCards.prop.pt}</p>
-          </CardContent>
-          <CardActions disableSpacing>
-            <Button variant="contained" onClick={()=>setCardFlip(!cardFlip)} className={classes.bumpLeft}>show xml</Button>
+            <Grid container justify="space-between">
+              <Button  onClick={()=>{copyContent()}}>COPY XML</Button>
+              <Button variant="contained" onClick={()=>setExtendCard(!extendCard)} className={classes.bumpLeft}>{extendCard ? 'hide xml' : 'show xml'}</Button>
 
-          </CardActions>
+              {/* <Button variant="contained" onClick={()=>setCardFlip(!cardFlip)} className={classes.bumpLeft}>show xml</Button> */}
+
+            </Grid>
+            {extendCard &&(
+              <div>
+                <textarea 
+                  className={classes.invisible} 
+                  id="codeBlock"             
+                  value={`${xmlCode}`}></textarea>
+
+                <pre className={classes.codeBlock} >
+                  <code >
+                    {xmlCode}
+                  </code>
+                </pre>
+              </div>
+            )}
+          </CardContent>
+          
         </Card>
         <Card>
           {/* back */}
