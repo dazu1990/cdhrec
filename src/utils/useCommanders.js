@@ -28,7 +28,6 @@ const useCommanders = (params) => {
                 }
                 status
                 name
-                formatCommander
                 related
                 reverseRelated
                 set {

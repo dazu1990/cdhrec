@@ -27,7 +27,7 @@ const { tagline, title, subtitle, xmlcard, discordcard } = content;
 
 const Welcome = ({classes}: Props) => (
   <>
-  <Container style={{ padding: 0 }}>
+  <Container style={{ padding: 0 }} >
     <Grid container >
       <Grid item xs={12} md={6} style={{ padding: 20 }}>
         <Fade in timeout={1000}>

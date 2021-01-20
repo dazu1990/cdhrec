@@ -74,6 +74,9 @@ const styles = ({ typography,palette }) => ({
     '&:hover':{
       color: 'black'
     }
+  },
+  btn: {
+    lineHeight: '1rem'
   }
 });
 

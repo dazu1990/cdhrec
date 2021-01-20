@@ -108,9 +108,12 @@ const CommanderList = ({ classes }: Props) => {
 
 
   const handleSearch = (event)=>{
+    event.preventDefault();
+    // console.log()
+
     // setMaxCards(100)
 
-    if(event.target.value.length > 2){
+    if(event.target.value.length > 0){
       setSearchQuery(event.target.value)
       let results = fuse.search(searchQuery);
       results = results.map(({item})=>{
@@ -127,21 +130,23 @@ const CommanderList = ({ classes }: Props) => {
       // setMaxCardsChunks(allWpCard.edges/maxCards)
 
     }
-    // setMaxCards(100)
-
-
-    // event.preventDefault();
-
     
   }
 
   const backToTop = (event)=>{
     // const anchor = (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
+    const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top');
+
+    if (anchor) {
+      anchor.scrollIntoView({ behavior: 'smooth', alignToTop: true , block: 'center'});
+    }
+    
+    // const anchor = (event.target.ownerDocument || document ).querySelector('#gatsby-focus-wrapper');
     // // (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
     // if (anchor) {
-    //   anchor.scrollIntoView();
+      // anchor.scrollIntoView();
     // }
-    window.scrollTo(0,0)
+    // window.scrollTo(0,0)
   }
   // let toggle = true;
   const handleScroll = () => {
@@ -209,7 +214,7 @@ const CommanderList = ({ classes }: Props) => {
         })
       });      
 
-      console.log('finalList',finalList);
+      // console.log('finalList',finalList);
 
       return finalList;
     }
@@ -233,7 +238,7 @@ const CommanderList = ({ classes }: Props) => {
             return subnode
           }
         })
-        
+
         if(card2[0]){
           flipCard = {
             flipCard: true,
@@ -332,8 +337,8 @@ const CommanderList = ({ classes }: Props) => {
 
   const searchOptions = {
     includeScore: true,
-    minMatchCharLength: 3,
-    threshold: 0.45,
+    minMatchCharLength: 4,
+    threshold: 0.15,
     keys: ['name']
   }
 
@@ -353,11 +358,11 @@ const CommanderList = ({ classes }: Props) => {
           direction="row"
           justify="space-between"
           alignItems="center"
-          id="back-to-top-anchor"
+          // id="back-to-top-anchor"
 
         >
           <Grid container xs={12} md={3} justify="center" className={classes.mobileSpacer}>
-            <form className={classes.searchbar} noValidate autoComplete="off">
+            <form className={classes.searchbar} noValidate autoComplete="off" onSubmit={e => { e.preventDefault(); }}>
               <TextField 
                 id="standard-basic" 
                 name="search"
@@ -384,8 +389,8 @@ const CommanderList = ({ classes }: Props) => {
           
           <Grid container xs={12} md={3} justify="space-around" className={classes.mobileSpacer}>
             <ButtonGroup disableElevation variant="contained" >
-              <Button onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
-              <Button onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Beta'}</Button>
+              <Button className={classes.btn} onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
+              <Button className={classes.btn} onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Playtesting'}</Button>
 
               {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
             </ButtonGroup>

@@ -114,9 +114,9 @@ const CommanderCard = ({ classes, card }: Props) => {
         
           {card.title}
           {card.cdhCards.status !== 'Approved' && (
-            <span> (BETA)</span>
+            <span> (Playtesting)</span>
           )}
-           <br></br> #{card.cdhCards.set.muid} 
+           <br></br> muid #{card.cdhCards.set.muid} 
       </div>
     )}
 
@@ -124,9 +124,9 @@ const CommanderCard = ({ classes, card }: Props) => {
       <div className={classes.cardName}>
         {card.card1.title} // {card.card2.title}  
         {card.card1.cdhCards.status !== 'Approved' && (
-          <span> (BETA)</span>
+          <span> (Playtesting)</span>
         )}
-        <br></br> #{card.card1.cdhCards.set.muid} // #{card.card2.cdhCards.set.muid}
+        <br></br> muid #{card.card1.cdhCards.set.muid} // #{card.card2.cdhCards.set.muid}
       </div>
     )}
 

@@ -59,7 +59,6 @@ exports.createPages = async ({ graphql, actions }) => {
                 }
                 status
                 name
-                formatCommander
                 related
                 reverseRelated
                 set {

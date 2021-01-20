@@ -50,6 +50,7 @@ const styles = ({ typography }) => ({
   },
   cardName:{
     margin: '1rem auto 0',
+    lineHeight: '1rem',
     fontSize: '0.75rem',
     textAlign: 'center'
   },

@@ -1,9 +1,13 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import merge from 'lodash/merge';
 
 import palette from './palette';
 import typography from './typography';
 import color from './color';
+
+// const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
 const muiTheme = createMuiTheme({
   typography: {
