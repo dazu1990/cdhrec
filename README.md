@@ -1,22 +1,11 @@
 <p align="center">
-  <img alt="Gatsby" src="https://raw.githubusercontent.com/chronisp/gatsby-starter/master/src/images/logo.svg" width="60" />
-</p>
-<h1 align="center">
-  Gatsby Starter
-</h1>
-
-<p align="center">
   CDHREC
 </p>
 
 <p align="center">
-  <a href="https://app.netlify.com/sites/gatsby-starter-dot/deploys">
-    <img alt="Netlify" src="https://img.shields.io/netlify/a37c0ad8-deae-4bd3-8c8e-cbac8d2f05c3">
-  </a>
-  <a href="https://www.codacy.com/app/chronisp/gatsby-starter?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=chronisp/gatsby-starter&amp;utm_campaign=Badge_Grade">
-    <img alt="Codacy grade" src="https://img.shields.io/codacy/grade/c23975ea23e3459283f6c76ad338fcb1">
-  </a>
-  <a href="https://github.com/chronisp/gatsby-starter/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/chronisp/gatsby-starter"></a>
+
+<a href="https://github.com/chronisp/gatsby-starter/blob/master/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/chronisp/gatsby-starter"></a>
+
 </p>
 
 ## Key Features
@@ -51,29 +40,13 @@ Clone repository
 git clone https://github.com/chronisp/gatsby-starter.git <YOUR_PROJECT_NAME>
 ```
 
-Move to project directory
-
-```sh
-cd <YOUR_PROJECT_NAME>
-```
-
 Install all dependencies
 
 ```sh
 yarn install
 ```
 
-### Contentful blog
-
-Setup Contentful settings
-
-```sh
-yarn setup
-```
-
-Follow the instructions in order to setup `CONTENTFUL_SPACE_ID` and `CONTENTFUL_ACCESS_TOKEN`. Required settings will be defined in both `.env.development` and `.env.production` files.
-
-For more info on how to setup Contentful follow this [link](https://www.contentful.com/r/knowledgebase/gatsbyjs-and-contentful-in-five-minutes/).
+make sure you have the gatsby-cli installed on yur machine
 
 ### Development mode
 
