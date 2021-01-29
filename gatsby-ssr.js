@@ -5,8 +5,8 @@ import theme from 'styles/theme';
 
 export const wrapRootElement = ({ element }) => {
  return (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
+  <ThemeProvider theme={theme} style={{margin: '0px'}}>
+    <CssBaseline style={{margin: '0px'}}/>
     {element}
   </ThemeProvider>
  );

@@ -8,8 +8,8 @@ export const wrapRootElement = ({ element }) => {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
  return (
-  <ThemeProvider theme={theme} >
-    <CssBaseline />
+  <ThemeProvider theme={theme} style={{margin: '0px'}}>
+    <CssBaseline style={{margin: '0px'}}/>
     {element}
   </ThemeProvider>
  );

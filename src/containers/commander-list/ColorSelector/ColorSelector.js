@@ -77,10 +77,6 @@ const ColorSelector = ({ classes, data }: Props) => {
 
   };
 
-  // useEffect(() => {
-  //   console.log('colorFilter INSIDE', newFilter)
-  //   data.setColorFilter(newFilter)
-  // }, [newFilter]);
 
   return (
     <FormGroup row className={classes.groupContainer}>

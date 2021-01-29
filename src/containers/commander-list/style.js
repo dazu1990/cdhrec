@@ -8,6 +8,7 @@ const styles = ({ typography,palette }) => ({
   },
   toolbar:{
     padding: 10,
+    paddingBottom: 0
     // backgroundColor: '#fafafa'
   },
   goUp:{
@@ -26,15 +27,18 @@ const styles = ({ typography,palette }) => ({
     position: 'fixed',
     bottom: '0px',
     left: '0px',
-    background: 'black'
+    background: 'black',
+    zIndex: '99999'
   },
   colorBarInner: {
     height: '0.35rem',
     position: 'relative',
-    bottom: '-0.65rem',
     left: '0px',
     background: 'black',
     transform: 'scale(1.1)'
+  },
+  colorBarInnerDesktop:{
+    bottom: '-0.65rem'
   },
   colorInner: {
     height: '100%'
@@ -77,6 +81,36 @@ const styles = ({ typography,palette }) => ({
   },
   btn: {
     lineHeight: '1rem'
+  },
+  menucollapse:{
+    marginBottom: '1rem',
+    display: 'none',
+    '@media (max-width: 768px)': {
+      display: 'inherit'
+    }
+  },
+  mobileMenu:{
+    top: 0,
+    left: '0px',
+    position: 'fixed',
+    background: 'white',
+    width: '100%',
+    zIndex: '9',
+    transition: 'all 250ms',
+    transform: 'translateY(-12rem)',
+    '&.expanded':{
+      '@media (max-width: 768px)': {
+        paddingTop: '1rem',
+        transform: 'translateY(4rem)',
+      }
+    },
+    '&.scrollDown':{
+      transform: 'translateY(5rem)',
+      '@media (max-width: 768px)': {
+        transform: 'translateY(-7.5rem)',
+      }
+      // background: 'blue'
+    }
   }
 });
 

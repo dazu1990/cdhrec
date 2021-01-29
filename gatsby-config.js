@@ -77,9 +77,9 @@ module.exports = {
       options: {
         url: `http://api.cdhrec.com/index.php?graphql`,
         schema: {
-          perPage: 20,
+          perPage: 10,
           previewRequestConcurrency: 1,
-          timeout: 55000,
+          timeout: 60000,
         },
       },
     },

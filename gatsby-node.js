@@ -50,7 +50,6 @@ exports.createPages = async ({ graphql, actions }) => {
                   cmc
                   coloridentity
                   colors
-                  fieldGroupName
                   maintype
                   manacost
                   side
@@ -66,12 +65,10 @@ exports.createPages = async ({ graphql, actions }) => {
                   picurl
                   num
                   muid
-                  fieldGroupName
                   uuid
                 }
                 text
                 token
-                fieldGroupName
               }
               featuredImage {
                 node {

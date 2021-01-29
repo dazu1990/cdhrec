@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState}  from 'react';
 import { withStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { Grid, Card, CardActionArea, CardContent } from '@material-ui/core';
@@ -7,6 +7,22 @@ import { Grid, Card, CardActionArea, CardContent } from '@material-ui/core';
 import Img from 'gatsby-image';
 
 import styles from './style';
+
+
+// export const dumbImg = ({ src, srcOnError}) => {
+//   const [srcImg, setSrcImg] = useState(null);
+
+//   const onError = () => {
+//     setSrcImg(srcOnError);
+//   };
+
+
+//   if (srcImg) {
+//     return <img src={srcImg} />;
+//   }
+
+//   return <img src={src} onError={onError}  />;
+// };
 
 type Props = {
   classes: Object,
@@ -18,34 +34,53 @@ type Props = {
 const CommanderCard = ({ classes, card }: Props) => {
   const cardWidth = 220;
   const cardHeight = 310;
+  const[ imageExists,setImageExists] = useState(true) ;
+
+  // console.log(card)
+
+
+
 
   const noImageCard = (card)=>{
+    
     if(!card.featuredImage){
       return(
-        <Card 
-        style={{ width: cardWidth, height: cardHeight }} 
-        >
+        <>
+          {imageExists && (
+            <img 
+            style={{ width: cardWidth }} 
+            src={card.cdhCards.set.picurl} 
+            alt={card.title}
+            onError={()=>{setImageExists(false); }}
     
-          <CardContent>
-            <strong>{card.title}</strong><br></br>
-            {card.cdhCards.prop.manacost}
-            <br></br>
-            <div>
-              {card.cdhCards.prop.type}
-            </div>
-            <div dangerouslySetInnerHTML={{__html: card.cdhCards.text}} className={classes.cardBodyCopy}>
-            </div>
-            <p>{card.cdhCards.prop.pt}</p>
-            <i>*image not available</i>
-          </CardContent>
-          
-        </Card>
+            />
+          )}
+          {!imageExists && (
+            <Card 
+            style={{ width: cardWidth, height: cardHeight }} 
+          >
+      
+            <CardContent>
+              <strong>{card.title}</strong><br></br>
+              {card.cdhCards.prop.manacost}
+              <br></br>
+              <div>
+                {card.cdhCards.prop.type}
+              </div>
+              <div dangerouslySetInnerHTML={{__html: card.cdhCards.text}} className={classes.cardBodyCopy}>
+              </div>
+              <p>{card.cdhCards.prop.pt}</p>
+              <i>*image not available</i>
+            </CardContent>
+            
+          </Card>
+          )}
+        </>
       )
     }
-    
   }
   
-
+  // noImageCard(card)
   // console.log(card)
   return  (
   <Grid 
@@ -60,7 +95,6 @@ const CommanderCard = ({ classes, card }: Props) => {
     {card && !card.flipCard && (
       <Card className={classes.cardImg}>
         
-          
         <CardActionArea>
           {card.featuredImage && card.featuredImage.node.localFile.childImageSharp && (
             <Img 
@@ -85,24 +119,23 @@ const CommanderCard = ({ classes, card }: Props) => {
             fluid={card.card1.featuredImage.node.localFile.childImageSharp.fluid} 
             alt={card.card1.title}/>
             )}
+
             {noImageCard(card.card1)}
 
           </CardActionArea>
         </Card>
         <Card className={classes.cardBack}>
           <CardActionArea>
-          {card.card2.featuredImage && (
-            <Img 
-            style={{ width: cardWidth }} 
-            fluid={card.card2.featuredImage.node.localFile.childImageSharp.fluid}  
-            alt={card.card2.title}/>
-          )}
+            {card.card2.featuredImage && (
+              <Img 
+              style={{ width: cardWidth }} 
+              fluid={card.card2.featuredImage.node.localFile.childImageSharp.fluid}  
+              alt={card.card2.title}/>
+            )}
             {noImageCard(card.card2)}
 
           </CardActionArea>
         </Card>
-        
-
       </div>
       
     )}

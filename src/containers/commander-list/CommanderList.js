@@ -51,6 +51,8 @@ const CommanderList = ({ classes }: Props) => {
   const { allWpCard } = useCommanders();
   // const[commanderList, setCommanderList] = useState(allWpCard.edges);
 
+  const[expandMenu,setExpandMenu] = useState(false);
+
 
   const maxCards = 100;
   const[currentChunk,setCurrentChunk] = useState(maxCards);
@@ -109,7 +111,6 @@ const CommanderList = ({ classes }: Props) => {
 
   const handleSearch = (event)=>{
     event.preventDefault();
-    // console.log()
 
     // setMaxCards(100)
 
@@ -149,28 +150,34 @@ const CommanderList = ({ classes }: Props) => {
     // window.scrollTo(0,0)
   }
   // let toggle = true;
-  const handleScroll = () => {
-    // console.log(commanderList)
-    const currentScrollTop = document.getElementById('grid').scrollTop;
-    const innerHeight = document.getElementById('grid').scrollHeight
+  // const handleScroll = () => {
 
-    setLastScrollTop(currentScrollTop);
+  //   const currentScrollTop = document.documentElement.scrollTop;
 
-    
+  //   console.log(currentScrollTop)
 
-    // if(lastScrollTop > (innerHeight * 0.9)){
-    //   console.log('scrolllimit')
 
-    //   setCurrentChunk(currentChunk + 25)
-    // }
+  // }
+  // window.addEventListener('scroll', handleScroll);
 
-  }
+  const [scrolling, setScrolling] = useState(false);
+  const [scrollTop, setScrollTop] = useState(0);
 
   useEffect(() => {
-    document.getElementById('grid').addEventListener('scroll', handleScroll);
-  }, [lastScrollTop ]);
+    const onScroll = e => {
+      setScrollTop(e.target.documentElement.scrollTop);
+      setScrolling(e.target.documentElement.scrollTop > scrollTop);
+
+      // console.log(scrolling, scrollTop)
+    };
+    window.addEventListener("scroll", onScroll);
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrollTop]);
 
 
+  // useEffect(() => {
+  // }, []);
 
   // This filters by color
   const filteredCommanders= ()=>{
@@ -181,8 +188,6 @@ const CommanderList = ({ classes }: Props) => {
 
         if(node.cdhCards.related || node.cdhCards.reverseRelated ){
           if(node.cdhCards.reverseRelated){
-            // console.log('REVERSE SET == ', node.cdhCards.reverseRelated)
-
             return node.cdhCards.reverseRelated
           }else{
             return node.cdhCards.related 
@@ -193,10 +198,8 @@ const CommanderList = ({ classes }: Props) => {
 
       });
 
-
-
       relatedList = relatedList.map(({node})=>{
-        // console.log('RELATED ',node)
+
         if(node.cdhCards.related ){
           return node.cdhCards.related;
         }else {
@@ -214,14 +217,10 @@ const CommanderList = ({ classes }: Props) => {
         })
       });      
 
-      // console.log('finalList',finalList);
-
       return finalList;
     }
 
     const relatedList = getRelatedList();
-    // console.log('rdxtfyghiujo')
-    // searchQuery
     
     let newList = sourceList.map(({node})=>{
 
@@ -230,8 +229,6 @@ const CommanderList = ({ classes }: Props) => {
       if((node.cdhCards.related && relatedList.includes(node.cdhCards.related)) || (node.cdhCards.reverseRelated && relatedList.includes(node.cdhCards.reverseRelated)) ){
 
         let card2 = sourceList.filter((subnode)=>{
-          // console.log('norm', subnode)
-
           if(subnode && subnode.node.cdhCards.name === node.cdhCards.related){
             return subnode
           }else if(subnode && subnode.node.cdhCards.name === node.cdhCards.reverseRelated){
@@ -261,7 +258,6 @@ const CommanderList = ({ classes }: Props) => {
       const finalReturn = ()=>{
         // checking if card is part of a flip card
         if(flipCard && (node.cdhCards.name === flipCard.card1.cdhCards.name || node.cdhCards.name === flipCard.card2.cdhCards.name)){
-          // console.log(flipCard.card1.cdhCards.name)
           return flipCard;
         }else{
           return node;
@@ -300,7 +296,6 @@ const CommanderList = ({ classes }: Props) => {
       // remove duplicate flip parings
       let frontSideFirst = true;
       if(el && el.flipCard ){
-        // console.log('EL', el)
         if(el.card1.cdhCards.prop.side !== "front"){
           frontSideFirst = false;
         }
@@ -317,11 +312,11 @@ const CommanderList = ({ classes }: Props) => {
     // setMaxCards(100)
 
     // if(maxCardsChunks !== (newList/maxCards)){
-      // console.log('here')
+
       // setMaxCardsChunks(newList/maxCards)
     // }
 
-    console.log(newList)
+    // console.log(newList)
 
     return (newList)
   }
@@ -344,16 +339,8 @@ const CommanderList = ({ classes }: Props) => {
 
   const fuse = new Fuse(flattenedList, searchOptions);
 
-  // setCommanderList(filteredCommanders())
-
-  // const commanderList = filteredCommanders();
-
-  
-  // const commanderList = []
-  return (
-    <Container className={classes.container} >
-      <Card className={classes.toolbar} >
-        <Grid 
+  const renderBarContent = (scrollmenu)=>(<>
+    <Grid 
           container
           direction="row"
           justify="space-between"
@@ -380,8 +367,9 @@ const CommanderList = ({ classes }: Props) => {
               />
             </form>
           </Grid>
+
           <Grid container xs={12} md={6} justify="center" className={classes.mobileSpacer} >
-            <Grid item xs={8} md={12}>
+            <Grid item xs={scrollmenu ? 12 : 8} md={12}>
               <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
             </Grid>
               
@@ -391,10 +379,20 @@ const CommanderList = ({ classes }: Props) => {
             <ButtonGroup disableElevation variant="contained" >
               <Button className={classes.btn} onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
               <Button className={classes.btn} onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Playtesting'}</Button>
-
               {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
             </ButtonGroup>
           </Grid>
+
+          {scrollmenu && (
+            <Grid container xs={12} md={3} justify="space-around" className={`${classes.menucollapse} ${classes.mobileSpacer}`}>
+              <ButtonGroup disableElevation  >
+                <Button onClick={()=>setExpandMenu(!expandMenu)}>{expandMenu ? 'close' : 'search | filter'}</Button>
+              </ButtonGroup>
+            </Grid>
+          )}
+
+          
+          
 
         </Grid>
         {colorFilter && (
@@ -405,6 +403,28 @@ const CommanderList = ({ classes }: Props) => {
 
           </Grid>
         )}
+
+  </>)
+
+  // setCommanderList(filteredCommanders())
+
+  // const commanderList = filteredCommanders();
+
+  
+  // const commanderList = []
+  return (
+    <Container className={classes.container} >
+      <Grid 
+        container
+        direction="row"
+        justify="center"
+        alignItems="center"
+        className={`${classes.mobileMenu} ${scrolling & scrollTop > 400? 'scrollDown' : ''} ${expandMenu ? 'expanded' : ''}`}
+        >
+        {renderBarContent(true)}
+      </Grid>
+      <Card className={classes.toolbar}>
+        {renderBarContent(false)}
 
       </Card>
 
@@ -449,7 +469,6 @@ const CommanderList = ({ classes }: Props) => {
         </IconButton>
       </div>
 
-
       {colorFilter && (
         <Grid container xs={12} justify='center' alignItems='center' className={classes.colorBar} >
           {colorFilter.split("").map((color, colorIndex)=>(
@@ -458,12 +477,6 @@ const CommanderList = ({ classes }: Props) => {
 
         </Grid>
       )}
-      
-
-
-
-
-
       
     </Container>
   );

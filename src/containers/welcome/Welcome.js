@@ -61,7 +61,7 @@ const Welcome = ({classes}: Props) => (
                           <Typography variant='body1' color='textPrimary' className={classes.cardcopy}>
                             {xmlcard.copy}
                           </Typography>
-                          <Link href={xmlcard.link} target="_blank">
+                          <Link href={xmlcard.link} target="_blank" download>
 
                             <Button variant='outlined'>{xmlcard.cta}</Button>
                           </Link>

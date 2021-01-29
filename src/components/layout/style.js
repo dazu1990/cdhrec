@@ -7,10 +7,14 @@ const styles = ({ app, breakpoints, typography }) => ({
         // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
       },
     },
+    body: {
+      margin: '0px'
+    }
   },
   container: {
     minHeight: '100vh',
-    marginTop: '4.25rem'
+    marginTop: '4.25rem',
+    left: '0px'
   },
   scrollFix: {
     marginRight: '-17px !important',
@@ -40,7 +44,7 @@ const styles = ({ app, breakpoints, typography }) => ({
     backgroundImage: ``,
     backgroundSize: 'cover',
     background: '#EEE',
-
+    left: '0px'
     // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
     // backgroundPosition: 
   },
