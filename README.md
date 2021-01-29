@@ -16,8 +16,6 @@ These are the key features of the project:
 - [React](https://reactjs.org/) (everything in React Hooks)
 - [Redux](https://redux.js.org/) (custom HOF to connect actions & props)
 - [Material UI](https://material-ui.com/) (palette, typography & breakpoints configuration)
-- [Contentful CMS](https://www.contentful.com/) (blog integration)
-- [Netlify Deployment Support](https://www.netlify.com)
 - [React Helmet](https://github.com/nfl/react-helmet)
 - [Flow](https://flow.org/)
 - [Prettier](https://prettier.io/)
