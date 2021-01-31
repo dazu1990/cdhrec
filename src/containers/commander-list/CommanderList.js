@@ -340,6 +340,13 @@ const CommanderList = ({ classes }: Props) => {
     return shuffleArray([...allWpCard.edges]);
   }
 
+  const sortText = () => {
+    if (randomizedCards.length) {
+      return 'displayed randomly';
+    }
+    return `from ${descAsc ? 'newest to oldest' : 'oldest to newest'}`;
+  }
+
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -463,7 +470,7 @@ const CommanderList = ({ classes }: Props) => {
         alignItems="center"
         className={classes.vertSpace}
       >
-        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders from {descAsc ? 'newest to oldest' : 'oldest to newest'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
+        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders {`${sortText()}`} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (
