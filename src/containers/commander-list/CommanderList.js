@@ -37,6 +37,7 @@ const CommanderList = ({ classes }: Props) => {
   const[descAsc,setDescAsc] = useState(1);
   const[alphabetical,setAlphabetical] = useState(1);
   const[approvedFilter,setApprovedFilter] = useState(1);
+  const[randomizedCards,setRandomOrder] = useState([]);
 
 
   const descAscDisplay = !descAsc ? `new to old` : `old to new`;
@@ -59,7 +60,6 @@ const CommanderList = ({ classes }: Props) => {
 
 
   // const[maxCardsChunks,setMaxCardsChunks] = useState(1);
-
 
   const convertToSlug = (Text) =>{
     if(Text){
@@ -181,7 +181,15 @@ const CommanderList = ({ classes }: Props) => {
 
   // This filters by color
   const filteredCommanders= ()=>{
-    const sourceList = (searchResult && searchResult.length > 0 ) ? searchResult: allWpCard.edges;
+    let sourceList = []
+    // Set the source list based on search results, random, or standard
+    if (searchResult && searchResult.length > 0 ) {
+      sourceList = searchResult;
+    } else if (randomizedCards.length > 0) {
+      sourceList = randomizedCards;
+    } else {
+      sourceList = allWpCard.edges
+    }
     // generate list of all "related" cards
     const getRelatedList = ()=>{
       let relatedList = sourceList.filter(({node})=>{ 
@@ -216,7 +224,6 @@ const CommanderList = ({ classes }: Props) => {
           }
         })
       });      
-
       return finalList;
     }
 
@@ -321,6 +328,33 @@ const CommanderList = ({ classes }: Props) => {
     return (newList)
   }
 
+  const sortDescAsc = (val) => {
+    // Before sorting, remove randomized list
+    setRandomOrder([]);
+    setDescAsc(val);
+  }
+
+  // Randomize cards
+  const randomizeCards = () => {
+    // Send in a copy of ALL cards
+    return shuffleArray([...allWpCard.edges]);
+  }
+
+  const sortText = () => {
+    if (randomizedCards.length) {
+      return 'displayed randomly';
+    }
+    return `from ${descAsc ? 'newest to oldest' : 'oldest to newest'}`;
+  }
+
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   const flattenedList = allWpCard.edges.map(({node})=>{
     const flatObj = {
       name: node.cdhCards.name,
@@ -377,8 +411,9 @@ const CommanderList = ({ classes }: Props) => {
           
           <Grid container xs={12} md={3} justify="space-around" className={classes.mobileSpacer}>
             <ButtonGroup disableElevation variant="contained" >
-              <Button className={classes.btn} onClick={()=>setDescAsc(!descAsc)}>{descAscDisplay}</Button>
+              <Button className={classes.btn} onClick={()=>sortDescAsc(!descAsc)}>{descAscDisplay}</Button>
               <Button className={classes.btn} onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Playtesting'}</Button>
+              <Button className={classes.btn} onClick={()=>setRandomOrder(randomizeCards())}>{'Random Shuffle'}</Button>
               {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
             </ButtonGroup>
           </Grid>
@@ -435,7 +470,7 @@ const CommanderList = ({ classes }: Props) => {
         alignItems="center"
         className={classes.vertSpace}
       >
-        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders from {descAsc ? 'newest to oldest' : 'oldest to newest'} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
+        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders {`${sortText()}`} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (
