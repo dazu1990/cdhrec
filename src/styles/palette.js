@@ -4,7 +4,7 @@ const palette = {
   },
   text: {
     primary: '#17252A',
-    secondary: '#fff',
+    secondary: '#dedede',
   },
   primary: {
     light: '#2b2d2e',
@@ -13,10 +13,10 @@ const palette = {
     contrastText: '#fff',
   },
   secondary: {
-    light: '#6affff',
-    main: '#3AAFA9',
-    dark: '#00a7bc',
-    contrastText: '#fff',
+    light: '#17252A',
+    main: '#2b2d2e',
+    dark: '#17252A',
+    contrastText: '#17252A',
   },
   green: {
     colorless: '#eee',

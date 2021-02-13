@@ -80,6 +80,7 @@ const ColorSelector = ({ classes, data }: Props) => {
 
   return (
     <FormGroup row className={classes.groupContainer}>
+      
       <FormControlLabel
         control={
             <Checkbox 

@@ -1,7 +1,7 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
 import { withStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Grid, GridList, GridListTile, GridListTileBar ,Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
+import { AppBar, Toolbar, Grid, GridList, GridListTile, GridListTileBar ,FormControlLabel, Checkbox, Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SearchIcon from '@material-ui/icons/Search';
 import Fab from '@material-ui/core/Fab';
@@ -73,38 +73,48 @@ const CommanderList = ({ classes }: Props) => {
   }
 
   const colorToWords = (color) => {
-    let filter = Array.from(color);
     let newString = '';
 
-    filter.forEach((colorLetter,index) => {
-      if(index !== 0){
-        newString = newString + ' ';
-      }
-      switch(colorLetter){
-        case 'C':
-          newString = newString + 'colorless'
-          break;
-        case 'W':
-          newString = newString + 'white';
-          break;
-        case 'B':
-          newString = newString + 'black';
-          break;
-        case 'U':
-          newString = newString + 'blue';
-          break;
-        case 'R':
-          newString = newString + 'red';
-          break;
-        case 'G':
-          newString = newString + 'green';
-          break;
-        default:
-          newString = newString + color;
-          break;
-      }
-      
-    });
+    const getWords = (innerColor)=>{
+      let filter = Array.from(innerColor);
+      filter.forEach((colorLetter,index) => {
+        if(index !== 0){
+          newString = newString + ', ';
+        }
+        switch(colorLetter){
+          case 'C':
+            newString = newString + 'colorless'
+            break;
+          case 'W':
+            newString = newString + 'white';
+            break;
+          case 'B':
+            newString = newString + 'black';
+            break;
+          case 'U':
+            newString = newString + 'blue';
+            break;
+          case 'R':
+            newString = newString + 'red';
+            break;
+          case 'G':
+            newString = newString + 'green';
+            break;
+          default:
+            newString = newString + color;
+            break;
+        }
+        
+      });
+    }
+
+    if(inclusiveSearch){
+      getWords(color)
+    }else{
+      getWords(color)
+    }
+
+    
     return newString;
   }
 
@@ -162,6 +172,9 @@ const CommanderList = ({ classes }: Props) => {
 
   const [scrolling, setScrolling] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
+
+  const [inclusiveSearch, setInclusiveSearch] = useState(false);
+
 
   useEffect(() => {
     const onScroll = e => {
@@ -256,27 +269,67 @@ const CommanderList = ({ classes }: Props) => {
       const isEqual = (a, b) =>{ 
         let A =  a ? a.replace(/[0-9]/g, '') : a;
         if(A){
+
           return( A.split('').sort().join('').trim() === b.split('').sort().join('').trim() )
         }else{
           return(false)
         }
       };
 
-      const finalReturn = ()=>{
-        // checking if card is part of a flip card
-        if(flipCard && (node.cdhCards.name === flipCard.card1.cdhCards.name || node.cdhCards.name === flipCard.card2.cdhCards.name)){
-          return flipCard;
-        }else{
-          return node;
+      const getAllSubstrings = (colors) => {
+        // colors must be === string.split('')
+
+        var branches = [];
+        if (colors.length === 1) return colors;
+        for (var k in colors) {
+          var color = colors[k];
+          getAllSubstrings(colors.join('').replace(color, '').split('')).concat("").map(function(subtree) {
+            branches.push([color].concat(subtree));
+          });
         }
+        return branches.map( (str) => str.join('') );
+      };
+
+      const finalReturn = (returnArray)=>{
+        // checking if card is part of a flip card
+        if(!returnArray){
+          if(flipCard && (node.cdhCards.name === flipCard.card1.cdhCards.name || node.cdhCards.name === flipCard.card2.cdhCards.name)){
+            return flipCard;
+          }else{
+            return node;
+          }
+        }else{
+          return returnArray;
+        }
+        
       }
 
       if(approvedFilter){
         if(colorFilter && colorFilter.length > 0 ){
           // does the node pass the colour filter?
-          if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
-            return finalReturn();
+          if(inclusiveSearch){
+            let subStrings = getAllSubstrings(colorFilter.split(''));
+            if(colorFilter !== "C"){
+              console.log(colorFilter)
+              subStrings.push("C")
+            }
+            
+            // console.log(subStrings)
+            let returnArray = [];
+            subStrings.forEach((substring)=>{
+              // console.log('=>', substring, isEqual(node.cdhCards.prop.coloridentity, substring) )
+              if(isEqual(node.cdhCards.prop.coloridentity, substring) ){
+                // console.log('---', node.cdhCards.prop.coloridentity, substring)
+                returnArray.push(finalReturn());
+              }
+            })
+            return finalReturn(returnArray);
+          }else{
+            if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
+              return finalReturn();
+            }
           }
+          
         }else {
           return finalReturn();
         }
@@ -297,7 +350,7 @@ const CommanderList = ({ classes }: Props) => {
       
       
     });
-    newList = newList.filter(function (el) {
+    newList = newList.flat().filter(function (el) {
       // removed null items
       const notNull = el != null;
       // remove duplicate flip parings
@@ -402,8 +455,29 @@ const CommanderList = ({ classes }: Props) => {
             </form>
           </Grid>
 
-          <Grid container xs={12} md={6} justify="center" className={classes.mobileSpacer} >
+          <Grid container xs={12} md={1} justify="center" alignItems='center' className={classes.mobileSpacer} >
+
+          <FormControlLabel
+            control={
+                <Checkbox 
+                  // icon={ <i className={`ms ms-c ${classes.unchecked}`}></i> } 
+                  // checkedIcon={ <i className={`ms ms-c ms-cost`}></i> } 
+                  name="filter by identity"
+                  value={inclusiveSearch}
+                  // color="black"
+                  onChange={()=>setInclusiveSearch(!inclusiveSearch)}
+                />
+            }
+            label="Inclusive search"
+            // labelPlacement="bottom"
+          />
+          </Grid>
+
+
+          <Grid container xs={12} md={5} justify="center" alignItems='center' className={classes.mobileSpacer} >
+
             <Grid item xs={scrollmenu ? 12 : 8} md={12}>
+
               <ColorSelector data={{ setColorFilter: setColorFilter }}  ></ColorSelector>
             </Grid>
               
@@ -425,17 +499,12 @@ const CommanderList = ({ classes }: Props) => {
               </ButtonGroup>
             </Grid>
           )}
-
-          
-          
-
         </Grid>
         {colorFilter && (
           <Grid container xs={12} justify='center' alignItems='center' className={classes.colorBarInner} >
             {colorFilter.split("").map((color, colorIndex)=>(
               <Grid item style={{width: `${100/colorFilter.length}%`}} className={`${classes[`color_${color}`]} ${classes.colorInner}`}></Grid>
             ))}
-
           </Grid>
         )}
 
@@ -470,7 +539,9 @@ const CommanderList = ({ classes }: Props) => {
         alignItems="center"
         className={classes.vertSpace}
       >
-        <div>showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders {`${sortText()}`} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
+        
+        <div>
+          showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders {`${sortText()}`} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
       </Grid>
       
       {filteredCommanders().length > 0 && (

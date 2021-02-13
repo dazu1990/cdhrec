@@ -1,9 +1,9 @@
 import { FaGithub } from 'react-icons/fa';
 
 const content = {
-  title: 'About.',
+  title: 'What is CDH?',
   subtitle: 'Find out more on Github',
-  body: 'Custom Dragon Highlander is a community dedicated to designing to creating, playtesting and voting on custom commanders. The voting and playtesting takes place on our Discord server. This site is currently a visual and easily navigatble list of all the approved commanders from our Discord.',
+  body: 'Custom Dragon Highlander is a community dedicated to designing to creating, playtesting and voting on custom commanders. Join our Discord to help vote for and playtest with your favorite designs. This site is currently a visual and easily searchable list of all the approved CDH commanders.',
   questions: {
     header: 'Frequently Asked Questions'
   },
