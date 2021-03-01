@@ -6,8 +6,12 @@ const open = stateProp(state => ({
   open: state.open,
 }));
 
+// const testState = stateProp(state => ({
+//   testStateInner: 'hello',
+// }));
+
 const toggleMenu = actionProp(dispatch => ({
   toggleMenu: () => dispatch(toggleMenuAction()),
 }));
 
-export { open, toggleMenu };
+export { open, toggleMenu, testState };

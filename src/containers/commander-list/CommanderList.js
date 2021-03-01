@@ -1,19 +1,24 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
 import { withStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Grid, GridList, GridListTile, GridListTileBar ,FormControlLabel, Checkbox, Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
+import { Grid, FormControlLabel, Checkbox, Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import SearchIcon from '@material-ui/icons/Search';
-import Fab from '@material-ui/core/Fab';
+import ShuffleIcon from '@material-ui/icons/Shuffle';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-import Typography from '@material-ui/core/Typography';
+
+// import Fab from '@material-ui/core/Fab';
+
+// import Typography from '@material-ui/core/Typography';
 
 
 
 
 // import { CommanderCard } from '../../components';
 import { CommanderCard } from 'components';
-import { BlogPost } from 'components';
+// import { BlogPost } from 'components';
 
 
 
@@ -31,12 +36,14 @@ const CommanderList = ({ classes }: Props) => {
   
   const[colorFilter,setColorFilter] = useState("");
 
-  const [lastScrollTop, setLastScrollTop] = useState(0);
+  // const [lastScrollTop, setLastScrollTop] = useState(0);
 
 
   const[descAsc,setDescAsc] = useState(1);
   const[alphabetical,setAlphabetical] = useState(1);
   const[approvedFilter,setApprovedFilter] = useState(1);
+  const[playtestingFilter,setPlaytestingFilter] = useState(1);
+
   const[randomizedCards,setRandomOrder] = useState([]);
 
 
@@ -304,7 +311,7 @@ const CommanderList = ({ classes }: Props) => {
         
       }
 
-      if(approvedFilter){
+      const theColorFilter = ()=>{
         if(colorFilter && colorFilter.length > 0 ){
           // does the node pass the colour filter?
           if(inclusiveSearch){
@@ -333,16 +340,20 @@ const CommanderList = ({ classes }: Props) => {
         }else {
           return finalReturn();
         }
-      }else{
+      }
+      // console.log(approvedFilter, playtestingFilter)
+      if((approvedFilter && playtestingFilter)){
+ 
+        return theColorFilter();
+
+      }else if(!approvedFilter && playtestingFilter){
+        if(node.cdhCards.status !== 'Approved'){
+          return theColorFilter();
+        }
+        
+      }else if(approvedFilter && !playtestingFilter){
         if(node.cdhCards.status === 'Approved'){
-          if(colorFilter && colorFilter.length > 0 ){
-            // does the node pass the colour filter?
-            if(isEqual(node.cdhCards.prop.coloridentity, colorFilter)){
-              return finalReturn();
-            }
-          }else {
-            return finalReturn();
-          }
+          return theColorFilter();
         }
         
       }
@@ -366,6 +377,7 @@ const CommanderList = ({ classes }: Props) => {
     });
 
 
+
     // set order by muid
     newList = descAsc ? newList : newList.reverse();
     // (newList/maxCards)
@@ -377,6 +389,15 @@ const CommanderList = ({ classes }: Props) => {
     // }
 
     // console.log(newList)
+
+    newList = newList.filter(function(el) {
+      if (!this[el.id]) {
+        this[el.id] = true;
+        return true;
+      }
+      return false;
+    }, Object.create(null));
+    // console.log('newList = ',newList)
 
     return (newList)
   }
@@ -438,7 +459,6 @@ const CommanderList = ({ classes }: Props) => {
           <Grid container xs={12} md={3} justify="center" className={classes.mobileSpacer}>
             <form className={classes.searchbar} noValidate autoComplete="off" onSubmit={e => { e.preventDefault(); }}>
               <TextField 
-                id="standard-basic" 
                 name="search"
                 label="Search Commanders" 
                 placeholder='"Kard, The Seeking"'
@@ -483,13 +503,24 @@ const CommanderList = ({ classes }: Props) => {
               
           </Grid>
           
-          <Grid container xs={12} md={3} justify="space-around" className={classes.mobileSpacer}>
-            <ButtonGroup disableElevation variant="contained" >
-              <Button className={classes.btn} onClick={()=>sortDescAsc(!descAsc)}>{descAscDisplay}</Button>
-              <Button className={classes.btn} onClick={()=>setApprovedFilter(!approvedFilter)}>{approvedFilter ? 'Approved Only': 'Approved & Playtesting'}</Button>
-              <Button className={classes.btn} onClick={()=>setRandomOrder(randomizeCards())}>{'Random Shuffle'}</Button>
-              {/* <Button onClick={()=>setAlphabetical(!alphabetical)}>{alphabeticalDisplay}</Button> */}
-            </ButtonGroup>
+          <Grid container xs={12} md={3} justify="center" className={classes.mobileSpacer}>
+            <Grid container xs={12} justify="center">
+              <ButtonGroup disableElevation  >
+                <Button className={classes.btn} onClick={()=>sortDescAsc(!descAsc)}>{descAscDisplay}</Button>
+                <Button className={classes.btn} onClick={()=>setRandomOrder(randomizeCards())}><ShuffleIcon/></Button>
+              </ButtonGroup>
+            </Grid>
+            <Grid container xs={12} justify="center">
+              <ButtonGroup disableElevation  >
+                <Button className={classes.btn} onClick={()=>setApprovedFilter(!approvedFilter)}>
+                  {approvedFilter ? <VisibilityOffIcon/> : <VisibilityIcon/>} Approved
+                </Button>
+                <Button className={classes.btn} onClick={()=>setPlaytestingFilter(!playtestingFilter)}>
+                  {playtestingFilter ? <VisibilityOffIcon/> : <VisibilityIcon/>} Playtesting
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            
           </Grid>
 
           {scrollmenu && (
@@ -563,7 +594,7 @@ const CommanderList = ({ classes }: Props) => {
           })}
 
           {currentChunk < filteredCommanders().length &&(
-            <Grid item xs={12} justify='center' alignItems='center' className={classes.loadmore} style={{ height: 'auto' }}> 
+            <Grid container item xs={12} justify='center' alignItems='center' className={classes.loadmore} style={{ height: 'auto' }}> 
               <Button variant="contained" size="large" className={classes.loadmoreBtn} onClick={()=>setCurrentChunk(currentChunk + 100)}>Load More</Button>
             </Grid>
           )}

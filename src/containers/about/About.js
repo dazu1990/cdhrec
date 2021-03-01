@@ -1,8 +1,8 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import Fade from '@material-ui/core/Fade';
+// import Fade from '@material-ui/core/Fade';
 
-import { ListItemAvatar, Avatar, Grid, Container, Accordion, AccordionSummary, AccordionDetails,List,ListItem, ListItemText, Divider, ButtonGroup, Button, InputBase, Link, IconButton, Card } from '@material-ui/core';
+import { ListItemAvatar, Avatar, Grid, Container, Accordion, AccordionSummary, AccordionDetails,List,ListItem, ListItemText, Link } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
@@ -12,7 +12,7 @@ import content from './content';
 import usePosts from '../../utils/usePosts';
 
 
-const { title, subtitle, links, body } = content;
+const { body } = content;
 
 const About = () => {
   const { allWpPost } = usePosts();

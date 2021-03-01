@@ -2,8 +2,6 @@ import { useStaticQuery,  graphql } from 'gatsby';
 
 const usePosts = (params) => {
 
-
-  
   const data = useStaticQuery(
     graphql`
       query allPosts{

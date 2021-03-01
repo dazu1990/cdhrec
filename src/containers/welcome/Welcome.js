@@ -3,11 +3,11 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/styles';
 
 import Fade from '@material-ui/core/Fade';
-import {Card, Grid, Container, Avatar, SvgIcon, Link, CardContent, Button, List, ListItem, ListItemIcon, ListItemText, CardActionArea} from '@material-ui/core';
+import {Card, Grid, Container, Avatar, SvgIcon, Link, Button} from '@material-ui/core';
 
-import HelpIcon from '@material-ui/icons/Help';
+// import HelpIcon from '@material-ui/icons/Help';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+// import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 
 
@@ -23,7 +23,7 @@ type Props = {
   classes: Object,
 };
 
-const { tagline, title, subtitle, xmlcard, discordcard } = content;
+const {  title, subtitle, xmlcard, discordcard } = content;
 
 const Welcome = ({classes}: Props) => (
   <>

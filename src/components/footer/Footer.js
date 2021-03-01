@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/styles';
 // Grid, Container,
-import { Grid, Container, Typography, ButtonGroup, Button, Divider, InputBase, Link, IconButton, Card } from '@material-ui/core';
+import { Grid, Container, Typography } from '@material-ui/core';
 
 
 import styles from './style';
