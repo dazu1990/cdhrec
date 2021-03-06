@@ -1,10 +1,12 @@
 import React, {useState}  from 'react';
-import { useStore } from 'react-redux'
+import { useStore } from 'react-redux';
 
 import { withStyles } from '@material-ui/styles';
 import ReactCardFlip from 'react-card-flip';
 import 'mana-font';
-import axios from 'axios'
+import axios from 'axios';
+// import 'localstorage-polyfill';
+
 
 
 
@@ -13,8 +15,8 @@ import { CommanderCard } from 'components';
 import { Container, Grid, Card, CardContent, CardActions, Button, CardHeader } from '@material-ui/core';
 // import useCommanders from '../utils/useCommanders';
 
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Layout from "../components/layout";
+import SEO from "../components/seo";
 
 import styles from './style';
 

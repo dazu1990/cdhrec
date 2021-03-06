@@ -29,7 +29,7 @@ import ColorSelector from './ColorSelector/ColorSelector';
 import styles from './style';
 
 type Props = {
-  classes: Object,
+  classes: Object
 };
 
 const CommanderList = ({ classes }: Props) => {
@@ -402,6 +402,22 @@ const CommanderList = ({ classes }: Props) => {
     return (newList)
   }
 
+  const searchResultsText = () => {
+    let approvedSec = `all ${filteredCommanders().length}`;
+
+    if(approvedFilter && !playtestingFilter){
+      approvedSec = 'only approved'
+    }else if(!approvedFilter && playtestingFilter){
+      approvedSec = 'only playtesting'
+    }else if(!approvedFilter && !playtestingFilter){
+      approvedSec = `no`
+    }
+
+    return(
+      `showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}`
+    )
+  }
+
   const sortDescAsc = (val) => {
     // Before sorting, remove randomized list
     setRandomOrder([]);
@@ -572,7 +588,8 @@ const CommanderList = ({ classes }: Props) => {
       >
         
         <div>
-          showing {approvedFilter ? `all ${filteredCommanders().length}` : 'only approved'}  {colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders {`${sortText()}`} {searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}</div>
+          {searchResultsText()}
+        </div>
       </Grid>
       
       {filteredCommanders().length > 0 && (

@@ -56,6 +56,8 @@ exports.createPages = async ({ graphql, actions }) => {
   
   // }
 
+  
+
 
   const result = await graphql(/* GraphQL */ `
     query allCards{
@@ -117,6 +119,29 @@ exports.createPages = async ({ graphql, actions }) => {
       }
   `)
   result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
+
+    // const decks = await graphql(/* GraphQL */ `query decks {
+    //   wpDeck {
+    //     deckGraphQL {
+    //       decklist {
+    //         cardname
+    //         fieldGroupName
+    //         number
+    //       }
+    //       commander {
+    //         ... on WpCard {
+    //           id
+    //           title
+    //           uri
+    //           slug
+    //         }
+    //       }
+    //       author
+    //       title
+    //     }
+    //   }
+    // }
+    // `)
 
     let relations = []
     let tokens = []

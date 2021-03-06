@@ -20,7 +20,7 @@ import content from './content';
 import styles from './style';
 
 type Props = {
-  classes: Object,
+  classes: Object
 };
 
 const {  title, subtitle, xmlcard, discordcard } = content;

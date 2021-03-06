@@ -73,7 +73,7 @@ module.exports = {
     },
     
     {
-      resolve: `gatsby-source-wordpress-experimental`,
+      resolve: `gatsby-source-wordpress`,
       options: {
         url: `http://api.cdhrec.com/index.php?graphql`,
         schema: {
