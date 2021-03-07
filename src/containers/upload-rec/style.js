@@ -4,12 +4,10 @@ const styles = ({ typography,palette }) => ({
     },
     grid: {
       marginTop: '2rem',
-      // height: '90vh'
     },
     toolbar:{
       padding: 10,
       paddingBottom: 0
-      // backgroundColor: '#fafafa'
     },
     goUp:{
       position: 'fixed',
@@ -62,14 +60,14 @@ const styles = ({ typography,palette }) => ({
       background: '#beb9b2'
     },
     loadmore:{
-      // background: 'gray',
       height: 'auto',
       display: 'flex',
       justifyContent: 'center',
   
     },
-    mobileSpacer: {
-      margin: '0.5rem 0'
+    mobileSpacerFlex: {
+      display: 'flex',
+      margin: '0.5rem 0',
     },
     loadmoreBtn: {
       backgroundColor:  'black',
@@ -89,8 +87,25 @@ const styles = ({ typography,palette }) => ({
         display: 'inherit'
       }
     },
-    deckInput:{
+    deckInput: {
       width: '600px'
+    },
+    reminderText:  {
+      marginTop: '20px',
+    },
+    cardSelect: {
+      width: '350px',
+      margin: '10px',
+    },
+    uploadTitle: {
+      fontSize: '3rem',
+      fontWeight: '900',
+      fontFamily: 'Playfair Display SC',
+      textAlign: 'center',
+      marginBottom: '30px',
+      '@media (max-width: 768px)': {
+        fontSize: '2.5rem',
+      }
     },
     mobileMenu:{
       top: 0,
@@ -112,7 +127,6 @@ const styles = ({ typography,palette }) => ({
         '@media (max-width: 768px)': {
           transform: 'translateY(-7.5rem)',
         }
-        // background: 'blue'
       }
     }
   });
