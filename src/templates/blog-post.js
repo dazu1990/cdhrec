@@ -1,7 +1,12 @@
 import React, {useState}  from 'react';
+import { useStore } from 'react-redux';
+
 import { withStyles } from '@material-ui/styles';
 import ReactCardFlip from 'react-card-flip';
 import 'mana-font';
+import axios from 'axios';
+// import 'localstorage-polyfill';
+
 
 
 
@@ -10,8 +15,8 @@ import { CommanderCard } from 'components';
 import { Container, Grid, Card, CardContent, CardActions, Button, CardHeader } from '@material-ui/core';
 // import useCommanders from '../utils/useCommanders';
 
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Layout from "../components/layout";
+import SEO from "../components/seo";
 
 import styles from './style';
 
@@ -23,9 +28,16 @@ type Props = {
 
 
 const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: Props) => {
-  // console.log('cardData',cardData, related, tokens)
+
+  const apiAuth = localStorage && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
+
+  // console.log('apiAuth', apiAuth )
+
+
+
   const[cardFlip,setCardFlip] = useState(false);
   const[extendCard,setExtendCard] = useState(false);
+
 
 
   const card = related.length > 0 ? { flipCard : true, card1: cardData, card2: related[0]} : cardData;
@@ -46,11 +58,10 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
       ConvertCost.colorCodes.forEach((color,i)=>{
         let checkColor = brackets ? `{${color}}` : color;
         if(!brackets){
-          // if(newString)
+
           newString = newString.replace(/{/g,'');
           newString = newString.replace(/}/g,'');
 
-          // newString = newString.replaceAll( '}','');
         }
         if(color === "T"){
 
@@ -62,14 +73,29 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
 
       })
 
-      // console.log('newString',newString)
-
       return newString;
     }
   }
+// // FYI THIS WILL BE DEPRECIATED 
+//   const getDecklists = ()=>{
 
 
+//   }
 
+
+  // const pushtodecklist = ()=>{
+
+  //   // const wpInfo = {
+  //   //   username: `frontend`,
+  //   //   password: `front_end2021`
+  //   // }
+
+  //   // axios.post('http://api.cdhrec.com/wp-json/jwt-auth/v1/token', wpInfo)
+  //   //     .then(response => {
+  //   //       console.log('response data',response.data)
+  //   //       localStorage.setItem('apiCdhRec', response.data);
+  //   //     });
+  // }
 
   const renderCard = (card, index)=>{    
     // let newarray = cardFlip;
@@ -193,8 +219,6 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
   return (
     <Layout className={classes.container}>
       <SEO title={card.title || `${card.card1.title} // ${card.card2.title}`} />
-      
-      
         <article
           itemScope
           itemType="http://schema.org/Article"
@@ -238,6 +262,7 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
               
 
             </Grid>
+            {/* <Button onClick={()=>pushtodecklist()}>TEST API</Button> */}
             
 
           </Container>

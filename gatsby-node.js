@@ -36,6 +36,29 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
+
+  // let
+
+  // const setApiCdhRec = () => {
+  
+  //   const wpInfo = {
+  //     username: `frontend`,
+  //     password: `front_end2021`
+  //   }
+  
+  //   axios.post('http://api.cdhrec.com/wp-json/jwt-auth/v1/token', wpInfo)
+  //       .then(response => {
+  //         // console.log('response data',response.data)
+  //         localStorage.setItem('apiCdhRec', JSON.stringify(response.data));
+  //       });
+  
+
+  
+  // }
+
+  
+
+
   const result = await graphql(/* GraphQL */ `
     query allCards{
         allWpCard(
@@ -97,6 +120,29 @@ exports.createPages = async ({ graphql, actions }) => {
   `)
   result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
 
+    // const decks = await graphql(/* GraphQL */ `query decks {
+    //   wpDeck {
+    //     deckGraphQL {
+    //       decklist {
+    //         cardname
+    //         fieldGroupName
+    //         number
+    //       }
+    //       commander {
+    //         ... on WpCard {
+    //           id
+    //           title
+    //           uri
+    //           slug
+    //         }
+    //       }
+    //       author
+    //       title
+    //     }
+    //   }
+    // }
+    // `)
+
     let relations = []
     let tokens = []
     if (outerNode.cdhCards.related || outerNode.cdhCards.reverseRelated){
@@ -112,6 +158,8 @@ exports.createPages = async ({ graphql, actions }) => {
       })
 
     }
+
+
     
 
     // let related = result.data.allWpCard.edges.filter(relation => node.cdhCards.related.includes(relation.title))

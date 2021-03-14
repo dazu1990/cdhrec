@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/styles';
 import { Avatar, Navigation, Animated } from 'components';
 
 import styles from './style';
-import { Container, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 type Props = {
   classes: Object,

@@ -97,7 +97,7 @@ const styles = ({ typography,palette }) => ({
     width: '100%',
     zIndex: '9',
     transition: 'all 250ms',
-    transform: 'translateY(-12rem)',
+    transform: 'translateY(-100%)',
     '&.expanded':{
       '@media (max-width: 768px)': {
         paddingTop: '1rem',
@@ -107,7 +107,10 @@ const styles = ({ typography,palette }) => ({
     '&.scrollDown':{
       transform: 'translateY(5rem)',
       '@media (max-width: 768px)': {
-        transform: 'translateY(-7.5rem)',
+        transform: 'translateY(calc(-63%))',
+      },
+      '@media (max-width: 400px)': {
+        transform: 'translateY(calc(-68%))',
       }
       // background: 'blue'
     }
