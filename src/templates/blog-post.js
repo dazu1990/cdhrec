@@ -29,7 +29,7 @@ type Props = {
 
 const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: Props) => {
 
-  const apiAuth = localStorage && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
+  // const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
 
   // console.log('apiAuth', apiAuth )
 
