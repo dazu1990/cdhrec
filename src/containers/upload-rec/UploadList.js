@@ -15,6 +15,10 @@ type Props = {
   };
   
   const UploadList = ({ classes }: Props) => {
+    // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
+    const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
+    console.log('apiAuth = ',apiAuth)
+
     // Initialize the state variables
     const[commanderSelected, setCommander] = useState({});
     const[partnerSelected, setPartner] = useState({});
@@ -70,7 +74,7 @@ type Props = {
           justify="space-between"
           alignItems="center"
         >     
-          <Grid item direction="column" className={classes.mobileSpacerFlex}>
+          <Grid container direction="column" className={classes.mobileSpacerFlex}>
             {commanderSelected.name && (
               <CommanderCard card={commanderSelected}/>
             )}
@@ -119,7 +123,7 @@ type Props = {
               Don't forget your lands!
             </Typography>        
           </Grid>
-          <Grid item direction="column" className={classes.mobileSpacerFlex}>
+          <Grid container direction="column" className={classes.mobileSpacerFlex}>
             <TextareaAutosize
               className={classes.deckInput} 
               id="deck-list"
@@ -127,8 +131,8 @@ type Props = {
               label="Deck List" 
               placeholder=''
               rowsMin={50}
-              InputLabelProps={{
-                focused: 'true',
+              inputlabelprops={{
+                focused: true,
                 width: '500px',
                 height: '800px',
               }}
