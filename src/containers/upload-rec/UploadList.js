@@ -17,12 +17,12 @@ type Props = {
   const UploadList = ({ classes }: Props) => {
     // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
     const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
-    console.log('apiAuth = ',apiAuth)
 
     // Initialize the state variables
     const[commanderSelected, setCommander] = useState({});
     const[partnerSelected, setPartner] = useState({});
     const[deckList, setDeck] = useState("");
+    const[decktitle, setTitle] = useState("");
 
     // A collection of all the commanders in the cdh xml
     const { allWpCard } = useCommanders();
@@ -40,29 +40,61 @@ type Props = {
       return flatObj;
     });
 
+    const formattedDeckList = () => {
+      const formatted = [];
+      const deckItems = deckList.split('\n');
+      deckItems.forEach((lineItem) => {
+        // Validate the line item. Do we want a regex thing or do we want to assign it a thing?
+        let splitItem = lineItem.split(' ');
+        let cleanedFirst = parseInt(splitItem[0], 10);
+        // Check the first segment
+        if (cleanedFirst) {
+          formatted.push({
+            number: cleanedFirst,
+            cardname: lineItem.replace(`${splitItem[0]} `, ''),
+          });
+        } else {
+          // If there is no number at the beginning of the line time, assume 1
+          formatted.push({
+            number: 1,
+            cardname: lineItem,
+          });
+        }
+      });
+      return formatted;
+    };
+
     // Handle submitting the deck
-    const submitList = () => {
-      console.log(commanderSelected);
-      console.log(partnerSelected);
-      console.log(deckList);
+    const submitList = async () => {
       const localData = localStorage.getItem('apiCdhRec', {});
       let cmdr = commanderSelected.name;
       if (partnerSelected.name) {
         cmdr = `${commanderSelected.name}//${partnerSelected.name}`
       }
-      axios.put('http://api.cdhrec.com/wp-json/acf/v3/decks', {
-        headers: {
-          'Authorization': localData.token,
-        },
-        data: {
-          title: 'TODO',
+
+      // Create the deck and save the ID for later
+      const deckIdResp = await axios.post('http://api.cdhrec.com/wp-json/wp/v2/decks', {}, {headers: {'Authorization': `Bearer ${apiAuth.token}`}});
+
+      const deckIdResp = { data: {id: 26702 }};
+
+      let bodyData = {
+        fields: {
+          title: decktitle,
           commmander: cmdr,
-          decklist: deckList,
           author: localData.user_nicename,
+          deckList: formattedDeckList()
         }
-      })
+      };
+
+      console.log('Whats this look like ', JSON.stringify(bodyData));
+      
+      await axios.post(`http://api.cdhrec.com/wp-json/acf/v3/decks/${deckIdResp.data.id}`, JSON.stringify(bodyData), 
+        {headers: {
+          'Authorization': `Bearer ${apiAuth.token}`,
+          'Content-Type': 'application/json'}
+        })
       .then(response => {
-        console.log('response data', response.data)
+        console.log('response data', response.data);
       });
     };
   
@@ -71,8 +103,6 @@ type Props = {
         <Grid 
           container
           direction="row"
-          justify="space-between"
-          alignItems="center"
         >     
           <Grid container direction="column" className={classes.mobileSpacerFlex}>
             {commanderSelected.name && (
@@ -82,8 +112,10 @@ type Props = {
               className={classes.cardSelect}
               id="commander-select"
               name="commander-select"
+              disableClearable={true}
               options={flattenedList}
               getOptionLabel={(c) => c.name}
+              getOptionSelected={(option, value) => option.id === value.id}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -102,6 +134,7 @@ type Props = {
               name="partner-select"
               label="Partner (optional)" 
               placeholder='"Kard, The Seeking"'
+              disableClearable={true}
               options={flattenedList}
               getOptionLabel={(c) => c.name}
               renderInput={(params) => 
@@ -124,6 +157,14 @@ type Props = {
             </Typography>        
           </Grid>
           <Grid container direction="column" className={classes.mobileSpacerFlex}>
+            <TextField 
+              className={classes.cardSelect}
+              name="title"
+              label="Deck Title" 
+              placeholder='"Visin and the Bird Gang"'
+              onChange={(event)=>setTitle(event.target.value)}
+              variant="outlined"
+            />
             <TextareaAutosize
               className={classes.deckInput} 
               id="deck-list"
