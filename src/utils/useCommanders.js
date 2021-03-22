@@ -42,6 +42,7 @@ const useCommanders = (params) => {
                 token
                 fieldGroupName
               }
+              databaseId
               featuredImage {
                 node {
                   srcSet

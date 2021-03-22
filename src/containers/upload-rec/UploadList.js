@@ -18,6 +18,8 @@ type Props = {
     // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
     const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
 
+    // console.log(apiAuth)
+
     // Initialize the state variables
     const[commanderSelected, setCommander] = useState({});
     const[partnerSelected, setPartner] = useState({});
@@ -29,6 +31,7 @@ type Props = {
 
     // All the commanders flatened into an object used by the auto complete
     const flattenedList = allWpCard.edges.map(({node})=>{
+      console.log('node',node.cdhCards.name,  node.databaseId)
       const flatObj = {
         name: node.cdhCards.name,
         muid: node.cdhCards.set.muid,
@@ -36,6 +39,7 @@ type Props = {
         featuredImage: node.featuredImage ? node.featuredImage : node.cdhCards.set.picurl,
         flipCard: node.flipCard,
         cdhCards: node.cdhCards,
+        postId: node.databaseId
       };
       return flatObj;
     });
@@ -61,32 +65,58 @@ type Props = {
           });
         }
       });
+
+      // console.log('formated', formatted)
       return formatted;
     };
 
     // Handle submitting the deck
     const submitList = async () => {
       const localData = localStorage.getItem('apiCdhRec', {});
-      let cmdr = commanderSelected.name;
-      if (partnerSelected.name) {
-        cmdr = `${commanderSelected.name}//${partnerSelected.name}`
-      }
+      let cmdr = commanderSelected.postId;
+
+      // com
+      // if (partnerSelected.name) {
+      //   cmdr = `${commanderSelected.name}//${partnerSelected.name}`
+      // }
+
+      // console.log('title', decktitle , JSON.stringify({
+      //   "title": decktitle,
+      //   "status": "publish"
+      // }))
+
+      const postBody = JSON.stringify({
+        "title": decktitle,
+        "status": "publish"
+      })
 
       // Create the deck and save the ID for later
-      const deckIdResp = await axios.post('http://api.cdhrec.com/wp-json/wp/v2/decks', {}, {headers: {'Authorization': `Bearer ${apiAuth.token}`}});
+      const deckIdResp = await axios.post(
+        'http://api.cdhrec.com/wp-json/wp/v2/decks', 
+        postBody, 
+        {
+          headers: {
+            'Authorization': `Bearer ${apiAuth.token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
 
-      const deckIdResp = { data: {id: 26702 }};
+      // const deckIdResp = { data: {id: 26702 }};
+
+      console.log('CMDR', cmdr)
 
       let bodyData = {
         fields: {
           title: decktitle,
-          commmander: cmdr,
-          author: localData.user_nicename,
-          deckList: formattedDeckList()
+          commander: cmdr,
+          // author: localData.user_nicename,
+          author: 'some person',
+          decklist: formattedDeckList()
         }
       };
 
-      console.log('Whats this look like ', JSON.stringify(bodyData));
+      console.log('Whats this look like ', JSON.stringify(bodyData), deckIdResp.data.id, deckIdResp );
       
       await axios.post(`http://api.cdhrec.com/wp-json/acf/v3/decks/${deckIdResp.data.id}`, JSON.stringify(bodyData), 
         {headers: {
@@ -104,7 +134,7 @@ type Props = {
           container
           direction="row"
         >     
-          <Grid container direction="column" className={classes.mobileSpacerFlex}>
+          <Grid container direction="column" className={classes.mobileSpacerFlex} xs={12} md={6}>
             {commanderSelected.name && (
               <CommanderCard card={commanderSelected}/>
             )}
@@ -156,7 +186,7 @@ type Props = {
               Don't forget your lands!
             </Typography>        
           </Grid>
-          <Grid container direction="column" className={classes.mobileSpacerFlex}>
+          <Grid container direction="column" className={classes.mobileSpacerFlex} xs={12} md={6}>
             <TextField 
               className={classes.cardSelect}
               name="title"
