@@ -31,7 +31,6 @@ type Props = {
 
     // All the commanders flatened into an object used by the auto complete
     const flattenedList = allWpCard.edges.map(({node})=>{
-      console.log('node',node.cdhCards.name,  node.databaseId)
       const flatObj = {
         name: node.cdhCards.name,
         muid: node.cdhCards.set.muid,
