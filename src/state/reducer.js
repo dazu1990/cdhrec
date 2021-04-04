@@ -5,7 +5,9 @@ import { toggleMenu } from './actions';
 import axios from 'axios'
 
 // import localstorage-polyfill from 'localstorage-polyfill'
+
 // import 'localstorage-polyfill'
+
 
 
 
@@ -29,9 +31,10 @@ const setApiCdhRec = () => {
   axios.post('http://api.cdhrec.com/wp-json/jwt-auth/v1/token', wpInfo)
       .then(response => {
         // console.log('response data',response.data)
-        if(typeof window !== 'undefined' && localStorage){
-          localStorage.setItem('apiCdhRec', JSON.stringify(response.data));
+        if(typeof window !== 'undefined' && global.sessionStorage){
+          global.sessionStorage.setItem('apiCdhRec', JSON.stringify(response.data));
         }else{
+          
           console.log('no polyfill')
         }
       });

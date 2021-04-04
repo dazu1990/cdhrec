@@ -12,7 +12,22 @@ import axios from 'axios';
 
 // import { Link, graphql } from "gatsby"
 import { CommanderCard } from 'components';
-import { Container, Grid, Card, CardContent, CardActions, Button, CardHeader } from '@material-ui/core';
+import { 
+  Container, 
+  Grid, 
+  Card, 
+  CardContent, 
+  CardActions, 
+  Button, 
+  Accordion, 
+  AccordionSummary,  
+  AccordionDetails, 
+  Typography,
+  List,
+  ListItem
+} from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 // import useCommanders from '../utils/useCommanders';
 
 import Layout from "../components/layout";
@@ -27,7 +42,8 @@ type Props = {
 
 
 
-const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: Props) => {
+const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, classes}: Props) => {
+  console.log('deckData === ' , deckData)
 
   // const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
 
@@ -261,6 +277,36 @@ const BlogPostTemplate = ({pageContext: {cardData, tokens, related}, classes}: P
               )}
               
 
+            </Grid>
+            <Grid item xs={12}>
+              <h2>Decklists</h2>
+              <List>
+                  
+                {deckData.map(({node},deckIndex)=>(
+                  <ListItem>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls={`panel${deckIndex}a-content`}
+                        id={`panel${deckIndex}1a-header`}
+                      >
+                        <Typography>{node.deckGraphQL.title}</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        {node.deckGraphQL.decklist.map(({node: cardNode})=>(
+                          <Typography>
+                            cardname and number
+                            {/* {cardNode.number} x {cardNode.cardname} */}
+                          </Typography>
+                        ))}
+                        
+                      </AccordionDetails>
+                    </Accordion>
+                  </ListItem>
+                ))}
+
+              </List>
+              
             </Grid>
             {/* <Button onClick={()=>pushtodecklist()}>TEST API</Button> */}
             
