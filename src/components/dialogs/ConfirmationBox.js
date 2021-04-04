@@ -9,20 +9,35 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import WarningIcon from '@material-ui/icons/Warning';
 
 type Props = {
   classes: Object,
   dialogText: Object,
+  icon: String,
   open: Boolean,
   updateParent: Function,
 };
 
 const ConfirmationBox= (Props) => {
-  const [parentShow, updateParent] = React.useState(Props.updateParent);
-
+  const classes = Props.classes;
   const handleClose = () => {
     Props.updateParent(false);
   };
+
+  const renderIcon = () => (<>
+    {Props.icon === "error" && (
+      <ErrorOutlineIcon className={classes.alertIconError}/>
+    )}
+    {Props.icon === "warning" && (
+      <WarningIcon className={classes.alertIconWarning}/>
+    )}
+    {Props.icon === "success" && (
+      <CheckCircleOutlineIcon className={classes.alertIconSuccess}/>
+    )}
+  </>);
 
   return (
     <div>
@@ -32,14 +47,26 @@ const ConfirmationBox= (Props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{ Props.dialogText.title }</DialogTitle>
+        <DialogTitle 
+          id="alert-dialog-title" 
+          className={classes.alertTitle}
+        >
+          {renderIcon()}
+          { Props.dialogText.title }
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText 
+            id="alert-dialog-description"
+            className={classes.alertMessage}
+          >
             { Props.dialogText.message }
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
+        <DialogActions className={classes.alertButtons}>
+          <Button 
+            className={classes.alertButton}
+            onClick={handleClose}
+          >
             OK
           </Button>
         </DialogActions>
