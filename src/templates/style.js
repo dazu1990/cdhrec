@@ -34,6 +34,26 @@ const styles = ({ typography,palette }) => ({
   },
   bumpLeft: {
     marginLeft: 'auto'
+  },
+  cardList: {
+    position: 'relative',
+    overflow: 'auto',
+    minHeight: '4rem',
+    maxHeight: '300px',
+    background: 'rgb(225,225,225)',
+    padding: '0px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cardListItem: {
+    background: 'rgb(240,240,240)',
+    borderBottom: 'solid 1px rgb(210,210,210)'
+  },
+  deckSectionTitle: {
+    width: '100%',
+    marginBottom: '0px'
+    // fontSize: '1.25rem'
   }
 });
 

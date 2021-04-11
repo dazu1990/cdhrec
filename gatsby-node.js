@@ -83,25 +83,15 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const allDecks = await getDecksV2(graphql)
 
-  const filterDecksByMuid = async (muid) => {
-    // try{
-      let decksToPush =  await allDecks.allWpDeck.edges.filter(({node : deckNode})=>{
-        if(deckNode.deckGraphQL.commander.cdhCards.set.muid === muid){
-          return deckNode
-        }
-      })
-
-      // console.log('decksToPush3   ==', decksToPush)
-
-
-
-      return decksToPush
-    // } catch (err){
-
-    // }
-    
+  const filterDecksByMuid = (muid) => {
+    let decksToPush =  allDecks.allWpDeck.edges.filter(({node : deckNode})=>{
+      if(deckNode.deckGraphQL.commander.cdhCards.set.muid === muid){
+        return deckNode
+      }
+    })
+    return decksToPush
   }
-  // console.log('DECK!!', allDecks)
+
   const { createPage } = actions
 
   const result = await graphql(/* GraphQL */ `
@@ -164,45 +154,55 @@ exports.createPages = async ({ graphql, actions }) => {
       }
   `)
 
-  
-    result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
+  result.data.allWpCard.edges.forEach(({ node : outerNode }) => {
 
-      const useResults = async()=>{
-        const deckData= await filterDecksByMuid(outerNode.cdhCards.set.muid)
-        let relations = []
-        let tokens = []
-        if (outerNode.cdhCards.related || outerNode.cdhCards.reverseRelated){
-          result.data.allWpCard.edges.forEach(({node : innernode}) => {
-            if((outerNode.cdhCards.related && outerNode.cdhCards.related.includes(innernode.title)) || (outerNode.cdhCards.reverseRelated && outerNode.cdhCards.reverseRelated.includes(innernode.title))){
-              if(innernode.cdhCards.token){
-                tokens.push(innernode)
-              }else{
-                relations.push(innernode)
-              }
-              
-            }
-          })
+    // let myPromise = new Promise(function(myResolve, myReject) {
+    //   let deckData = filterDecksByMuid(outerNode.cdhCards.set.muid) ;
     
-        }  
-        // let related = result.data.allWpCard.edges.filter(relation => node.cdhCards.related.includes(relation.title))
-        createPage({
-          path: `${convertToSlug(outerNode.title)}`,
-          component: path.resolve(`./src/templates/blog-post.js`),
-          context: {
-            // Data passed to context is available
-            // in page queries as GraphQL variables.
-            slug: `${convertToSlug(outerNode.title)}`,
-            deckData: deckData,
-            cardData: outerNode,
-            related: relations,
-            tokens: tokens
-          },
-        })
-      }
-      useResults();
-    })
+    // // The producing code (this may take some time)
+    
+    //   if (deckData) {
+    //     myResolve("OK");
+    //   } else {
+    //     myReject("Error");
+    //   }
+    // });
+    
+    // myPromise.then(
+    //   function(value) {myDisplayer(value);},
+    //   function(error) {myDisplayer(error);}
+    // );
 
-  
-  
+    const deckData=  filterDecksByMuid(outerNode.cdhCards.set.muid) || []
+    let relations = []
+    let tokens = []
+    if (outerNode.cdhCards.related || outerNode.cdhCards.reverseRelated){
+      result.data.allWpCard.edges.forEach(({node : innernode}) => {
+        if((outerNode.cdhCards.related && outerNode.cdhCards.related.includes(innernode.title)) || (outerNode.cdhCards.reverseRelated && outerNode.cdhCards.reverseRelated.includes(innernode.title))){
+          if(innernode.cdhCards.token){
+            tokens.push(innernode)
+          }else{
+            relations.push(innernode)
+          }
+          
+        }
+      })
+
+    }
+
+    createPage({
+      path: `${convertToSlug(outerNode.title)}`,
+      component: path.resolve(`./src/templates/blog-post.js`),
+      context: {
+        // Data passed to context is available
+        // in page queries as GraphQL variables.
+        slug: `${convertToSlug(outerNode.title)}`,
+        deckData: deckData,
+        cardData: outerNode,
+        related: relations,
+        tokens: tokens
+      }
+    })
+  })
 }
 

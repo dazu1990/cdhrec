@@ -24,7 +24,9 @@ import {
   AccordionDetails, 
   Typography,
   List,
-  ListItem
+  ListItem,
+  ListItemText,
+  Paper
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
@@ -43,7 +45,7 @@ type Props = {
 
 
 const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, classes}: Props) => {
-  console.log('deckData === ' , deckData)
+  // console.log('deckData === ' , deckData)
 
   // const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
 
@@ -53,6 +55,8 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
 
   const[cardFlip,setCardFlip] = useState(false);
   const[extendCard,setExtendCard] = useState(false);
+  const[currentDeck,setCurrentDeck] = useState(0);
+
 
 
 
@@ -259,7 +263,7 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
               </Grid>
               
               {related.length === 0 && (
-                <Grid item xs={12} md={6} className={classes.padBuffer}>
+                <Grid item xs={12} md={9} className={classes.padBuffer}>
                   {renderCard(card)}
                 </Grid>
               )}
@@ -278,39 +282,50 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
               
 
             </Grid>
-            <Grid item xs={12}>
-              <h2>Decklists</h2>
-              <List>
+            <Paper >
+              <Grid container xs={12}>
+                <Grid container xs={12} sm={6} style={{padding: '1rem'}}>
+                  <Grid item xs={12}>
+                    <h2>Decks for:</h2>
+                    <h3>{card.title}</h3>
+                    <List aria-label="decklists" className={classes.cardList}>
+                      {deckData.length < 1 && (
+                        <Typography>There aren't any decks for {card.title}.<br></br> Why don't you add one <a href="/recommend">here</a></Typography>
+                      )}
+                      {deckData.map(({node},deckIndex)=>(
+                        <ListItem 
+                          key={`deck_${deckIndex}`} 
+                          button 
+                          onClick={()=>{setCurrentDeck(deckIndex)}}
+                          className={classes.cardListItem}
+                        >    
+                          <ListItemText primary={node.deckGraphQL.title}></ListItemText>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Grid>
+                </Grid>
+                <Grid container xs={12} sm={6} style={{padding: '1rem'}}>
                   
-                {deckData.map(({node},deckIndex)=>(
-                  <ListItem>
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls={`panel${deckIndex}a-content`}
-                        id={`panel${deckIndex}1a-header`}
-                      >
-                        <Typography>{node.deckGraphQL.title}</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {node.deckGraphQL.decklist.map(({node: cardNode})=>(
-                          <Typography>
-                            cardname and number
-                            {/* {cardNode.number} x {cardNode.cardname} */}
-                          </Typography>
-                        ))}
-                        
-                      </AccordionDetails>
-                    </Accordion>
-                  </ListItem>
-                ))}
+                  <h2 className={classes.deckSectionTitle}>Cards in:</h2>
+                  <h3>{deckData[currentDeck] ? deckData[currentDeck].node.deckGraphQL.title : 'non-existent deck'}</h3>
+                  <Grid item xs={12}>
+                    <List className={classes.cardList}>
+                      {deckData.length < 1 && (
+                        <Typography>{'There are no cards'}</Typography>
+                      )}
+                      {deckData[currentDeck] && deckData[currentDeck].node.deckGraphQL.decklist.map((card, cardIndex) => (
+                        <ListItem key={`card_${cardIndex}`} className={classes.cardListItem}>
+                          <ListItemText primary={`${card.number} ${card.cardname}`}></ListItemText>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Grid>
+                </Grid>
+              </Grid>
 
-              </List>
-              
-            </Grid>
-            {/* <Button onClick={()=>pushtodecklist()}>TEST API</Button> */}
+            </Paper>
             
-
           </Container>
         </article>
     </Layout>
