@@ -6,6 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import axios from 'axios'
 
 import useCommanders from '../../utils/useCommanders';
+import usePartnerCommanders from '../../utils/partnerCommanders';
 import { CommanderCard } from 'components';
 
 import styles from './style';
@@ -29,6 +30,7 @@ const UploadList = (Props) => {
 
   // A collection of all the commanders in the cdh xml
   const { allWpCard } = useCommanders();
+  const partnerHelper = usePartnerCommanders();
 
   // All the commanders flatened into an object used by the auto complete
   const flattenedList = allWpCard.edges.map(({node})=>{
@@ -88,6 +90,30 @@ const UploadList = (Props) => {
       setDialogShow(true);
       setLoading(false);
       return;
+    }
+    
+    // If a partner is selected, make sure that the cmd is the relevant partner
+    if (partnerSelected.postId) {
+      const counterpart = partnerHelper.getPartner(commanderSelected.name);
+      if (counterpart === undefined) {
+        setDialogText({
+          message: "This Commander does not have a legal partner",
+          title: "Not a Partner",
+        });
+        setDialogIcon("error");
+        setDialogShow(true);
+        setLoading(false);
+        return;
+      } else if (counterpart.muid !== partnerSelected.muid) {
+        setDialogText({
+          message: "These two do not partner together",
+          title: "Partners Do Not Match",
+        });
+        setDialogIcon("error");
+        setDialogShow(true);
+        setLoading(false);
+        return;
+      }
     }
     
     // Make sure we have the right amount of cards 
@@ -214,7 +240,7 @@ const UploadList = (Props) => {
             label="Partner (optional)" 
             placeholder='"Kard, The Seeking"'
             disableClearable={true}
-            options={flattenedList}
+            options={partnerHelper.flattenedList()}
             getOptionLabel={(c) => c.name}
             renderInput={(params) => 
               <TextField
