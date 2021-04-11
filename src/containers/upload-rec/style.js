@@ -78,7 +78,9 @@ const styles = ({ typography,palette }) => ({
       }
     },
     btn: {
-      lineHeight: '1rem'
+      lineHeight: '1rem',
+      'margin-top': "10px",
+      width: "95%"
     },
     menucollapse:{
       marginBottom: '1rem',
@@ -88,7 +90,11 @@ const styles = ({ typography,palette }) => ({
       }
     },
     deckInput: {
-      width: '600px'
+      width: '95%'
+    },
+    deckTitle: {
+      margin: "10px 0px",
+      width: "95%"
     },
     reminderText:  {
       marginTop: '20px',

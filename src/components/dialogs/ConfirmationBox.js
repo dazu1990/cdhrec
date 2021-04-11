@@ -13,13 +13,13 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import WarningIcon from '@material-ui/icons/Warning';
 
-type Props = {
-  classes: Object,
-  dialogText: Object,
-  icon: String,
-  open: Boolean,
-  updateParent: Function,
-};
+// type Props = {
+//   classes: Object,
+//   dialogText: Object,
+//   icon: String,
+//   open: Boolean,
+//   updateParent: Function,
+// };
 
 const ConfirmationBox= (Props) => {
   const classes = Props.classes;

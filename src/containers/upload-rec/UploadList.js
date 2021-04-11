@@ -1,6 +1,6 @@
-import React, {useState, useEffect}  from 'react';
+import React, {useState}  from 'react';
 import { withStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Grid, FormControlLabel, Container, TextField, ButtonGroup, Button, Link, IconButton, Card, Typography } from '@material-ui/core';
+import { Grid, Container, TextField, ButtonGroup, Button, Card, CircularProgress, Typography } from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import axios from 'axios'
@@ -11,17 +11,11 @@ import { CommanderCard } from 'components';
 import styles from './style';
 import ConfirmationBox from '../../components/dialogs';
 
-// import 'localstorage-polyfill'
-
-
-
-type Props = {
-    classes: Object,
-  };
-  
-const UploadList = ({ classes }: Props) => {
+const UploadList = (Props) => {
   // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
   const apiAuth = typeof window !== 'undefined' ? JSON.parse(global.sessionStorage.getItem('apiCdhRec')) : false;
+
+  const classes = Props.classes;
 
   // Initialize the state variables
   const[commanderSelected, setCommander] = useState({});
@@ -31,6 +25,7 @@ const UploadList = ({ classes }: Props) => {
   const[dialogShow, setDialogShow] = useState(false);
   const[dialogText, setDialogText] = useState({});
   const[dialogIcon, setDialogIcon] = useState({});
+  const[isLoading, setLoading] = useState(false);
 
   // A collection of all the commanders in the cdh xml
   const { allWpCard } = useCommanders();
@@ -80,6 +75,7 @@ const UploadList = ({ classes }: Props) => {
 
   // Handle submitting the deck
   const submitList = async () => {
+    setLoading(true);
     const cmdr = commanderSelected.postId;
     const [fDeck, cardCount] = formattedDeckList();
 
@@ -90,6 +86,7 @@ const UploadList = ({ classes }: Props) => {
       });
       setDialogIcon("error");
       setDialogShow(true);
+      setLoading(false);
       return;
     }
     
@@ -101,6 +98,7 @@ const UploadList = ({ classes }: Props) => {
       });
       setDialogIcon("error");
       setDialogShow(true);
+      setLoading(false);
       return;
     }
 
@@ -151,6 +149,7 @@ const UploadList = ({ classes }: Props) => {
           });
           setDialogIcon("success");
           setDialogShow(true);
+          setLoading(false);
           return;
         } else {
           // request succeeded but response was not a 200
@@ -160,6 +159,7 @@ const UploadList = ({ classes }: Props) => {
           });
           setDialogIcon("error");
           setDialogShow(true);
+          setLoading(false);
           return;
         }
       });     
@@ -171,6 +171,7 @@ const UploadList = ({ classes }: Props) => {
       });
       setDialogIcon("error");
       setDialogShow(true);
+      setLoading(false);
       return;
     }
   }
@@ -236,7 +237,7 @@ const UploadList = ({ classes }: Props) => {
         </Grid>
         <Grid container direction="column" className={classes.mobileSpacerFlex} xs={12} md={6}>
           <TextField 
-            className={classes.cardSelect}
+            className={classes.deckTitle}
             name="title"
             label="Deck Title" 
             placeholder='"Visin and the Bird Gang"'
@@ -258,7 +259,14 @@ const UploadList = ({ classes }: Props) => {
             variant="outlined"
             onChange={(event)=>setDeck(event.target.value)}
           />
-          <input type="button" className={classes.btn} onClick={submitList} value="Submit" />
+          <ButtonGroup disableElevation>
+            <Button 
+              className={classes.btn}
+              onClick={submitList}
+            >
+              {isLoading ? <CircularProgress /> : "Submit"}
+            </Button>
+          </ButtonGroup>
         </Grid>
     </Grid>
   </form>
