@@ -23,8 +23,6 @@ const UploadList = ({ classes }: Props) => {
   // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
   const apiAuth = typeof window !== 'undefined' ? JSON.parse(global.sessionStorage.getItem('apiCdhRec')) : false;
 
-  // console.log(apiAuth)
-
   // Initialize the state variables
   const[commanderSelected, setCommander] = useState({});
   const[partnerSelected, setPartner] = useState({});
@@ -32,6 +30,7 @@ const UploadList = ({ classes }: Props) => {
   const[decktitle, setTitle] = useState("");
   const[dialogShow, setDialogShow] = useState(false);
   const[dialogText, setDialogText] = useState({});
+  const[dialogIcon, setDialogIcon] = useState({});
 
   // A collection of all the commanders in the cdh xml
   const { allWpCard } = useCommanders();
@@ -83,16 +82,32 @@ const UploadList = ({ classes }: Props) => {
   const submitList = async () => {
     const cmdr = commanderSelected.postId;
     const [fDeck, cardCount] = formattedDeckList();
+
+    if (!cmdr) {
+      setDialogText({
+        message: "Who will lead this deck?",
+        title: "Commander required",
+      });
+      setDialogIcon("error");
+      setDialogShow(true);
+      return;
+    }
     
     // Make sure we have the right amount of cards 
     if (cardCount !== 99) {
-      console.log('Card count', cardCount);
       setDialogText({
         message: "EDH decks need 100 cards",
         title: "100 Cards required",
       });
+      setDialogIcon("error");
       setDialogShow(true);
       return;
+    }
+
+    // If the user did not set a deckTitle, add one
+    if (!decktitle.length) {
+      const currentDate = new Date();
+      setTitle(`${commanderSelected.name} Deck ${currentDate.toDateString()}`);
     }
 
     const postBody = JSON.stringify({
@@ -128,19 +143,33 @@ const UploadList = ({ classes }: Props) => {
           'Content-Type': 'application/json'}
         })
       .then(response => {
-        console.log('we had a response, check for status', response.status_code)
-        setDialogText({
-          message: "Thanks for the reccomendation!",
-          title: "Success!",
-        });
-        setDialogShow(true);
-        return;
+        // Success!
+        if (response.status === 200) { 
+          setDialogText({
+            message: "Thanks for the reccomendation!",
+            title: "Success!",
+          });
+          setDialogIcon("success");
+          setDialogShow(true);
+          return;
+        } else {
+          // request succeeded but response was not a 200
+          setDialogText({
+            message: `Please try again later or post in #website-is-broke. Error ${response.status}`,
+            title: "Something went wrong!",
+          });
+          setDialogIcon("error");
+          setDialogShow(true);
+          return;
+        }
       });     
     } catch (e) {
+      // generic unknown error
       setDialogText({
         message: "Please try again later or post in #website-is-broke",
         title: "Something went wrong!",
       });
+      setDialogIcon("error");
       setDialogShow(true);
       return;
     }
@@ -246,6 +275,7 @@ const UploadList = ({ classes }: Props) => {
       </Card>
       <ConfirmationBox
         dialogText={dialogText}
+        icon={dialogIcon}
         open={dialogShow}
         updateParent={setDialogShow}
       />  
