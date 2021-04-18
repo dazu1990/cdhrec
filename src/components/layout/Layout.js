@@ -14,13 +14,13 @@ import styles from './style';
 
 require('typeface-roboto');
 
-type Props = {
-  classes: Object,
-  children: HTMLElement,
-  noBackground: Boolean,
-};
+// type Props = {
+//   classes: Object,
+//   children: HTMLElement,
+//   noBackground: Boolean,
+// };
 
-const Layout = ({ classes, children, noBackground }: Props) => {
+const Layout = ({ classes, children, noBackground }) => {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   // ${prefersDarkMode ? classes.darkmode : ''}
   return (

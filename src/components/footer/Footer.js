@@ -6,11 +6,11 @@ import { Grid, Container, Typography } from '@material-ui/core';
 
 import styles from './style';
 
-type Props = {
-  classes: Object,
-};
+// type Props = {
+//   classes: Object,
+// };
 
-const Footer = ({ classes }: Props) => (
+const Footer = ({ classes }) => (
   <footer className={classes.container}>
     <Container>
       <Grid container>

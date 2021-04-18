@@ -7,11 +7,11 @@ import { Avatar, Navigation, Animated } from 'components';
 import styles from './style';
 import { Grid } from '@material-ui/core';
 
-type Props = {
-  classes: Object,
-};
+// type Props = {
+//   classes: Object,
+// };
 
-const Header = ({ classes }: Props) => (
+const Header = ({ classes }) => (
   <header className={classes.wrapper}>
 
     <Grid

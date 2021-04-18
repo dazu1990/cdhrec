@@ -12,10 +12,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import styles from './style';
 
 
-type Props = {
-  classes: Object,
-  data: Object
-};
+// type Props = {
+//   classes: Object,
+//   data: Object
+// };
 const RedCheckbox = withStyles({
   root: {
     color: red[400],
@@ -47,7 +47,7 @@ const GreenCheckbox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 
-const ColorSelector = ({ classes, data }: Props) => {
+const ColorSelector = ({ classes, data }) => {
   const [checkedState, setCheckedState] = useState({
     C: false,
     W: false,

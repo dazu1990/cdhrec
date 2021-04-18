@@ -38,13 +38,13 @@ import SEO from "../components/seo";
 import styles from './style';
 
 
-type Props = {
-  classes: Object
-};
+// type Props = {
+//   classes: Object
+// };
 
 
 
-const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, classes}: Props) => {
+const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, classes}) => {
   // console.log('deckData === ' , deckData)
 
   // const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;

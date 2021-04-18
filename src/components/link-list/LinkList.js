@@ -3,12 +3,12 @@ import { withStyles } from '@material-ui/styles';
 
 import styles from './style';
 
-type Props = {
-  classes: Object,
-  links: [],
-};
+// type Props = {
+//   classes: Object,
+//   links: [],
+// };
 
-const LinkList = ({ classes, links }: Props) => (
+const LinkList = ({ classes, links }) => (
   <div>
     <ul className={classes.container}>
       {links.map(({ Icon, to, newTab, text }, index) => (

@@ -72,6 +72,18 @@ module.exports = {
         },
       },
     },
+    // https://mtgjson.com/graphql
+    {
+      resolve: "gatsby-source-graphql",
+      options: {
+        // Arbitrary name for the remote schema Query type
+        typeName: "mtgJSON",
+        // Field under which the remote schema will be accessible. You'll use this in your Gatsby query
+        fieldName: "mtgJSON",
+        // Url to query from
+        url: "https://mtgjson.com/graphql",
+      },
+    },
     
     {
       resolve: `gatsby-source-wordpress`,
@@ -81,10 +93,11 @@ module.exports = {
           perPage: 8,
           requestConcurrency: 5,
           previewRequestConcurrency: 2,
-          timeout: 65000,
+          timeout: 70000,
         },
       },
     },
+
     // {
     //   resolve: `gatsby-source-wordpress`,
     //   options: {
@@ -165,13 +178,13 @@ module.exports = {
       },
     },
 
-    'gatsby-plugin-netlify',
+    // 'gatsby-plugin-netlify',
     'gatsby-plugin-sitemap',
-    {
-      resolve: `gatsby-plugin-google-adsense`,
-      options: {
-        publisherId: `ca-pub-8937023691503080`
-      },
-    }
+    // {
+    //   resolve: `gatsby-plugin-google-adsense`,
+    //   options: {
+    //     publisherId: `ca-pub-8937023691503080`
+    //   },
+    // }
   ],
 };

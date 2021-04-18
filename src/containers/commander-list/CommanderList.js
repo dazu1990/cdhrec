@@ -28,11 +28,11 @@ import ColorSelector from './ColorSelector/ColorSelector';
 
 import styles from './style';
 
-type Props = {
-  classes: Object
-};
+// type Props = {
+//   classes: Object
+// };
 
-const CommanderList = ({ classes }: Props) => {
+const CommanderList = ({ classes }) => {
   
   const[colorFilter,setColorFilter] = useState("");
 

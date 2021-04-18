@@ -4,14 +4,14 @@ import useSiteMetadata from './useSiteMetadata';
 import avatarIcon from 'images/logo.svg';
 
 
-type Props = {
-  description?: String,
-  lang?: String,
-  meta: [],
-  title: String,
-};
+// type Props = {
+//   description?: String,
+//   lang?: String,
+//   meta: [],
+//   title: String,
+// };
 
-function SEO({ description, lang, meta, title }: Props) {
+function SEO({ description, lang, meta, title }) {
   const siteMetadata = useSiteMetadata();
 
   const metaDescription = description || siteMetadata.description;

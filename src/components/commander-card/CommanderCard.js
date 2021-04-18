@@ -24,14 +24,14 @@ import styles from './style';
 //   return <img src={src} onError={onError}  />;
 // };
 
-type Props = {
-  classes: Object,
-  card: Object,
-};
+// type Props = {
+//   classes: Object,
+//   card: Object,
+// };
 
 // const card = 
 
-const CommanderCard = ({ classes, card }: Props) => {
+const CommanderCard = ({ classes, card }) => {
   const cardWidth = 220;
   const cardHeight = 310;
   const[ imageExists,setImageExists] = useState(true) ;

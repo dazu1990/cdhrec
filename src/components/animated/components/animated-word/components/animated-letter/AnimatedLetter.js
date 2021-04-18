@@ -6,12 +6,12 @@ import { useActiveAnimation } from 'components/animated/hooks';
 
 import styles from './style';
 
-type Props = {
-  classes: Object,
-  letter: String,
-  animation: String,
-  timeout: Number,
-};
+// type Props = {
+//   classes: Object,
+//   letter: String,
+//   animation: String,
+//   timeout: Number,
+// };
 
 const AnimatedLetter = ({
   classes,
@@ -19,7 +19,7 @@ const AnimatedLetter = ({
   animation,
   animateLetter,
   timeout,
-}: Props) => {
+}) => {
   const [activeAnimation, setActiveAnimation] = useActiveAnimation(timeout);
 
   return (

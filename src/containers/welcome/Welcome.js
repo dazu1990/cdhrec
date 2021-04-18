@@ -19,13 +19,13 @@ import { Animated } from 'components';
 import content from './content';
 import styles from './style';
 
-type Props = {
-  classes: Object
-};
+// type Props = {
+//   classes: Object
+// };
 
 const {  title, subtitle, xmlcard, discordcard } = content;
 
-const Welcome = ({classes}: Props) => (
+const Welcome = ({classes}) => (
   <>
   <Container style={{ padding: 0 }} >
     <Grid container >
