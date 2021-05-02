@@ -65,10 +65,12 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "build": "gatsby build",
+    "deploy": "./deploy.sh",
     "develop": "gatsby develop",
     "format": "prettier --write src/**/*.{js,jsx}",
     "serve": "gatsby serve",
-    "setup": "node ./bin/setup.js"
+    "setup": "node ./bin/setup.js",
+    "script-install": "yarn install"
   },
   "repository": {
     "type": "git",
