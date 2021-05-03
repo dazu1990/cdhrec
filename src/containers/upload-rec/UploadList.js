@@ -95,7 +95,7 @@ const UploadList = (Props) => {
     // If a partner is selected, make sure that the cmd is the relevant partner
     if (partnerSelected.postId) {
       const counterpart = partnerHelper.getPartner(commanderSelected.name);
-      console.log(counterpart)
+
       if (counterpart === undefined) {
         setDialogText({
           message: "This Commander does not have a legal partner",

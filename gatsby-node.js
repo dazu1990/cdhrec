@@ -103,6 +103,7 @@ exports.createPages = async ({ graphql, actions }) => {
             node {
               id
               title
+              databaseId
               cdhCards {
                 prop {
                   cmc

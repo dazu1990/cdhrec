@@ -23,6 +23,8 @@ import { CommanderCard } from 'components';
 
 
 import useCommanders from '../../utils/useCommanders';
+import usePartnerCommanders from '../../utils/partnerCommanders';
+
 import ColorSelector from './ColorSelector/ColorSelector';
 
 
@@ -33,10 +35,11 @@ import styles from './style';
 // };
 
 const CommanderList = ({ classes }) => {
+
+  const partnerHelper = usePartnerCommanders();
+
   
   const[colorFilter,setColorFilter] = useState("");
-
-  // const [lastScrollTop, setLastScrollTop] = useState(0);
 
 
   const[descAsc,setDescAsc] = useState(1);
@@ -49,15 +52,12 @@ const CommanderList = ({ classes }) => {
 
   const descAscDisplay = !descAsc ? `new to old` : `old to new`;
   const alphabeticalDisplay = !alphabetical ? `A > Z` : `Z > A`;
-  // const activeOrder = ()=>{
-  //   if(descAsc && )
-  // }
+
 
 
   const [searchQuery, setSearchQuery] = useState("");
   const[searchResult,setSearchResult] = useState([]);
   const { allWpCard } = useCommanders();
-  // const[commanderList, setCommanderList] = useState(allWpCard.edges);
 
   const[expandMenu,setExpandMenu] = useState(false);
 
@@ -65,8 +65,11 @@ const CommanderList = ({ classes }) => {
   const maxCards = 100;
   const[currentChunk,setCurrentChunk] = useState(maxCards);
 
+  const [scrolling, setScrolling] = useState(false);
+  const [scrollTop, setScrollTop] = useState(0);
 
-  // const[maxCardsChunks,setMaxCardsChunks] = useState(1);
+  const [inclusiveSearch, setInclusiveSearch] = useState(false);
+
 
   const convertToSlug = (Text) =>{
     if(Text){
@@ -127,9 +130,8 @@ const CommanderList = ({ classes }) => {
 
 
   const handleSearch = (event)=>{
+    // this fires when text is added to field
     event.preventDefault();
-
-    // setMaxCards(100)
 
     if(event.target.value.length > 0){
       setSearchQuery(event.target.value)
@@ -140,49 +142,26 @@ const CommanderList = ({ classes }) => {
       });
 
       setSearchResult(results)
-      // setMaxCardsChunks(results/maxCards)
 
     }else if (event.target.value.length === 0){
       setSearchQuery(event.target.value)
       setSearchResult("")
-      // setMaxCardsChunks(allWpCard.edges/maxCards)
 
     }
     
   }
 
   const backToTop = (event)=>{
-    // const anchor = (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
+    // this scrolls back to the top of whatever #back-to-top is on
     const anchor = (event.target.ownerDocument || document).querySelector('#back-to-top');
-
     if (anchor) {
       anchor.scrollIntoView({ behavior: 'smooth', alignToTop: true , block: 'center'});
     }
-    
-    // const anchor = (event.target.ownerDocument || document ).querySelector('#gatsby-focus-wrapper');
-    // // (event.target.ownerDocument || document ).querySelector('#back-to-top-anchor');
-    // if (anchor) {
-      // anchor.scrollIntoView();
-    // }
-    // window.scrollTo(0,0)
   }
-  // let toggle = true;
-  // const handleScroll = () => {
 
-  //   const currentScrollTop = document.documentElement.scrollTop;
+  
 
-  //   console.log(currentScrollTop)
-
-
-  // }
-  // window.addEventListener('scroll', handleScroll);
-
-  const [scrolling, setScrolling] = useState(false);
-  const [scrollTop, setScrollTop] = useState(0);
-
-  const [inclusiveSearch, setInclusiveSearch] = useState(false);
-
-
+  // this fires whenever the scrollTop state is changed
   useEffect(() => {
     const onScroll = e => {
       setScrollTop(e.target.documentElement.scrollTop);
@@ -195,11 +174,11 @@ const CommanderList = ({ classes }) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollTop]);
 
+  let partnerList = partnerHelper.flattenedSlim();
+  partnerList = partnerList.map(node=>({...node, partner: partnerHelper.getPartner(node.name)}))
 
-  // useEffect(() => {
-  // }, []);
 
-  // This filters by color
+  // This filters by whatever filters you have enabled
   const filteredCommanders= ()=>{
     let sourceList = []
     // Set the source list based on search results, random, or standard
@@ -223,7 +202,6 @@ const CommanderList = ({ classes }) => {
           
         } 
 
-
       });
 
       relatedList = relatedList.map(({node})=>{
@@ -246,12 +224,14 @@ const CommanderList = ({ classes }) => {
       });      
       return finalList;
     }
-
     const relatedList = getRelatedList();
     
-    let newList = sourceList.map(({node})=>{
-
+    let newList = sourceList.map(({node}, nodeIndex)=>{
+      // console.log(node)
+      
+      // this is formating/joining the multi-card stacks
       let flipCard = false;
+
       // create flip card obj if card is part of the list of related cards
       if((node.cdhCards.related && relatedList.includes(node.cdhCards.related)) || (node.cdhCards.reverseRelated && relatedList.includes(node.cdhCards.reverseRelated)) ){
 
@@ -272,6 +252,46 @@ const CommanderList = ({ classes }) => {
         }
         
       }
+      const hasPartner = ()=>{
+        const hasPartnerList = partnerList.filter(partner=>{
+          if(partner.name === node.title){
+            // console.log(node.title, partner)
+            return  partner.partner
+          }
+        })
+        // if(hasPartnerList && hasPartnerList.length > 0 ) console.log(hasPartnerList[0].partner, node.title)
+
+
+        return hasPartnerList && hasPartnerList.length > 0 ? hasPartnerList[0].partner.name : null
+
+      }
+
+      // const hasPartnerII = hasPartner()
+      const hasPartnerII = false
+
+      if(hasPartnerII){
+        // console.log('partner', hasPartnerII)
+        let partner = sourceList.filter((subnode)=>{
+          if(subnode.node.title === hasPartnerII){
+            return subnode
+          }
+        })
+
+        
+        if(partner[0] && partner[0].node){
+          // console.log('the partners', node.title, partner[0].node.title)
+          // const card1 = {...node,}
+          flipCard = {
+            flipCard: true,
+            partner: true,
+            partnerIndex: nodeIndex % 2 == 0,
+            card1: node,
+            card2: partner[0].node
+          }
+        }
+      }
+
+
       // converts color identity to appropriate format
       const isEqual = (a, b) =>{ 
         let A =  a ? a.replace(/[0-9]/g, '') : a;
@@ -284,7 +304,6 @@ const CommanderList = ({ classes }) => {
       };
 
       const getAllSubstrings = (colors) => {
-        // colors must be === string.split('')
 
         var branches = [];
         if (colors.length === 1) return colors;
@@ -301,6 +320,7 @@ const CommanderList = ({ classes }) => {
         // checking if card is part of a flip card
         if(!returnArray){
           if(flipCard && (node.cdhCards.name === flipCard.card1.cdhCards.name || node.cdhCards.name === flipCard.card2.cdhCards.name)){
+            // console.log(flipCard)
             return flipCard;
           }else{
             return node;
@@ -317,7 +337,7 @@ const CommanderList = ({ classes }) => {
           if(inclusiveSearch){
             let subStrings = getAllSubstrings(colorFilter.split(''));
             if(colorFilter !== "C"){
-              console.log(colorFilter)
+              // console.log(colorFilter)
               subStrings.push("C")
             }
             
@@ -341,7 +361,7 @@ const CommanderList = ({ classes }) => {
           return finalReturn();
         }
       }
-      // console.log(approvedFilter, playtestingFilter)
+
       if((approvedFilter && playtestingFilter)){
  
         return theColorFilter();
@@ -361,12 +381,17 @@ const CommanderList = ({ classes }) => {
       
       
     });
-    newList = newList.flat().filter(function (el) {
+    newList = newList.flat().filter( (el) => {
       // removed null items
       const notNull = el != null;
       // remove duplicate flip parings
       let frontSideFirst = true;
-      if(el && el.flipCard ){
+      if(el && el.flipCard  ){
+        // console.log('el.flipCard.partner = ', el)
+
+        if(el.partner && el.partnerIndex){
+          frontSideFirst = false;
+        } 
         if(el.card1.cdhCards.prop.side !== "front"){
           frontSideFirst = false;
         }
@@ -380,15 +405,7 @@ const CommanderList = ({ classes }) => {
 
     // set order by muid
     newList = descAsc ? newList : newList.reverse();
-    // (newList/maxCards)
-    // setMaxCards(100)
 
-    // if(maxCardsChunks !== (newList/maxCards)){
-
-      // setMaxCardsChunks(newList/maxCards)
-    // }
-
-    // console.log(newList)
 
     newList = newList.filter(function(el) {
       if (!this[el.id]) {
@@ -397,7 +414,7 @@ const CommanderList = ({ classes }) => {
       }
       return false;
     }, Object.create(null));
-    // console.log('newList = ',newList)
+
 
     return (newList)
   }
@@ -472,7 +489,7 @@ const CommanderList = ({ classes }) => {
           // id="back-to-top-anchor"
 
         >
-          <Grid container xs={12} md={3} justify="center" className={classes.mobileSpacer}>
+          <Grid item xs={12} md={3} justify="center" className={classes.mobileSpacer}>
             <form className={classes.searchbar} noValidate autoComplete="off" onSubmit={e => { e.preventDefault(); }}>
               <TextField 
                 name="search"
@@ -491,7 +508,7 @@ const CommanderList = ({ classes }) => {
             </form>
           </Grid>
 
-          <Grid container xs={12} md={1} justify="center" alignItems='center' className={classes.mobileSpacer} >
+          <Grid item xs={12} md={1} justify="center" alignItems='center' className={classes.mobileSpacer} >
 
           <FormControlLabel
             control={
@@ -510,7 +527,7 @@ const CommanderList = ({ classes }) => {
           </Grid>
 
 
-          <Grid container xs={12} md={5} justify="center" alignItems='center' className={classes.mobileSpacer} >
+          <Grid item xs={12} md={5} className={classes.mobileSpacer} >
 
             <Grid item xs={scrollmenu ? 12 : 8} md={12}>
 
@@ -599,7 +616,7 @@ const CommanderList = ({ classes }) => {
           {filteredCommanders().map(( card, index) => {
             if(index < currentChunk){
               return (
-                <Grid container key={index} xs={12} sm={6} md={3} justify='center' alignItems='center' id={`card_${index}`}>
+                <Grid item key={index} xs={12} sm={6} md={3} justify='center' alignItems='center' id={`card_${index}`}>
       
                   <Link href={card.flipCard ? convertToSlug(card.card1.title) : convertToSlug(card.title)}>
                     <CommanderCard card={card}/>

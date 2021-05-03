@@ -1,17 +1,14 @@
-import React, {useState}  from 'react';
+import React, {useState, useEffect}  from 'react';
 import { useStore } from 'react-redux';
 
 import { withStyles } from '@material-ui/styles';
 import ReactCardFlip from 'react-card-flip';
 import 'mana-font';
 import axios from 'axios';
-// import 'localstorage-polyfill';
 
 
-
-
-// import { Link, graphql } from "gatsby"
 import { CommanderCard } from 'components';
+import decodehtml from '../utils/decodehtml';
 import { 
   Container, 
   Grid, 
@@ -19,9 +16,6 @@ import {
   CardContent, 
   CardActions, 
   Button, 
-  Accordion, 
-  AccordionSummary,  
-  AccordionDetails, 
   Typography,
   List,
   ListItem,
@@ -38,24 +32,62 @@ import SEO from "../components/seo";
 import styles from './style';
 
 
+
 // type Props = {
 //   classes: Object
 // };
+
+const ListItemLink = (props) =>  {
+  return <ListItem button component="a" {...props} />;
+}
 
 
 
 const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, classes}) => {
   // console.log('deckData === ' , deckData)
 
-  // const apiAuth = localStorage && localStorage.getItem && localStorage.getItem('apiCdhRec') ? JSON.parse(localStorage.getItem('apiCdhRec')) : false;
+  // const apiAuth = typeof window !== 'undefined' ? JSON.parse(global.sessionStorage.getItem('apiCdhRec')) : false;
 
-  // console.log('apiAuth', apiAuth )
 
 
 
   const[cardFlip,setCardFlip] = useState(false);
   const[extendCard,setExtendCard] = useState(false);
-  const[currentDeck,setCurrentDeck] = useState(0);
+  const[currentDeck,setCurrentDeck] = useState({index: 0 , type: 'old'});
+
+  const [newDecks, setNewDecks] = useState([])
+  const [deckCheck, setDeckCheck] = useState(false)
+
+  useEffect(() => {
+
+      // http://api.cdhrec.com/wp-json/acf/v3/decks
+      // http://api.cdhrec.com/wp-json/wp/v2/decks
+    if(!deckCheck){
+      fetch(`http://api.cdhrec.com/wp-json/wp/v2/decks`)
+      .then(response => response.json()) // parse JSON from request
+      .then(resultData => {
+        const oldDeck = deckData.map((prevdeck)=>{
+          const name = `${prevdeck.node.slug}`;
+          return(name)
+        })
+        // console.log(oldDeck, deckData)
+        const filteredResultData = resultData.filter(deck=>{
+          if(deck.acf.commander === cardData.databaseId){
+            // console.log('oldDeck.includes(deck.slug)', oldDeck.includes(deck.slug), deck.slug, oldDeck)
+            if(!oldDeck.includes(deck.slug)){
+              return deck
+            }
+          }
+        })
+        setNewDecks(filteredResultData)
+
+      }) // set data for the number of stars
+      setDeckCheck(true)
+
+    }
+    
+
+  }, [])
 
 
 
@@ -292,34 +324,76 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
                       {deckData.length < 1 && (
                         <Typography>There aren't any decks for {card.title}.<br></br> Why don't you add one <a href="/recommend">here</a></Typography>
                       )}
+                      {newDecks.map((deck,deckIndex)=>(
+                        <ListItem 
+                          key={`newdeck_${deckIndex}`} 
+                          button 
+                          onClick={()=>{setCurrentDeck({index: deckIndex, type: 'new'})}}
+                          className={classes.cardListItem}
+                        >    
+                          <ListItemText primary={decodehtml(deck.title.rendered)}></ListItemText>
+                        </ListItem>
+                      ))}
                       {deckData.map(({node},deckIndex)=>(
                         <ListItem 
                           key={`deck_${deckIndex}`} 
                           button 
-                          onClick={()=>{setCurrentDeck(deckIndex)}}
+                          onClick={()=>{setCurrentDeck({index: deckIndex, type: 'old'})}}
                           className={classes.cardListItem}
                         >    
                           <ListItemText primary={node.deckGraphQL.title}></ListItemText>
                         </ListItem>
                       ))}
+                      {deckData.length > 0 && (
+                        <ListItem 
+                          button 
+                          className={classes.cardListItem}
+                        >
+                          <ListItemLink href="/recommend">
+                            <ListItemText primary={'Add another deck here!'}></ListItemText>
+                          </ListItemLink>
+                        
+                        </ListItem>
+                      )}
                     </List>
                   </Grid>
                 </Grid>
                 <Grid container xs={12} sm={6} style={{padding: '1rem'}}>
                   
                   <h2 className={classes.deckSectionTitle}>Cards in:</h2>
-                  <h3>{deckData[currentDeck] ? deckData[currentDeck].node.deckGraphQL.title : 'non-existent deck'}</h3>
+                  {currentDeck.type === 'old' && (
+                    <h3>{deckData[currentDeck.index] ? deckData[currentDeck.index].node.deckGraphQL.title : 'non-existent deck'}</h3>
+                  )}
+                  {currentDeck.type === 'new' && (
+                    <h3>{newDecks[currentDeck.index] ? newDecks[currentDeck.index].title.rendered : 'non-existent deck'}</h3>
+                  )}
                   <Grid item xs={12}>
-                    <List className={classes.cardList}>
-                      {deckData.length < 1 && (
-                        <Typography>{'There are no cards'}</Typography>
-                      )}
-                      {deckData[currentDeck] && deckData[currentDeck].node.deckGraphQL.decklist.map((card, cardIndex) => (
-                        <ListItem key={`card_${cardIndex}`} className={classes.cardListItem}>
-                          <ListItemText primary={`${card.number} ${card.cardname}`}></ListItemText>
-                        </ListItem>
-                      ))}
-                    </List>
+                    {currentDeck.type === 'old' && (
+                      <List className={classes.cardList}>
+                        {deckData.length < 1 && (
+                          <Typography>{'There are no cards'}</Typography>
+                        )}
+                        {deckData[currentDeck.index] && deckData[currentDeck.index].node.deckGraphQL.decklist.map((card, cardIndex) => (
+                          <ListItem key={`card_${cardIndex}`} className={classes.cardListItem}>
+                            <ListItemText primary={`${card.number} ${card.cardname}`}></ListItemText>
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+
+                    {currentDeck.type === 'new' && (
+                      <List className={classes.cardList}>
+                        {newDecks.length < 1 && (
+                          <Typography>{'There are no cards'}</Typography>
+                        )}
+                        {newDecks[currentDeck.index] && newDecks[currentDeck.index].acf.decklist.map((card, cardIndex) => (
+                          <ListItem key={`card_${cardIndex}`} className={classes.cardListItem}>
+                            <ListItemText primary={`${card.number} ${card.cardname}`}></ListItemText>
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                    
                   </Grid>
                 </Grid>
               </Grid>

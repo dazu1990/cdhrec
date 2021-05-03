@@ -109,14 +109,17 @@ const usePartnerCommanders = (params) => {
   }
 
   const getPartner = (name) => {
+
+    // console.log('TITLE = ',name)
     return flattenedSlim().find(card => {
-      if (card.text.includes(name)) {
+      if (card.text.includes(`Partner with ${name}`)) {
         return card;
       }
     });
   }
 
-  return {getAllPartners, flattenedList, getPartner};
+
+  return {getAllPartners, flattenedList, getPartner, flattenedSlim };
 };
 
 export default usePartnerCommanders;

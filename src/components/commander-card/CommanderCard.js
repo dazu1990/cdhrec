@@ -49,7 +49,7 @@ const CommanderCard = ({ classes, card }) => {
           {imageExists && (
             <img 
             style={{ width: cardWidth }} 
-            src={card.cdhCards.set.picurl} 
+            src={card.cdhCards.set.picurl || ''} 
             alt={card.title}
             onError={()=>{setImageExists(false); }}
     

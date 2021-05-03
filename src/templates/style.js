@@ -42,9 +42,10 @@ const styles = ({ typography,palette }) => ({
     maxHeight: '300px',
     background: 'rgb(225,225,225)',
     padding: '0px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    // display: 'flex',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+
   },
   cardListItem: {
     background: 'rgb(240,240,240)',
