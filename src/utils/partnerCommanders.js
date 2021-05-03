@@ -97,22 +97,25 @@ const usePartnerCommanders = (params) => {
     });
   }
 
+  // Returns an iterable object for finding partners
   const flattenedSlim = () => {
     return data.allWpCard.edges.map(({node})=>{
       const flatObj = {
         name: node.cdhCards.name,
         muid: node.cdhCards.set.muid,
-        text: node.cdhCards.text,
+        text: node.cdhCards.text.toLowerCase(),
       };
       return flatObj;
     });
   }
 
+  // Return an array of possible partners
   const getPartner = (name) => {
-
-    // console.log('TITLE = ',name)
-    return flattenedSlim().find(card => {
-      if (card.text.includes(`Partner with ${name}`)) {
+    const inName = name;
+    name = name.replace('\'', '&#8217;');
+    name = name.toLowerCase();
+    return flattenedSlim().filter(card => {
+      if (card.name !== inName && card.text.includes(`partner with`) && card.text.includes(name)) {
         return card;
       }
     });

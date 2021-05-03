@@ -31,6 +31,8 @@ const UploadList = (Props) => {
   // A collection of all the commanders in the cdh xml
   const { allWpCard } = useCommanders();
   const partnerHelper = usePartnerCommanders();
+  // When testing partner combos, uncomment below
+  // const allWpCard = partnerHelper.getAllPartners();
 
   // All the commanders flatened into an object used by the auto complete
   const flattenedList = allWpCard.edges.map(({node})=>{
@@ -94,9 +96,8 @@ const UploadList = (Props) => {
     
     // If a partner is selected, make sure that the cmd is the relevant partner
     if (partnerSelected.postId) {
-      const counterpart = partnerHelper.getPartner(commanderSelected.name);
-
-      if (counterpart === undefined) {
+      const counterparts = partnerHelper.getPartner(commanderSelected.name);
+      if (!counterparts.length) {
         setDialogText({
           message: "This Commander does not have a legal partner",
           title: "Not a Partner",
@@ -105,15 +106,18 @@ const UploadList = (Props) => {
         setDialogShow(true);
         setLoading(false);
         return;
-      } else if (counterpart.muid !== partnerSelected.muid) {
-        setDialogText({
-          message: "These two do not partner together",
-          title: "Partners Do Not Match",
-        });
-        setDialogIcon("error");
-        setDialogShow(true);
-        setLoading(false);
-        return;
+      } else {
+        // Some commanders have potential for multiple options, loop through those
+        if (!counterparts.find(partner => partner.muid === partnerSelected.muid)) {
+          setDialogText({
+            message: "These two do not partner together",
+            title: "Partners Do Not Match",
+          });
+          setDialogIcon("error");
+          setDialogShow(true);
+          setLoading(false);
+          return;
+        }
       }
     }
     
