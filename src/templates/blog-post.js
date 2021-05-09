@@ -314,14 +314,14 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
               
 
             </Grid>
-            <Paper >
+             <Paper >
               <Grid container xs={12}>
                 <Grid container xs={12} sm={6} style={{padding: '1rem'}}>
                   <Grid item xs={12}>
                     <h2>Decks for:</h2>
                     <h3>{card.title}</h3>
                     <List aria-label="decklists" className={classes.cardList}>
-                      {deckData.length < 1 && (
+                      {deckData.length < 1 && newDecks.length < 1 && (
                         <Typography>There aren't any decks for {card.title}.<br></br> Why don't you add one <a href="/recommend">here</a></Typography>
                       )}
                       {newDecks.map((deck,deckIndex)=>(
@@ -399,7 +399,7 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
               </Grid>
 
             </Paper>
-            
+
           </Container>
         </article>
     </Layout>

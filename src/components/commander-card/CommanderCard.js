@@ -43,7 +43,7 @@ const CommanderCard = ({ classes, card }) => {
 
   const noImageCard = (card)=>{
     
-    if(!card.featuredImage){
+    if(!card.featuredImage || !card.featuredImage.node ){
       return(
         <>
           {imageExists && (
@@ -96,7 +96,8 @@ const CommanderCard = ({ classes, card }) => {
       <Card className={classes.cardImg}>
         
         <CardActionArea>
-          {card.featuredImage && card.featuredImage.node.localFile.childImageSharp && (
+
+          {card.featuredImage && card.featuredImage.node && card.featuredImage.node.localFile.childImageSharp.fluid && (
             <Img 
             style={{ width: cardWidth }} 
             // src={card.featuredImage.node.localFile.url} 
@@ -144,8 +145,8 @@ const CommanderCard = ({ classes, card }) => {
 
     {card && !card.flipCard && (
       <div className={classes.cardName}>
-        
-          {card.title}
+
+          {card.title || card.name}
           {card.cdhCards.status !== 'Approved' && (
             <span> (Playtesting)</span>
           )}
@@ -155,7 +156,7 @@ const CommanderCard = ({ classes, card }) => {
 
     {card && card.flipCard && (
       <div className={classes.cardName}>
-        {card.card1.title} // {card.card2.title}  
+        {card.card1.title || card.card1.name} // {card.card2.title || card.card2.name}  
         {card.card1.cdhCards.status !== 'Approved' && (
           <span> (Playtesting)</span>
         )}
