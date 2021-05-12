@@ -160,6 +160,7 @@ const UploadList = (Props) => {
       fields: {
         title: decktitle,
         commander: cmdr,
+        partner: partnerSelected.postId || null,
         author: 'some person',
         decklist: fDeck
       }

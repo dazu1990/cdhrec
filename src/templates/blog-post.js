@@ -72,7 +72,7 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
         })
         // console.log(oldDeck, deckData)
         const filteredResultData = resultData.filter(deck=>{
-          if(deck.acf.commander === cardData.databaseId){
+          if((deck.acf.commander === cardData.databaseId) || (deck.acf.partner && deck.acf.partner.ID === cardData.databaseId) ){
             // console.log('oldDeck.includes(deck.slug)', oldDeck.includes(deck.slug), deck.slug, oldDeck)
             if(!oldDeck.includes(deck.slug)){
               return deck
