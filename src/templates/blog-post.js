@@ -60,10 +60,10 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
 
   useEffect(() => {
 
-      // http://api.cdhrec.com/wp-json/acf/v3/decks
-      // http://api.cdhrec.com/wp-json/wp/v2/decks
+      // https://api.cdhrec.com/wp-json/acf/v3/decks
+      // https://api.cdhrec.com/wp-json/wp/v2/decks
     if(!deckCheck){
-      fetch(`http://api.cdhrec.com/wp-json/wp/v2/decks`)
+      fetch(`https://api.cdhrec.com/wp-json/wp/v2/decks`)
       .then(response => response.json()) // parse JSON from request
       .then(resultData => {
         const oldDeck = deckData.map((prevdeck)=>{

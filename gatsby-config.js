@@ -88,12 +88,7 @@ module.exports = {
     {
       resolve: `gatsby-source-wordpress`,
       options: {
-        debug: {
-          graphql: {
-            writeQueriesToDisk: true,
-          },
-        },
-        url: `https://api.cdhrec.com/graphql`,
+        url: `https://api.cdhrec.com/index.php?graphql`,
         schema: {
           perPage: 8,
           requestConcurrency: 5,
