@@ -13,7 +13,7 @@ import styles from './style';
 import ConfirmationBox from '../../components/dialogs';
 
 const UploadList = (Props) => {
-  // get authentication token. You can use the token to now POST to http://api.cdhrec.com/wp-json/wp/v2/decks &  http://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
+  // get authentication token. You can use the token to now POST to https://api.cdhrec.com/wp-json/wp/v2/decks &  https://api.cdhrec.com/wp-json/acf/v3/decks/[your deck id]
   const apiAuth = typeof window !== 'undefined' ? JSON.parse(global.sessionStorage.getItem('apiCdhRec')) : false;
 
   const classes = Props.classes;
@@ -125,7 +125,7 @@ const UploadList = (Props) => {
     if (cardCount !== 99) {
       setDialogText({
         message: "EDH decks need 100 cards",
-        title: "100 Cards required",
+        title: `EDH decks need 100 cards. ${cardCount} given`,
       });
       setDialogIcon("error");
       setDialogShow(true);
@@ -146,7 +146,7 @@ const UploadList = (Props) => {
 
     // Create the deck and save the ID for later
     const deckIdResp = await axios.post(
-      'http://api.cdhrec.com/wp-json/wp/v2/decks', 
+      'https://api.cdhrec.com/wp-json/wp/v2/decks', 
       postBody, 
       {
         headers: {
@@ -167,7 +167,7 @@ const UploadList = (Props) => {
     };
 
     try {
-      await axios.post(`http://api.cdhrec.com/wp-json/acf/v3/decks/${deckIdResp.data.id}`, JSON.stringify(bodyData), 
+      await axios.post(`https://api.cdhrec.com/wp-json/acf/v3/decks/${deckIdResp.data.id}`, JSON.stringify(bodyData), 
         {headers: {
           'Authorization': `Bearer ${apiAuth.token}`,
           'Content-Type': 'application/json'}

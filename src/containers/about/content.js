@@ -27,7 +27,7 @@ const content = {
       {
         name: 'Magic Set Editor',
         tagline: 'Card templates',
-        logo: 'http://api.cdhrec.com/wp-content/uploads/2021/01/Screen-Shot-2021-01-06-at-10.56.18-PM.png',
+        logo: 'https://api.cdhrec.com/wp-content/uploads/2021/01/Screen-Shot-2021-01-06-at-10.56.18-PM.png',
         link: 'https://magicseteditor.boards.net/page/downloads',
         color: 'lightgrey'
       },

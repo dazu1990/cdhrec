@@ -46,7 +46,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           property: "og:image",
-          content: "http://api.cdhrec.com/wp-content/uploads/2021/01/ogLogo.png",
+          content: "https://api.cdhrec.com/wp-content/uploads/2021/01/ogLogo.png",
         }
       ].concat(meta)}
     />

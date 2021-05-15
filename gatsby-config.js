@@ -88,7 +88,7 @@ module.exports = {
     {
       resolve: `gatsby-source-wordpress`,
       options: {
-        url: `http://api.cdhrec.com/index.php?graphql`,
+        url: `https://api.cdhrec.com/index.php?graphql`,
         schema: {
           perPage: 8,
           requestConcurrency: 5,
