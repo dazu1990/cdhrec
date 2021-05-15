@@ -51,26 +51,29 @@ const UploadList = (Props) => {
   const formattedDeckList = () => {
     const formatted = [];
     const deckItems = deckList.split('\n');
-    // Start counting at 1 if we have a partner
-    let count = partnerSelected.postId ? 1 : 0;
+    // Start counting at 2 if we have a partner, start at 1 to include cmdr
+    let count = partnerSelected.postId ? 2 : 1;
     deckItems.forEach((lineItem) => {
-      // Validate the line item. Do we want a regex thing or do we want to assign it a thing?
-      let splitItem = lineItem.split(' ');
-      let cleanedFirst = parseInt(splitItem[0], 10);
-      // Check the first segment
-      if (cleanedFirst) {
-        formatted.push({
-          number: cleanedFirst,
-          cardname: lineItem.replace(`${splitItem[0]} `, ''),
-        });
-        count += cleanedFirst;
-      } else {
-        // If there is no number at the beginning of the line time, assume 1
-        formatted.push({
-          number: 1,
-          cardname: lineItem,
-        });
-        count++;
+      // Only proceed if there is data in the line. Shortest legal card is 3 letters
+      if (lineItem.length > 2) {
+        // Validate the line item. Do we want a regex thing or do we want to assign it a thing?
+        let splitItem = lineItem.split(' ');
+        let cleanedFirst = parseInt(splitItem[0], 10);
+        // Check the first segment
+        if (cleanedFirst) {
+          formatted.push({
+            number: cleanedFirst,
+            cardname: lineItem.replace(`${splitItem[0]} `, ''),
+          });
+          count += cleanedFirst;
+        } else {
+          // If there is no number at the beginning of the line time, assume 1
+          formatted.push({
+            number: 1,
+            cardname: lineItem,
+          });
+          count++;
+        }
       }
     });
 
@@ -122,9 +125,9 @@ const UploadList = (Props) => {
     }
     
     // Make sure we have the right amount of cards 
-    if (cardCount !== 99) {
+    if (cardCount !== 100) {
       setDialogText({
-        message: "EDH decks need 100 cards",
+        message: `EDH decks need 100 cards. ${cardCount} given`,
         title: "100 Cards required",
       });
       setDialogIcon("error");
@@ -134,13 +137,17 @@ const UploadList = (Props) => {
     }
 
     // If the user did not set a deckTitle, add one
-    if (!decktitle.length) {
+    // We need to use a local variables as rerendering doesn't happen within functions
+    var currentTitle = decktitle
+    if (!currentTitle.length) {
       const currentDate = new Date();
-      setTitle(`${commanderSelected.name} Deck ${currentDate.toDateString()}`);
+      currentTitle = `${commanderSelected.name} Deck ${currentDate.toDateString()}`;
+      // Update the title anyway for rerendering when the user sees it
+      setTitle(currentTitle);
     }
 
     const postBody = JSON.stringify({
-      "title": decktitle,
+      "title": currentTitle,
       "status": "publish"
     })
 
@@ -158,7 +165,7 @@ const UploadList = (Props) => {
 
     let bodyData = {
       fields: {
-        title: decktitle,
+        title: currentTitle,
         commander: cmdr,
         partner: partnerSelected.postId || null,
         author: 'some person',
