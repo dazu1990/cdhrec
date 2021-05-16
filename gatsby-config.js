@@ -73,22 +73,22 @@ module.exports = {
       },
     },
     // https://mtgjson.com/graphql
-    {
-      resolve: "gatsby-source-graphql",
-      options: {
-        // Arbitrary name for the remote schema Query type
-        typeName: "mtgJSON",
-        // Field under which the remote schema will be accessible. You'll use this in your Gatsby query
-        fieldName: "mtgJSON",
-        // Url to query from
-        url: "https://mtgjson.com/graphql",
-      },
-    },
+    // {
+    //   resolve: "gatsby-source-graphql",
+    //   options: {
+    //     // Arbitrary name for the remote schema Query type
+    //     typeName: "mtgJSON",
+    //     // Field under which the remote schema will be accessible. You'll use this in your Gatsby query
+    //     fieldName: "mtgJSON",
+    //     // Url to query from
+    //     url: "https://mtgjson.com/graphql",
+    //   },
+    // },
     
     {
       resolve: `gatsby-source-wordpress`,
       options: {
-        url: `http://api.cdhrec.com/index.php?graphql`,
+        url: `https://api.cdhrec.com/index.php?graphql`,
         schema: {
           perPage: 8,
           requestConcurrency: 5,
