@@ -362,10 +362,10 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
                   
                   <h2 className={classes.deckSectionTitle}>Cards in:</h2>
                   {currentDeck.type === 'old' && (
-                    <h3>{deckData[currentDeck.index] ? deckData[currentDeck.index].node.deckGraphQL.title : 'non-existent deck'}</h3>
+                    <h3>{deckData[currentDeck.index] ? decodehtml(deckData[currentDeck.index].node.deckGraphQL.title) : 'non-existent deck'}</h3>
                   )}
                   {currentDeck.type === 'new' && (
-                    <h3>{newDecks[currentDeck.index] ? newDecks[currentDeck.index].title.rendered : 'non-existent deck'}</h3>
+                    <h3>{newDecks[currentDeck.index] ? decodehtml(newDecks[currentDeck.index].title.rendered) : 'non-existent deck'}</h3>
                   )}
                   <Grid item xs={12}>
                     {currentDeck.type === 'old' && (
