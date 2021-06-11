@@ -1,3 +1,6 @@
+import darkModeHelper from "../../utils/darkModeHelper";
+const darkModeStore = darkModeHelper();
+
 const styles = ({ app, breakpoints, typography }) => ({
   '@global': {
     html: {
@@ -43,7 +46,7 @@ const styles = ({ app, breakpoints, typography }) => ({
   background: {
     backgroundImage: ``,
     backgroundSize: 'cover',
-    background: '#EEE',
+    background: darkModeStore.isDarkMode ? '#222' : '#EEE',
     left: '0px'
     // background: 'linear-gradient(0deg, rgba(228,228,233,1) 3%, rgba(255,255,255,1) 39%, rgba(255,255,255,1) 100%)'
     // backgroundPosition: 

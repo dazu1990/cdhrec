@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 const STATE_PROP = 'STATE_PROP';
 const ACTION_PROP = 'ACTION_PROP';
 
-const stateProp = (mapStateToProp: Object => Object) => {
+const stateProp = mapStateToProp => {
   mapStateToProp.type = STATE_PROP;
   return mapStateToProp;
 };

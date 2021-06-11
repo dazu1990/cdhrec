@@ -90,6 +90,8 @@ const styles = ({ typography,palette }) => ({
       }
     },
     deckInput: {
+      background: palette.component.background,
+      color: palette.text.primary,
       width: '95%'
     },
     deckTitle: {

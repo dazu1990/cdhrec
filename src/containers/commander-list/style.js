@@ -93,7 +93,7 @@ const styles = ({ typography,palette }) => ({
     top: 0,
     left: '0px',
     position: 'fixed',
-    background: 'white',
+    background: palette.component.background,
     width: '100%',
     zIndex: '9',
     transition: 'all 250ms',
