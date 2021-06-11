@@ -7,7 +7,6 @@ import palette from './palette';
 import typography from './typography';
 import color from './color';
 
-// const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
 const muiTheme = createMuiTheme({
   typography: {
@@ -81,7 +80,5 @@ muiTheme.overrides = {
     },
   },
 };
-
-console.log('muiTheme', muiTheme)
 
 export default muiTheme;
