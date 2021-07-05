@@ -17,7 +17,7 @@ const styles = ({ typography,palette }) => ({
     left: '1rem',
   },
   goUpBtn:{
-    background: `#ddd`
+    background: palette.component.background,
   },
   vertSpace:{
     margin: '2rem 0'

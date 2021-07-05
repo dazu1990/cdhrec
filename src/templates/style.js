@@ -40,7 +40,7 @@ const styles = ({ typography,palette }) => ({
     overflow: 'auto',
     minHeight: '4rem',
     maxHeight: '300px',
-    background: 'rgb(225,225,225)',
+    background: palette.component.extraDarkBackground,
     padding: '0px',
     // display: 'flex',
     // justifyContent: 'center',
@@ -48,7 +48,7 @@ const styles = ({ typography,palette }) => ({
 
   },
   cardListItem: {
-    background: 'rgb(240,240,240)',
+    background: palette.component.extraDarkBackground,
     borderBottom: 'solid 1px rgb(210,210,210)'
   },
   deckSectionTitle: {

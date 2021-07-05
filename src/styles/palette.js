@@ -9,6 +9,7 @@ const palette =  (darkModeStore.isDarkMode ? {
   },
   component: {
     background: '#424242',
+    extraDarkBackground: '#252525',
   },
   text: {
     primary: '#f5f5f5',
@@ -58,6 +59,7 @@ const palette =  (darkModeStore.isDarkMode ? {
   },
   component: {
     background: 'white',
+    extraDarkBackground: 'rgb(225,225,225)',
   },
   text: {
     primary: '#17252A',
