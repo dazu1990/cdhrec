@@ -4,7 +4,7 @@ const content = {
   subtitle:
     'Welcome to Custom Dragon Highlander, a community dedicated to designing only the finest custom commanders!',
   xmlcard: {
-    link: 'http://api.cdhrec.com/publicXML/CDHrec.Latest.xml',
+    link: 'https://api.cdhrec.com/publicXML/CDHrec.Latest.xml',
     copy: "Here's the latest XML file with all commanders and tokens!",
     cta: "Download"
   },
