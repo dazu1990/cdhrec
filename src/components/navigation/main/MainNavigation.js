@@ -3,11 +3,15 @@ import Link from 'gatsby-link';
 import { withStyles } from '@material-ui/styles';
 
 import styles from './style';
+import darkModeHelper from '../../../utils/darkModeHelper';
+
+const darkModeStore = darkModeHelper();
 
 // type Props = {
 //   classes: Object,
 //   options: [],
 // };
+
 
 const MainNavigation = ({ classes, options }) => (
   <ul>
@@ -22,6 +26,14 @@ const MainNavigation = ({ classes, options }) => (
         </Link>
       </li>
     ))}
+    <li className={classes.menuContainer}>
+      <span
+        className={classes.navLink}
+        onClick={darkModeStore.toggleDarkMode}
+      >
+        Dark Mode
+      </span>
+    </li>
   </ul>
 );
 

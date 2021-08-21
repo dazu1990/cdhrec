@@ -1,4 +1,4 @@
-const styles = ({ app, typography }) => ({
+const styles = ({ typography, palette }) => ({
   alertButton: {
 
   },
@@ -20,7 +20,7 @@ const styles = ({ app, typography }) => ({
   },
 
   alertMessage: {
-    color: "#292929",
+    color: palette.text.primary,
     "text-align": "center"
   },
   alertTitle: {

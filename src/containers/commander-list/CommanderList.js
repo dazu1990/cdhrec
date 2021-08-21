@@ -420,7 +420,11 @@ const CommanderList = ({ classes }) => {
   }
 
   const searchResultsText = () => {
+
+    // console.log('searchResult', searchResult, searchQuery )
     let approvedSec = `all ${filteredCommanders().length}`;
+
+    let badsearchQuery = searchResult.length === 0 && searchQuery.length > 1 ? 'no search results: ' : ''
 
     if(approvedFilter && !playtestingFilter){
       approvedSec = 'only approved'
@@ -431,7 +435,7 @@ const CommanderList = ({ classes }) => {
     }
 
     return(
-      `showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchQuery && searchQuery.length > 2? `named "${searchQuery}"`: ``}`
+      `${badsearchQuery} showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
     )
   }
 
@@ -473,8 +477,9 @@ const CommanderList = ({ classes }) => {
 
   const searchOptions = {
     includeScore: true,
-    minMatchCharLength: 4,
-    threshold: 0.15,
+    minMatchCharLength: 2,
+    isCaseSensitive: false,
+    threshold: 0.1,
     keys: ['name']
   }
 

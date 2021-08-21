@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'gatsby-link';
 import { withStyles } from '@material-ui/styles';
 import { FaBars } from 'react-icons/fa';
+import darkModeHelper from '../../../utils/darkModeHelper';
 
 import styles from './style';
 
@@ -11,6 +12,7 @@ import styles from './style';
 //   open: Boolean,
 //   onClick: () => void,
 // };
+const darkModeStore = darkModeHelper();
 
 const MobileNavigation = ({ classes, options, onClick, open }) => (
   <>
@@ -28,6 +30,12 @@ const MobileNavigation = ({ classes, options, onClick, open }) => (
             </Link>
           </div>
         ))}
+        <div
+          className={classes.navLink}
+          onClick={darkModeStore.toggleDarkMode}
+        >
+          Dark Mode
+        </div>
       </div>
     )}
   </>
