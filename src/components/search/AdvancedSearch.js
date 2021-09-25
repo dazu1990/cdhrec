@@ -13,14 +13,15 @@ import SearchIcon from '@material-ui/icons/Search';
 
 
 const AdvancedSearch= (Props) => {
-  let searchOptions = {}
   const classes = Props.classes;
+  const currentOptions = {};
   const handleDrawerClose = () => {
+    Props.updateAdvancedOptions(currentOptions);
     Props.updateParent(false);
-    Props.updateParentSearch(searchOptions);
+    Props.runParentSearch(currentOptions);
   };
   const updateField = (event) => {
-    searchOptions[event.target.name] = event.target.value;
+    currentOptions[event.target.name] = event.target.value;
   };
 
   return (
@@ -32,17 +33,19 @@ const AdvancedSearch= (Props) => {
         open={Props.open}
       >
         <div className={classes.drawerHeader}>
-          <span>Advanced Search</span>
+          <div>Advanced Search</div>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <div>
           <TextField 
+            className={classes.searchBox}
             name="name"
             label="Name" 
             placeholder='"Kard, The Seeking"'
             onChange={updateField}
+            value={currentOptions.name}
             InputProps={{
               startAdornment: <SearchIcon></SearchIcon>,
             }}
@@ -54,6 +57,7 @@ const AdvancedSearch= (Props) => {
           />
           <br/>
           <TextField 
+            className={classes.searchBox}
             name="type"
             label="Type" 
             placeholder='"Salamander Warlock"'
@@ -69,6 +73,7 @@ const AdvancedSearch= (Props) => {
           />
           <br/>
           <TextField 
+            className={classes.searchBox}
             name="text"
             label="Text" 
             placeholder='"Whenever a bird..."'

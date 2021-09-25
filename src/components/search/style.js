@@ -1,31 +1,15 @@
 const styles = ({ typography, palette }) => ({
-  alertButton: {
-
+  drawerHeader: {
+    "display": "flex",
+    "align-items": "center",
+    "justify-content": "space-between",
+    "font-weight": "bold",
+    "margin-bottom": "15px",
+    "margin-left": "5px",
   },
-  alertButtons: {
-    "justify-content": "center"
-  },
-
-  alertIconError: {
-    color: "#FF0000",
-    margin: "-4px 6px"
-  },
-  alertIconSuccess: {
-    color: "#00FF00",
-    margin: "-4px 6px"
-  },
-  alertIconWarning: {
-    color: "#F39C12",
-    margin: "-4px 6px"
-  },
-
-  alertMessage: {
-    color: palette.text.primary,
-    "text-align": "center"
-  },
-  alertTitle: {
-    "margin-left": "-14px"
-  },
+  searchBox: {
+    "margin-bottom": "25px",
+  }
 });
 
 export default styles;

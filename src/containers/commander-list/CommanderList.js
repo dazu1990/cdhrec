@@ -35,9 +35,9 @@ import styles from './style';
 // type Props = {
 //   classes: Object
 // };
+console.log('how times for me');
 
 const CommanderList = ({ classes }) => {
-
   const partnerHelper = usePartnerCommanders();
 
   
@@ -74,6 +74,8 @@ const CommanderList = ({ classes }) => {
 
   const [advancedSearchOpen, setDrawer] = useState(false);
 
+  const [advancedOptions, setAdvancedOptionsState] = useState({});
+  // const advancedOptions = {};
 
   const convertToSlug = (Text) =>{
     if(Text){
@@ -132,11 +134,19 @@ const CommanderList = ({ classes }) => {
     return newString;
   }
 
+  // const setAdvancedOptions = (update) => {
+  //   console.log('setting advanced', update);
+  //   advancedOptions[update.name] = update.value;
+  //   // setAdvancedOptionsState({
+  //   //   ...advancedOptions,
+  //   //   [update.name]: update.value,
+  //   // });
+  // };
+
   const handleMultiSearch = (options) => {
-    console.log('sarching on ', options, allWpCard);
+    console.log('nothere 3');
     let results = lunr_index.query(function (q) {
       for (const [key, value] of Object.entries(options)) {
-        console.log(key, value, value.length);
         if (value.length) {
           var tokens = lunr.tokenizer(value);
           tokens.forEach(function (token) {
@@ -146,9 +156,7 @@ const CommanderList = ({ classes }) => {
           });
         }
       }
-      console.log(q);
     });
-    console.log(results);
     results = results.map((item)=>{
       let fullcard = allWpCard.edges.find(obj => parseInt(obj.node.cdhCards.set.muid) === parseInt(item.ref, 10));
       return(fullcard)
@@ -157,28 +165,47 @@ const CommanderList = ({ classes }) => {
     setSearchResult(results);
   }
 
-
-  const handleSearch = (event)=>{
-    // this fires when text is added to field
-    event.preventDefault();
-
+  const handleSearchLunr = (event) => {
+    /*** THIS FUNCTION IS NOT USED  !!!
+     * In order to switch to a full lunr searching we need to decide on which fields we want to search on
+     * How we want the fuzzy/auto correct to work
+     * and debounce this function to pick up the speed.
+     * Below has been tested and works somewhat well but it sluggish and brings back too many
+     * results that are "similiar enough"
+    ***/
+   console.log('nothere 1');
     if(event.target.value.length > 0){
       setSearchQuery(event.target.value)
-      // let results = fuse.search(searchQuery);
-      // let results = lunr_index.search(searchQuery);
       let results = lunr_index.query(function (q) {
         var tokens = lunr.tokenizer(searchQuery)
         tokens.forEach(function (token) {
-          // q.term(token.toString(), { boost: 100 }) // exact match
+          q.term(token.toString(), { boost: 100 }) // exact match
           q.term(token.toString(), { usePipeline: false, wildcard: lunr.Query.wildcard.TRAILING, boost: 10 }) // prefix match, no stemmer
           q.term(token.toString(), { usePipeline: false, wildcard: lunr.Query.wildcard.LEADING, boost: 5 }) // prefix match, no stemmer
           q.term(token.toString(), { usePipeline: false, editDistance: 1, boost: 1 }) // fuzzy matching
         
         })
       });
-      // console.log(results);
       results = results.map((item)=>{
         let fullcard = allWpCard.edges.find(obj => parseInt(obj.node.cdhCards.set.muid) === parseInt(item.ref, 10));
+        return(fullcard);
+      });
+
+      setSearchResult(results)
+    } else if (event.target.value.length === 0){
+      setSearchQuery(event.target.value);
+      setSearchResult("");
+    }
+  }
+  const handleSearch = (event)=>{
+    // this fires when text is added to field
+    event.preventDefault();
+
+    if(event.target.value.length > 0){
+      setSearchQuery(event.target.value)
+      let results = fuse.search(searchQuery);
+      results = results.map(({item})=>{
+        let fullcard = allWpCard.edges.find(obj => obj.node.cdhCards.set.muid === item.muid);
         return(fullcard)
       });
 
@@ -189,7 +216,6 @@ const CommanderList = ({ classes }) => {
       setSearchResult("")
 
     }
-    
   }
 
   const backToTop = (event)=>{
@@ -465,8 +491,14 @@ const CommanderList = ({ classes }) => {
 
     // console.log('searchResult', searchResult, searchQuery )
     let approvedSec = `all ${filteredCommanders().length}`;
+    let searchStatement =  `${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
 
-    let badsearchQuery = searchResult.length === 0 && searchQuery.length > 1 ? 'no search results: ' : ''
+    let hasAdvanced = Object.keys(advancedOptions).length > 0;
+    let badsearchQuery = searchResult.length === 0 && (searchQuery.length > 1 || hasAdvanced) ? 'no search results: ' : '';
+
+    if (hasAdvanced && searchResult.length > 0) {
+      searchStatement = "that match the advanced query";
+    }
 
     if(approvedFilter && !playtestingFilter){
       approvedSec = 'only approved'
@@ -477,7 +509,7 @@ const CommanderList = ({ classes }) => {
     }
 
     return(
-      `${badsearchQuery} showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
+      `${badsearchQuery} showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchStatement}`
     )
   }
 
@@ -520,6 +552,7 @@ const CommanderList = ({ classes }) => {
   });
 
   const lunr_index = lunr(function () {
+    console.log('nothere 2');
     this.ref('muid')
     this.field('name')
     this.field('text')
@@ -566,11 +599,13 @@ const CommanderList = ({ classes }) => {
                 variant="outlined"
               />
             </form>
-            <Button size="small" onClick={()=>setDrawer(!advancedSearchOpen)}>Advanced</Button>
+            <Button size="small" onClick={()=>setDrawer(!advancedSearchOpen)}>Advanced Search - Beta</Button>
             <AdvancedSearch
               open={advancedSearchOpen}
+              initOptions={advancedOptions}
+              updateAdvancedOptions={setAdvancedOptionsState}
               updateParent={setDrawer}
-              updateParentSearch={handleMultiSearch}
+              runParentSearch={handleMultiSearch}
             />  
           </Grid>
 
