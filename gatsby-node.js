@@ -85,8 +85,12 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const filterDecksByMuid = (muid) => {
     let decksToPush =  allDecks.allWpDeck.edges.filter(({node : deckNode})=>{
-      if((deckNode.deckGraphQL.commander.cdhCards.set.muid === muid) || (deckNode.deckGraphQL.partner && deckNode.deckGraphQL.partner.cdhCards.set.muid === muid)){
-        return deckNode
+      if (deckNode.deckGraphQL.commander) {
+        if((deckNode.deckGraphQL.commander.cdhCards.set.muid === muid) || (deckNode.deckGraphQL.partner && deckNode.deckGraphQL.partner.cdhCards.set.muid === muid)){
+          return deckNode
+        }
+      } else {
+        console.log('Missed Card!', muid);
       }
     })
     return decksToPush

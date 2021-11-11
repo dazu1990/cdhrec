@@ -98,6 +98,10 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
     return text.replace('<br />','<br /><br />')
   }
 
+  const escapeRegExp = (string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  }
+
   var ConvertCost = {
     colorCodes: ['W', 'U', 'B', 'R', 'G', 'C', 'X', 'Y', 'Z', 'P', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
     parse: function (text,brackets) {
@@ -117,9 +121,9 @@ const BlogPostTemplate = ({pageContext: {cardData, deckData, tokens, related}, c
         }
         if(color === "T"){
 
-          newString = newString.replace( checkColor, `<i class="ms ms-tap ms-cost">${hiddenlabel(color)}</i>`)
+          newString = newString.replace( new RegExp(escapeRegExp(checkColor), 'g'), `<i class="ms ms-tap ms-cost">${hiddenlabel(color)}</i>`)
         }else{
-          newString = newString.replace( checkColor , `<i class="ms ms-${color.toLowerCase()} ms-cost">${hiddenlabel(color)}</i>`)
+          newString = newString.replace( new RegExp(escapeRegExp(checkColor), 'g') , `<i class="ms ms-${color.toLowerCase()} ms-cost">${hiddenlabel(color)}</i>`)
         }
         
 
