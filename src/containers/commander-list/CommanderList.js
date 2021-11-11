@@ -151,13 +151,9 @@ const CommanderList = ({ classes }) => {
         if (value.length) {
           var tokens = lunr.tokenizer(value);
           tokens.forEach(function (token) {
-            // q.term(token.toString(), { fields: [key]})
-            // q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, fields: [key] }) // prefix match, no stemmer
-            // q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, fields: [key] }) // prefix match, no stemmer
-            q.term(token.toString(), { boost: 100 }) // exact match
-            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, boost: 10 }) // prefix match, no stemmer
-            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, boost: 5 }) // prefix match, no stemmer
-            q.term(token.toString(), { usePipeline: true, editDistance: 1, boost: 1 }) // fuzzy matching
+            q.term(token.toString(), { fields: [key]})
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, fields: [key], presence: lunr.Query.presence.REQUIRED}) // prefix match, no stemmer
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, fields: [key], presence: lunr.Query.presence.REQUIRED}) // prefix match, no stemmer
           });
         }
       }
