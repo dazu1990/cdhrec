@@ -35,7 +35,6 @@ import styles from './style';
 // type Props = {
 //   classes: Object
 // };
-console.log('how times for me');
 
 const CommanderList = ({ classes }) => {
   const partnerHelper = usePartnerCommanders();
@@ -75,6 +74,9 @@ const CommanderList = ({ classes }) => {
   const [advancedSearchOpen, setDrawer] = useState(false);
 
   const [advancedOptions, setAdvancedOptionsState] = useState({});
+
+  const [hasRun, setHasRun] = useState(false); 
+
   // const advancedOptions = {};
 
   const convertToSlug = (Text) =>{
@@ -144,15 +146,18 @@ const CommanderList = ({ classes }) => {
   // };
 
   const handleMultiSearch = (options) => {
-    console.log('nothere 3');
-    let results = lunr_index.query(function (q) {
+    let results = lunr_index().query(function (q) {
       for (const [key, value] of Object.entries(options)) {
         if (value.length) {
           var tokens = lunr.tokenizer(value);
           tokens.forEach(function (token) {
             // q.term(token.toString(), { fields: [key]})
-            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, fields: [key] }) // prefix match, no stemmer
-            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, fields: [key] }) // prefix match, no stemmer
+            // q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, fields: [key] }) // prefix match, no stemmer
+            // q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, fields: [key] }) // prefix match, no stemmer
+            q.term(token.toString(), { boost: 100 }) // exact match
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, boost: 10 }) // prefix match, no stemmer
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, boost: 5 }) // prefix match, no stemmer
+            q.term(token.toString(), { usePipeline: true, editDistance: 1, boost: 1 }) // fuzzy matching
           });
         }
       }
@@ -173,10 +178,9 @@ const CommanderList = ({ classes }) => {
      * Below has been tested and works somewhat well but it sluggish and brings back too many
      * results that are "similiar enough"
     ***/
-   console.log('nothere 1');
     if(event.target.value.length > 0){
       setSearchQuery(event.target.value)
-      let results = lunr_index.query(function (q) {
+      let results = lunr_index().query(function (q) {
         var tokens = lunr.tokenizer(searchQuery)
         tokens.forEach(function (token) {
           q.term(token.toString(), { boost: 100 }) // exact match
@@ -256,7 +260,7 @@ const CommanderList = ({ classes }) => {
     } else {
       sourceList = allWpCard.edges
     }
-    // console.log('what we find?', sourceList);
+
     // generate list of all "related" cards
     const getRelatedList = ()=>{
       let relatedList = sourceList.filter(({node})=>{ 
@@ -295,7 +299,6 @@ const CommanderList = ({ classes }) => {
     const relatedList = getRelatedList();
     
     let newList = sourceList.map(({node}, nodeIndex)=>{
-      // console.log(node)
       
       // this is formating/joining the multi-card stacks
       let flipCard = false;
@@ -323,7 +326,6 @@ const CommanderList = ({ classes }) => {
       const hasPartner = ()=>{
         const hasPartnerList = partnerList.filter(partner=>{
           if(partner.name === node.title){
-            // console.log(node.title, partner)
             return  partner.partner
           }
         })
@@ -347,7 +349,6 @@ const CommanderList = ({ classes }) => {
 
         
         if(partner[0] && partner[0].node){
-          // console.log('the partners', node.title, partner[0].node.title)
           // const card1 = {...node,}
           flipCard = {
             flipCard: true,
@@ -488,8 +489,6 @@ const CommanderList = ({ classes }) => {
   }
 
   const searchResultsText = () => {
-
-    // console.log('searchResult', searchResult, searchQuery )
     let approvedSec = `all ${filteredCommanders().length}`;
     let searchStatement =  `${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
 
@@ -551,17 +550,21 @@ const CommanderList = ({ classes }) => {
     return flatObj;
   });
 
-  const lunr_index = lunr(function () {
-    console.log('nothere 2');
-    this.ref('muid')
-    this.field('name')
-    this.field('text')
-    this.field('type')
-  
-    flattenedList.forEach(function (doc) {
-      this.add(doc)
-    }, this)
-  });
+  const lunr_index = () => {
+    if(hasRun) {
+      return '';
+    }
+    return lunr(function () {
+      this.ref('muid')
+      this.field('name')
+      this.field('text')
+      this.field('type')
+    
+      flattenedList.forEach(function (doc) {
+        this.add(doc)
+      }, this)
+    });
+  }
 
   const searchOptions = {
     includeScore: true,

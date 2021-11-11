@@ -1,8 +1,6 @@
 import { useStaticQuery,  graphql } from 'gatsby';
 
 const useCommanders = (params) => {
-
-  console.log('Hello we are in user commander');
   const data = useStaticQuery(
     graphql`
       query allCards{
