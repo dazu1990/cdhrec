@@ -1,5 +1,6 @@
 import React, {useState, useEffect}  from 'react';
 import Fuse from 'fuse.js'
+import lunr from 'lunr'
 import { withStyles } from '@material-ui/styles';
 import { Grid, FormControlLabel, Checkbox, Container, TextField, ButtonGroup, Button, Link, IconButton, Card } from '@material-ui/core';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -7,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import AdvancedSearch from '../../components/search';
 
 
 // import Fab from '@material-ui/core/Fab';
@@ -35,7 +37,6 @@ import styles from './style';
 // };
 
 const CommanderList = ({ classes }) => {
-
   const partnerHelper = usePartnerCommanders();
 
   
@@ -70,6 +71,13 @@ const CommanderList = ({ classes }) => {
 
   const [inclusiveSearch, setInclusiveSearch] = useState(false);
 
+  const [advancedSearchOpen, setDrawer] = useState(false);
+
+  const [advancedOptions, setAdvancedOptionsState] = useState({});
+
+  const [hasRun, setHasRun] = useState(false); 
+
+  // const advancedOptions = {};
 
   const convertToSlug = (Text) =>{
     if(Text){
@@ -128,7 +136,67 @@ const CommanderList = ({ classes }) => {
     return newString;
   }
 
+  // const setAdvancedOptions = (update) => {
+  //   console.log('setting advanced', update);
+  //   advancedOptions[update.name] = update.value;
+  //   // setAdvancedOptionsState({
+  //   //   ...advancedOptions,
+  //   //   [update.name]: update.value,
+  //   // });
+  // };
 
+  const handleMultiSearch = (options) => {
+    let results = lunr_index().query(function (q) {
+      for (const [key, value] of Object.entries(options)) {
+        if (value.length) {
+          var tokens = lunr.tokenizer(value);
+          tokens.forEach(function (token) {
+            q.term(token.toString(), { fields: [key]})
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.TRAILING, fields: [key], presence: lunr.Query.presence.REQUIRED}) // prefix match, no stemmer
+            q.term(token.toString(), { usePipeline: true, wildcard: lunr.Query.wildcard.LEADING, fields: [key], presence: lunr.Query.presence.REQUIRED}) // prefix match, no stemmer
+          });
+        }
+      }
+    });
+    results = results.map((item)=>{
+      let fullcard = allWpCard.edges.find(obj => parseInt(obj.node.cdhCards.set.muid) === parseInt(item.ref, 10));
+      return(fullcard)
+    });
+
+    setSearchResult(results);
+  }
+
+  const handleSearchLunr = (event) => {
+    /*** THIS FUNCTION IS NOT USED  !!!
+     * In order to switch to a full lunr searching we need to decide on which fields we want to search on
+     * How we want the fuzzy/auto correct to work
+     * and debounce this function to pick up the speed.
+     * Below has been tested and works somewhat well but it sluggish and brings back too many
+     * results that are "similiar enough"
+    ***/
+    if(event.target.value.length > 0){
+      setSearchQuery(event.target.value)
+      let results = lunr_index().query(function (q) {
+        var tokens = lunr.tokenizer(searchQuery)
+        tokens.forEach(function (token) {
+          q.term(token.toString(), { boost: 100 }) // exact match
+          q.term(token.toString(), { usePipeline: false, wildcard: lunr.Query.wildcard.TRAILING, boost: 10 }) // prefix match, no stemmer
+          q.term(token.toString(), { usePipeline: false, wildcard: lunr.Query.wildcard.LEADING, boost: 5 }) // prefix match, no stemmer
+          q.term(token.toString(), { usePipeline: false, editDistance: 1, boost: 1 }) // fuzzy matching
+        
+        })
+      });
+      results = results.map((item)=>{
+        let fullcard = allWpCard.edges.find(obj => parseInt(obj.node.cdhCards.set.muid) === parseInt(item.ref, 10));
+        return(fullcard);
+      });
+
+      setSearchResult(results)
+    } else if (event.target.value.length === 0){
+      setSearchQuery(event.target.value);
+      setSearchResult("");
+    }
+  }
   const handleSearch = (event)=>{
     // this fires when text is added to field
     event.preventDefault();
@@ -148,7 +216,6 @@ const CommanderList = ({ classes }) => {
       setSearchResult("")
 
     }
-    
   }
 
   const backToTop = (event)=>{
@@ -189,6 +256,7 @@ const CommanderList = ({ classes }) => {
     } else {
       sourceList = allWpCard.edges
     }
+
     // generate list of all "related" cards
     const getRelatedList = ()=>{
       let relatedList = sourceList.filter(({node})=>{ 
@@ -227,7 +295,6 @@ const CommanderList = ({ classes }) => {
     const relatedList = getRelatedList();
     
     let newList = sourceList.map(({node}, nodeIndex)=>{
-      // console.log(node)
       
       // this is formating/joining the multi-card stacks
       let flipCard = false;
@@ -255,7 +322,6 @@ const CommanderList = ({ classes }) => {
       const hasPartner = ()=>{
         const hasPartnerList = partnerList.filter(partner=>{
           if(partner.name === node.title){
-            // console.log(node.title, partner)
             return  partner.partner
           }
         })
@@ -279,7 +345,6 @@ const CommanderList = ({ classes }) => {
 
         
         if(partner[0] && partner[0].node){
-          // console.log('the partners', node.title, partner[0].node.title)
           // const card1 = {...node,}
           flipCard = {
             flipCard: true,
@@ -420,11 +485,15 @@ const CommanderList = ({ classes }) => {
   }
 
   const searchResultsText = () => {
-
-    // console.log('searchResult', searchResult, searchQuery )
     let approvedSec = `all ${filteredCommanders().length}`;
+    let searchStatement =  `${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
 
-    let badsearchQuery = searchResult.length === 0 && searchQuery.length > 1 ? 'no search results: ' : ''
+    let hasAdvanced = Object.keys(advancedOptions).length > 0;
+    let badsearchQuery = searchResult.length === 0 && (searchQuery.length > 1 || hasAdvanced) ? 'no search results: ' : '';
+
+    if (hasAdvanced && searchResult.length > 0) {
+      searchStatement = "that match the advanced query";
+    }
 
     if(approvedFilter && !playtestingFilter){
       approvedSec = 'only approved'
@@ -435,7 +504,7 @@ const CommanderList = ({ classes }) => {
     }
 
     return(
-      `${badsearchQuery} showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchQuery && searchQuery.length > 2 && searchResult.length > 0 ? `named "${searchQuery}"`: ``}`
+      `${badsearchQuery} showing ${approvedSec}  ${colorFilter ? `${colorToWords(colorFilter)}` : '' } commanders ${`${sortText()}`} ${searchStatement}`
     )
   }
 
@@ -468,12 +537,30 @@ const CommanderList = ({ classes }) => {
 
   const flattenedList = allWpCard.edges.map(({node})=>{
     const flatObj = {
-      name: node.cdhCards.name,
+      coloridentity: node.cdhCards.prop.coloridentity,
       muid: node.cdhCards.set.muid,
-      coloridentity: node.cdhCards.prop.coloridentity
+      name: node.cdhCards.name,
+      text: node.cdhCards.text,
+      type: node.cdhCards.prop.type,
     };
     return flatObj;
   });
+
+  const lunr_index = () => {
+    if(hasRun) {
+      return '';
+    }
+    return lunr(function () {
+      this.ref('muid')
+      this.field('name')
+      this.field('text')
+      this.field('type')
+    
+      flattenedList.forEach(function (doc) {
+        this.add(doc)
+      }, this)
+    });
+  }
 
   const searchOptions = {
     includeScore: true,
@@ -511,6 +598,14 @@ const CommanderList = ({ classes }) => {
                 variant="outlined"
               />
             </form>
+            <Button size="small" onClick={()=>setDrawer(!advancedSearchOpen)}>Advanced Search - Beta</Button>
+            <AdvancedSearch
+              open={advancedSearchOpen}
+              initOptions={advancedOptions}
+              updateAdvancedOptions={setAdvancedOptionsState}
+              updateParent={setDrawer}
+              runParentSearch={handleMultiSearch}
+            />  
           </Grid>
 
           <Grid item xs={12} md={1} justify="center" alignItems='center' className={classes.mobileSpacer} >
