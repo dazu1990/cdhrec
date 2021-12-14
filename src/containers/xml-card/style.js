@@ -5,6 +5,12 @@ const styles = ({ typography,palette }) => ({
     xmlParent: {
       display: 'flex'
     },
+    inputField: {
+      margin: '10px'
+    },
+    inputLabel: {
+      fontSize: '1rem'
+    },
     grid: {
       marginTop: '2rem',
     },

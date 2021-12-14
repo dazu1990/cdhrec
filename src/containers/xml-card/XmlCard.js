@@ -20,7 +20,25 @@ const XmlCard = (Props) => {
   const[dialogIcon, setDialogIcon] = useState({});
   const[isLoading, setLoading] = useState(false);
   const[imageUrl, setImageUrl] = useState('https://cdn.discordapp.com/attachments/690041911620534298/859220708177739786/Salamander.png');
-  const[status, setStatus] = useState('');
+  // const[status, setStatus] = useState('Playtest');
+  // const[side, setSide] = useState('Front');
+  const[formState, setFormState] = useState({
+    status: 'Playtest',
+    side: 'Front',
+  });
+  fetch(`https://api.cdhrec.com/wp-json/wp/v2/cards?post=35007`)
+      .then(response => response.json())
+      .then(results => console.log('Here is the card', results))
+
+  const handleChange = (event) => {
+    const target = event.target;
+    const name = target.id;
+    const newState = formState;
+    newState[name] = target.value;
+
+    setFormState(newState);
+    console.log(formState);
+  };
 
   // Handle submitting the deck
   const submitCard = async () => {
@@ -114,7 +132,7 @@ const XmlCard = (Props) => {
           <TextField
             className={classes.inputField}
             required
-            id="imageUrl"
+            id="picurl"
             label="Image URL"
             InputLabelProps={{
               shrink: true,
@@ -124,12 +142,12 @@ const XmlCard = (Props) => {
           <TextField
             className={classes.inputField}
             required
-            id="cardName"
+            id="name"
             label="Name"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
@@ -139,37 +157,27 @@ const XmlCard = (Props) => {
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
-          />
-          <TextField
-            className={classes.inputField}
-            required
-            id="cardSide"
-            label="Main Type"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
             required
             id="manaCost"
-            label="Main Type"
+            label="Mana Cost"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
             required
             id="cardColors"
-            label="Main Type"
+            label="Card Colors"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
@@ -179,7 +187,7 @@ const XmlCard = (Props) => {
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
@@ -189,28 +197,39 @@ const XmlCard = (Props) => {
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
           <TextField
             className={classes.inputField}
             required
-            id="cardText"
+            id="text"
             label="Text"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setImageUrl(event.target.value)}
+            onChange={handleChange}
           />
-
-          <InputLabel id="statusLabel">Status</InputLabel>
+          <InputLabel id="sideLabel" className={classes.inputLabel}>Side</InputLabel>
           <Select
             className={classes.inputField}
-            id="statusDropdown"
+            id="side"
+            defaultValue={formState.side}
+            label="sideLabel"
+            onChange={handleChange}
+          >
+            <MenuItem value={"Front"}>Front</MenuItem>
+            <MenuItem value={"Back"}>Back</MenuItem>
+          </Select>
+          <InputLabel id="statusLabel" className={classes.inputLabel}>Status</InputLabel>
+          <Select
+            className={classes.inputField}
+            id="status"
+            defaultValue={formState.status}
             label="statusLabel"
             InputLabelProps={{
               shrink: true,
             }}
-            onChange={(event)=>setStatus(event.target.value)}
+            onChange={handleChange}
           >
             <MenuItem value={"Playtest"}>Playtest</MenuItem>
             <MenuItem value={"Approved"}>Approved</MenuItem>
