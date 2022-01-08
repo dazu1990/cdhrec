@@ -43,7 +43,7 @@ const AdvancedSearch= (Props) => {
             className={classes.searchBox}
             name="name"
             label="Name" 
-            placeholder='"Kard, The Seeking"'
+            placeholder='"Kard, the Seeking"'
             onChange={updateField}
             value={currentOptions.name}
             InputProps={{
@@ -76,7 +76,7 @@ const AdvancedSearch= (Props) => {
             className={classes.searchBox}
             name="text"
             label="Text" 
-            placeholder='"Whenever a bird..."'
+            placeholder='"draw a card..."'
             onChange={updateField}
             InputProps={{
               startAdornment: <SearchIcon></SearchIcon>,

@@ -586,7 +586,7 @@ const CommanderList = ({ classes }) => {
               <TextField 
                 name="search"
                 label="Search Commanders" 
-                placeholder='"Kard, The Seeking"'
+                placeholder='"Kard, the Seeking"'
                 onChange={handleSearch}
                 InputProps={{
                   startAdornment: <SearchIcon></SearchIcon>,
