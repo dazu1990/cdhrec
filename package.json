@@ -14,7 +14,7 @@
     "classnames": "^2.2.6",
     "cross-env": "^7.0.3",
     "fuse.js": "^6.4.3",
-    "gatsby": "3.3.0",
+    "gatsby": "3.13.1",
     "gatsby-cli": "^3.3.0",
     "gatsby-image": "^3.3.0",
     "gatsby-plugin-flow": "^2.3.0",
@@ -52,6 +52,7 @@
     "typeface-roboto": "^0.0.75"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@hot-loader/react-dom": "^16.11.0",
     "chalk": "^3.0.0",
     "inquirer": "^7.0.1",

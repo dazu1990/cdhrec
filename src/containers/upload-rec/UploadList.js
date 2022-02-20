@@ -183,7 +183,7 @@ const UploadList = (Props) => {
         // Success!
         if (response.status === 200) { 
           setDialogText({
-            message: "Thanks for the reccomendation!",
+            message: "Thanks for the recommendation!",
             title: "Success!",
           });
           setDialogIcon("success");
