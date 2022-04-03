@@ -5,11 +5,23 @@ const styles = ({ typography,palette }) => ({
     xmlParent: {
       display: 'flex'
     },
+    cardTextInput: {
+      width: '600px',
+      height: '250px',
+      margin: '10px',
+    },
+    codeBlock: {
+      overflow: 'scroll',
+    },
     inputField: {
       margin: '10px'
     },
     inputLabel: {
-      fontSize: '1rem'
+      fontSize: '1rem',
+      display: 'contents',
+    },
+    buttons: {
+      display: 'flex',
     },
     grid: {
       marginTop: '2rem',
@@ -145,7 +157,15 @@ const styles = ({ typography,palette }) => ({
           transform: 'translateY(-7.5rem)',
         }
       }
-    }
+    },
+    invisible:{
+      opacity: 0,
+      margin: 0,
+      padding: 0,
+      height: 0,
+      width: 0
+      
+    },
   });
   
   export default styles;
